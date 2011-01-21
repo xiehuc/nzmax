@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+    xmlns:viewStackEffects="org.efflex.mx.viewStackEffects.*"
+    layout="vertical" horizontalAlign="center" verticalAlign="middle"
+    backgroundGradientColors="[ 0x000000, 0x323232 ]"
+    paddingTop="10" paddingBottom="10"
+    viewSourceURL="srcview/index.html" creationComplete="main()">
+    
+<mx:Button id="btn" />
+<mx:Button label="xxx" id="btn2"/>
+<mx:Script>
+	<![CDATA[
+	import com.adobe.ac.mxeffects.DistortionConstants;
+	import com.adobe.ac.mxeffects.Flip;
+	import com.adobe.ac.mxeffects.HalfFlip;
+	private function main():void
+	{
+		var e:HalfFlip = new HalfFlip(btn);
+		e.siblings = [btn2];
+		e.direction = DistortionConstants.TOP;
+		e.verticalLightingLocation = DistortionConstants.BOTTOM;
+		e.duration = 4000;
+		e.play();
+	}
+	]]>
+</mx:Script>
+</mx:Application>

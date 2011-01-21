@@ -1,0 +1,809 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!---
+   控制Control的类.
+   就是下屏幕的所有.
+	 <table class="innertable">
+	 <tr><th>标签</th><td>值</td></tr>
+	 <tr><th>Link:</th><td>Control</td></tr>
+	 <tr><th>可创建:</th><td>否</td></tr>
+	 <tr><th>可存档:</th><td>是</td></tr>
+	 </table>
+-->
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="main()" backgroundColor="0x000000" 
+				xmlns:viewStackEffects="org.efflex.mx.viewStackEffects.*" xmlns:frames="controls.frames.*"
+				xmlns:cnt="controls.*"
+				width="256" height="192" verticalScrollPolicy="off" horizontalScrollPolicy="off"
+				implements="com.nz.IControl,com.nz.ISaveObject">
+	<mx:Script>
+		<![CDATA[
+			import com.HPBar;
+			import com.Music;
+			import codex.dynamics.DSprite;
+			import codex.events.BasisEvent;
+			import com.Assets;
+			import com.FuncMan;
+			import com.FileManage;
+			import com.greensock.TimelineLite;
+			import com.greensock.TweenLite;
+			import com.nz.FrameInstance;
+			import com.nz.GlobalKeyMap;
+			import com.nz.IPlugin;
+			import com.nz.Place;
+			import com.nz.PluginsType;
+			import com.SAVEManager;
+			import com.Script;
+			import com.nz.Transport;
+			import com.nz.EventListBridge;
+			import cont.snds.*;
+			import cont.Evidence_;
+			import cont.Title_;
+			import controls.frames.ChooseButton;
+			import controls.GridPane;
+			import controls.ObjectPaneCell;
+			import controls.PaneCell;
+			import controls.RolePaneCell;
+			import flash.display.DisplayObject;
+			import flash.display.Loader;
+			import flash.events.Event;
+			import flash.events.KeyboardEvent;
+			import flash.media.Sound;
+			import flash.utils.Dictionary;
+			import mx.containers.ViewStack;
+			import mx.controls.Button;
+			import mx.controls.List;
+			import mx.core.Container;
+			import mx.core.UIComponent;
+			import controls.frames.PhotoFrame
+			import mx.events.FlexEvent;
+			import mx.events.ItemClickEvent;
+			
+			/**@private */
+			public const field:String = "Control";
+			/**@private */
+			public var func:FuncMan//储存function设定;
+			private var cross:UIComponent;
+			private var gpane:GridPane;
+			private var rpane:GridPane;
+			private var pageList:Object;
+			private var _objectmode:Boolean;
+			private var pushObjectionModeEnabled:Boolean;
+			private var pluginList:Object;
+			/**@private */
+			public var currentFrame:String;
+			private var oldFrame:String;
+			private function main():void
+			{
+				pageList = new Object();
+				pageList[FrameInstance.PLAYFRAME] = [playPage, playCover];
+				pageList[FrameInstance.OBJECTFRAME] = [objectPage, objectCover];
+				pageList[FrameInstance.ROLEFRAME] = [rolePage, objectCover];
+				pageList[FrameInstance.FILEFRAME] = [filePage, nullCover];
+				pageList[FrameInstance.CHOOSEFRAME] = [choosePage, nullCover];
+				pageList[FrameInstance.INQUIREFRAME] = [inquirePage, inquireCover];
+				pageList[FrameInstance.DETEFRAME] = [detePage, playCover];
+				pageList[FrameInstance.TALKFRAME] = [talkPage, talkCover];
+				pageList[FrameInstance.MOVEFRAME] = [movePage, talkCover];
+				pageList[FrameInstance.SAVERFRAME] = [saver, nullCover];
+				pageList[FrameInstance.NULLFRAME] = [blankPage, nullCover];
+				
+				pluginList = new Object();
+				pluginList[photoPage.type] = photoPage;
+				pluginList[reportPage.type] = reportPage;
+				photoPage.content.y = 20;
+				reportPage.content.y = 20;
+				
+				Transport.CreateTypeList["ObjectItem"] = ObjectPaneCell;
+				Transport.CreateTypeList["RoleItem"] = RolePaneCell;
+				
+				objectModeEnabled = false;
+				
+				var gpane_title:Title_ = new Title_();
+				gpane_title_ui.addChild(gpane_title);
+				var rpane_title:Title_ = new Title_();
+				rpane_title_ui.addChild(rpane_title);
+				
+				gpane = new GridPane("ObjectPane");
+				gpane.name = "gpane";
+				gpane.group = "gpaneCellGroup";
+				gpane.title = gpane_title._tf;
+				gpane.x = 23+105-128; gpane.y = 56+50-96;
+				gpane.addEventListener(PaneCell.NOTICE, noticePaneCell);
+				gpane.addEventListener(PaneCell.SIDEBAR_CHECK, sidebar_check);
+				gpane.addEventListener(PaneCell.EXPAND_MODE_OPEN, pane_expand_open);
+				gpane.addEventListener(PaneCell.EXPAND_MODE_CLOSE, pane_expand_close);
+				gpane.addEventListener(PaneCell.SYNC_PANE, sync_pane_event);
+				gpane.addEventListener(PaneCell.DETAIL_REG, pane_reg_detail);
+				gpane.dispatchEvent(new Event(PaneCell.SIDEBAR_CHECK));
+				objectPage_child.addChildAt(gpane,0);
+				rpane = new GridPane("RolePane");
+				rpane.name = "rpane";
+				rpane.group = "rpaneCellGroup";
+				rpane.title = rpane_title._tf;
+				rpane.x = 23+105-128; rpane.y = 56+50-96;
+				rpane.addEventListener(PaneCell.NOTICE, noticePaneCell);
+				rpane.addEventListener(PaneCell.SIDEBAR_CHECK, sidebar_check);
+				rpane.addEventListener(PaneCell.EXPAND_MODE_OPEN, pane_expand_open);
+				rpane.addEventListener(PaneCell.EXPAND_MODE_CLOSE, pane_expand_close);
+				rpane.addEventListener(PaneCell.SYNC_PANE, sync_pane_event);
+				rpane.addEventListener(PaneCell.DETAIL_REG, pane_reg_detail);
+				rpane.dispatchEvent(new Event(PaneCell.SIDEBAR_CHECK));
+				rolePage_child.addChildAt(rpane,0);
+				
+				saver.addEventListener(Event.CLOSE, saver_close);
+				detePage.addEventListener(Event.CLOSE, deter_close);
+				
+				gotoPage(FrameInstance.MOVEFRAME);
+				
+				func = new FuncMan();
+				func.setFunc("gotoPage", { type:Script.SingleParams} );
+				func.setFunc("chooseSet", { type:Script.ComplexParams, down:false, progress:false } );
+				func.setFunc("pushObjection", { type:Script.SingleParams, down:false, progress:false } );
+				func.setFunc("cleanPushObjection", { type:Script.NoParams } );
+				
+				//this.stage.addEventListener(KeyboardEvent.KEY_UP, global_key_event);
+			}
+			
+			private function deter_close(e:Event):void 
+			{
+				gotoPage(detePage.prepareFrame);
+			}
+			/**
+			 * 为临时证物指正的做收尾工作.
+			 */
+			public function cleanPushObjection():void
+			{
+				objectModeEnabled = false;
+				var hp:HPBar = Transport.Pro["HP"] as HPBar;
+				hp.visible = false;
+				hp.hidelight();
+				top_r_btn.visible = true;
+			}
+			/**
+			 * 产生临时证物指正的效果.
+			 * 脚本比较复杂.
+			 * @example
+			 * <listing version="3.0">
+			 * &lt;Script sign="DEAULT_OBJECT" &gt;
+			 *     &lt;......write something here......&gt;
+			 * &lt;/Script &gt;
+			 * &lt;upText point="j" text="那么请律师给我们以明示吧" append="true" /&gt;
+			 * &lt;Control pushObjection="" &gt;
+			 *     &lt;object link="yaliu_ri" &gt;
+			 *         &lt;Control cleanPushObjection="" &gt;
+			 *         &lt;Script search="continue_ss" &gt;
+			 *     &lt;/object &gt;
+			 * &lt;/Control &gt;
+			 * &lt;Script label="continue_ss" &gt;
+			 * &lt;......place script here......&gt;
+			 * </listing>
+			 * 
+			 * @param	value
+			 * @playerversion 0.6.7
+			 * @version 0.6.7
+			 */
+			public function pushObjection(value:String):void
+			{
+				objectModeEnabled = true;
+				pushObjectionModeEnabled = true;
+				var hp:HPBar = Transport.Pro["HP"] as HPBar;
+				hp.visible = true;
+				hp.showlight();
+				top_r_btn.visible = false;
+				if(value == "role"){
+					gotoPage(FrameInstance.ROLEFRAME);
+				}else {
+					gotoPage(FrameInstance.OBJECTFRAME);
+				}
+			}
+			public function showPanel(p:Place):void
+			{
+				gotoPage(FrameInstance.DETEFRAME);
+				detePage.init(p);
+				movePage.init(null);
+				if(p.content.talk != undefined)
+					talkPage.init(p.content.talk[0]);
+			}
+			/**@private */
+			public function set playButtonEnabled(value:Boolean):void
+			{
+				if (currentFrame != FrameInstance.INQUIREFRAME) {
+					playButton.enabled = value;
+				}else {
+					if (value == false) {
+						prevButton.enabled = false;
+						nextButton.enabled = false;
+					}else {
+						var s:Script = Transport.Pro["Script"] as Script;
+						var bl:Boolean =  Boolean(s.oriData != s.oriData.parent().upText[0]);
+						if (s.oriData.parent().@hide != undefined) {
+							bl = true;
+						}
+						prevButton.enabled = bl;
+						nextButton.enabled = true;
+					}
+				}
+				dispatchEvent(new BasisEvent(Assets.SYNC_ARROW,true, false, value));
+			}
+			/**@private */
+			public function get playButtonEnabled():Boolean
+			{
+				if (currentFrame != FrameInstance.INQUIREFRAME) {
+					return playButton.enabled;
+				}
+				return prevButton.enabled;
+			}
+			/**@private */
+			public function set objectModeEnabled(value:Boolean):void
+			{
+				_objectmode = value;
+				if (_objectmode == true) {
+					top_m_btn.visible = true;
+					top_r_btn.visible =  false;
+					bar_up_2_1.visible = false;
+					bar_up_2_2.visible = true;
+					bar_down_2_1.visible = false;
+					bar_down_2_2.visible = true;
+				}else {
+					top_m_btn.visible  = false;
+					top_r_btn.visible  = true;
+					bar_up_2_1.visible = true;
+					bar_up_2_2.visible = false;
+					bar_down_2_1.visible = true;
+					bar_down_2_2.visible = false;
+				}
+			}
+			/**@private */
+			public function get objectModeEnabled():Boolean
+			{
+				return _objectmode;
+			}
+			/**
+			 * 跳转到指定页面.
+			 * <p>由于自动辅助.这个的需要已经减少许多了.页面列表:</p>
+			 * <ul>
+			 * <li><b>PLAYFRAME:</b>基本剧情控制的页面.中间有一个大大的按钮.右上有一个法庭记录的按钮</li>
+			 * <li><b>OBJECTFRAME:</b>证物存放的页面.</li>
+			 * <li><b>ROLEFRAME:</b>人物存放的页面.</li>
+			 * <li><b>CHOOSEFRAME:</b>选择控制的页面.中间有一列按钮</li>
+			 * <li><b>INQUIREFRAME:</b>询问控制页面.</li>
+			 * <li><b>NULLFRAME:</b>空白页面.什么也没有</li>
+			 * <li><b>FILEFRAME:</b>剧本选择页面.有一个列表</li>
+			 * <li><b>SAVERFRAME:</b>存档控制页面.</li>
+			 * </ul>
+			 * @param	page 指定页面
+			 */
+			public function gotoPage(page:String):void
+			{
+				if (page == currentFrame) {
+					return;
+				}
+				if ((currentFrame == FrameInstance.OBJECTFRAME || currentFrame == FrameInstance.ROLEFRAME)
+					&& (page == FrameInstance.OBJECTFRAME || page == FrameInstance.ROLEFRAME)) {
+				}else {
+					oldFrame = currentFrame;
+				}
+				currentFrame = page;
+				pageView.selectedChild.dispatchEvent(new FlexEvent(FlexEvent.HIDE));
+				TweenLite.delayedCall(0.5, continueGotoPage);
+			}
+			private function continueGotoPage():void
+			{
+				pageView.selectedChild = pageList[currentFrame][0];
+				coverView.selectedChild = pageList[currentFrame][1];
+			}
+			/**@private */
+			public function regPlugin(p:IPlugin):void
+			{
+				if (p.pluginType == PluginsType.CONTROL_DETAIL_TYPE) {
+					p.content.y = 20;
+					pluginList[p.type] = p;
+				}
+				pageView.addChild(p as Container);
+				pageView.selectedChild = pageList[currentFrame][0];
+			}
+			/**@private */
+			public function activePlugin(p:IPlugin):void
+			{
+				if (p == null) {
+					gotoPage(FrameInstance.PLAYFRAME);
+				}else {
+					pageView.selectedChild.dispatchEvent(new FlexEvent(FlexEvent.HIDE));
+					TweenLite.delayedCall(0.5,continueActivePlugin,[p]);
+				}
+			}
+			private function continueActivePlugin(p:IPlugin):void
+			{
+				oldFrame = currentFrame;
+				currentFrame = FrameInstance.PLUGINFRAME;
+				pageView.selectedChild = p as Container;
+				coverView.selectedChild = ((p.pluginType == PluginsType.CONTROL_DETAIL_TYPE)?blankCover:nullCover);
+			}
+			/**@private */
+			public function unregPlugin(p:IPlugin):void
+			{
+				pageView.removeChild(p as Container);
+				if (p.pluginType == PluginsType.CONTROL_DETAIL_TYPE) {
+					pluginList[p.type] = null;
+				}
+			}
+			/**@private */
+			public function openSaver(mode:String,first:Boolean = false):void
+			{
+				if((!first)&&currentFrame != FrameInstance.PLAYFRAME){
+					return;
+				}
+				gotoPage(FrameInstance.SAVERFRAME);
+				(mode == "save")? saver.title.text = "Save":saver.title.text = "Read";
+				(first)? saver.restart.label = "重新开始":saver.restart.label = "返回开始";
+				if (mode == "read") {
+					SAVEManager.read(saver.saveIndex);
+				}
+			}
+			/**@private */
+			public function updateSaver(obj:Object = null):void
+			{
+				if (obj == null) {
+					saver.time.text = "";
+				}else {
+					saver.loader.loadBytes(obj[0]);
+					saver.time.text = obj[1];
+				}
+			}
+			private function saver_close(e:Event):void 
+			{
+				gotoPage(oldFrame);
+			}
+			private function noticePaneCell(event:Event):void
+			{
+				event.stopImmediatePropagation();
+				var cell:PaneCell = event.target as PaneCell;
+				var pane:GridPane = (cell.type=="ObjectItem")?gpane:rpane;
+				dispatchEvent(new Event(Script.SCRIPT_PAUSE, true));
+				playButtonEnabled = false;
+				Transport.DisplayRoot.Over.addChild(cell);
+				var esnd:Sound = new Evidence_();
+				esnd.play();
+				cell.expand();
+				cell.x = 130+256;
+				cell.y = 85;
+				cell.background.visible = true;
+				var tm:TimelineLite = new TimelineLite( { onComplete:continueNotice ,onCompleteParams:[pane,cell]} );
+				tm.insert(new TweenLite(cell, 1, { x:130 } ),tm.duration);
+				tm.insert(new TweenLite(cell, 2, { x:130 } ),tm.duration);
+				tm.insert(new TweenLite(cell, 1, { x:130 - 256 } ),tm.duration);
+				tm.gotoAndPlay(0);
+			}
+			private function continueNotice(pane:GridPane,cell:PaneCell):void
+			{
+				cell.unexpand();
+				pane.addCell(cell);
+				cell.background.visible = false;
+				dispatchEvent(new Event(Script.SCRIPT_START, true));
+			}
+			/**
+			 * 选择设定
+			 * @example 
+			 * <listing version="3.0">
+			 * &lt;Control chooseSet="" &gt;
+			 *     &lt;content label="按钮1" &gt;
+			 *         &lt;......place script here......&gt;
+			 *     &lt;/content &gt;
+			 *     &lt;content label="按钮2" &gt;
+			 *         &lt;......place script here......&gt;
+			 *     &lt;/content &gt;
+			 * &lt;/Control &gt;
+			 * </listing>
+			 * @param	value
+			 * @param	blank
+			 */
+			public function chooseSet(value:XML,blank:String):void
+			{
+				oldFrame = currentFrame;
+				currentFrame = FrameInstance.CHOOSEFRAME;
+				choosePage.init(value);
+				activePlugin(choosePage);
+			}
+			private function sync_pane_event(e:BasisEvent):void 
+			{
+				if (gpane.expandMode != e.data) {
+					(e.data == true) ? gpane.expand(0, false,false):gpane.unexpand(false,false);
+				}
+				if (rpane.expandMode != e.data) {
+					(e.data == true) ? rpane.expand(0, false,false):rpane.unexpand(false,false);
+				}
+			}
+			private function top_r_btn_click():void
+			{
+				attachNewSound(qhzw);
+				if (top_r_btn.label == "人物记录") {
+					gotoPage(FrameInstance.ROLEFRAME);
+					top_r_btn.label = "法庭记录";
+				}else {
+					gotoPage(FrameInstance.OBJECTFRAME);
+					top_r_btn.label = "人物记录";
+				}
+			}
+			private function object_cancel_click():void 
+			{
+				attachNewSound(zwqx);
+				var pane:GridPane = (currentFrame == FrameInstance.OBJECTFRAME)?gpane:rpane;
+				if (pane.expandMode == true) {
+					pane.unexpand(true);
+					detail_btn.visible = false;
+				}else {
+					if (pushObjectionModeEnabled) {
+						return;
+					}
+					top_r_btn.label = '人物记录';
+					gotoPage(oldFrame);
+					/*if (Transport.Pro["Script"].environment == "询问") {
+						Transport.Pro["HP"].hidelight();
+						gotoPage(FrameInstance.INQUIREFRAME);
+					}else {
+						//gotoPage(FrameInstance.PLAYFRAME);
+						gotoPage(oldFrame);
+					}*/
+				}
+			}
+			private function talk_cancel_click():void
+			{
+				gotoPage(FrameInstance.DETEFRAME);
+			}
+		private function correct_click():void
+		{
+			var n:String;
+			if (currentFrame == FrameInstance.OBJECTFRAME) {
+				n = gpane.currentCell.linkName;
+			}else if (currentFrame == FrameInstance.ROLEFRAME) {
+				n = rpane.currentCell.linkName;
+			}
+			if (pushObjectionModeEnabled) {
+				object_cancel_click();
+				top_r_btn.label = "人物记录";
+				gotoPage(FrameInstance.PLAYFRAME);
+				pushObjectionModeEnabled = false;
+			}
+			Transport.getEvent(EventListBridge.CORRECTBUTTON_REQUEST)(n);
+		}
+		private function pane_expand_open(e:Event):void 
+		{
+			var pane:GridPane = e.currentTarget as GridPane;
+			//this[pane.name+"_title"].parent.visible = false;
+			pane.title.parent.parent.visible = false;
+			this[pane.name+"_right"].height = 70;
+			this[pane.name+"_right"].y = 70;
+			this[pane.name+"_left"].height = 70;
+			this[pane.name+"_left"].y = 70;
+			pane.bar_check();
+		}
+		private function pane_expand_close(e:Event):void
+		{
+			var pane:GridPane = e.currentTarget as GridPane;
+			this[pane.name+"_right"].height = 91;
+			this[pane.name+"_right"].y = 60;
+			this[pane.name+"_left"].height = 91;
+			this[pane.name+"_left"].y = 60;
+			pane.bar_check();
+			TweenLite.delayedCall(1.5, Assets.setVis, [pane.title.parent.parent, true]);
+		}
+		private function pane_reg_detail(e:Event):void
+		{
+			var pane:GridPane = e.currentTarget as GridPane;
+			var cell:PaneCell = pane.currentCell;
+			detail_btn.visible = cell.hasDetail;
+		}
+			private function detail_click():void
+			{
+				attachNewSound(detail_);
+				var p:GridPane = (currentFrame == FrameInstance.OBJECTFRAME) ? gpane:rpane;
+				var c:PaneCell = p.currentCell;
+				coverView.selectedChild = detailCover;
+				oldFrame = currentFrame;
+				currentFrame = FrameInstance.PLUGINFRAME;
+				pageView.selectedChild = pluginList[c.detailType];
+				(pluginList[c.detailType] as IPlugin).init(c.getDetailContent());
+			}
+			private function smcan_click():void
+			{
+				attachNewSound(zwqx);
+				(pageView.selectedChild as IPlugin).close();
+				gotoPage(oldFrame);
+			}
+
+		private function sidebar_check(e:Event):void 
+		{
+			var pane:GridPane = e.currentTarget as GridPane;
+			var lArr:Button = this[pane.name + "_left"];
+			var rArr:Button = this[pane.name + "_right"];
+			if(pane.expandMode == false){
+				if (pane.length == 1) {
+					rArr.enabled = false;
+					lArr.enabled = false;
+				}else {
+					rArr.enabled = Boolean(pane.currentIndex + 1 < pane.length);
+					lArr.enabled = Boolean(pane.currentIndex > 0);
+				}
+			}else if (pane.expandMode == true) {
+				if (pane.cellLength <= 1) {
+					rArr.enabled = false;
+					lArr.enabled = false;
+				}else {
+					rArr.enabled = Boolean(pane.currentCellIndex + 1 < pane.cellLength);
+					lArr.enabled = Boolean(pane.currentCellIndex > 0);
+				}
+			}
+		}
+			public function global_key_event(e:KeyboardEvent):void 
+			{
+				switch(currentFrame) {
+					case FrameInstance.PLAYFRAME:
+						switch(e.keyCode) {
+							case GlobalKeyMap.RButton:
+								gotoPage(FrameInstance.OBJECTFRAME);
+								attachNewSound(qhzw);
+							break;
+							case GlobalKeyMap.ConfirmButton:
+								if(playButton.enabled){
+									Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.PLAYBUTTON_CLICK);
+									attachNewSound(continue_);
+								}
+							break;
+						}
+					break;
+					case FrameInstance.ROLEFRAME:
+						switch(e.keyCode) {
+							case GlobalKeyMap.RButton:
+								top_r_btn_click();
+							break;
+							case GlobalKeyMap.CancelButton:
+								object_cancel_click();
+								top_r_btn.label='法庭记录';
+							break;
+							case GlobalKeyMap.ConfirmButton:
+								if (!rpane.expandMode) rpane.expand((GlobalKeyMap.FocusButton as PaneCell).index, true);
+								else detail_click();
+							break;
+							case GlobalKeyMap.SelectButton:
+								correct_click();
+							break;
+							case GlobalKeyMap.LeftArrow:
+								(rpane.expandMode)? rpane.prevScene(): rpane.deltaMove(-1);
+							break;
+							case GlobalKeyMap.RightArrow:
+								(rpane.expandMode)? rpane.nextScene(): rpane.deltaMove(1);
+							break;
+							case GlobalKeyMap.UpArrow:
+								if(!rpane.expandMode) rpane.deltaMove(0);
+							break;
+							case GlobalKeyMap.DownArrow:
+								if(!rpane.expandMode) rpane.deltaMove(0);
+							break;
+						}
+					break;
+					case FrameInstance.OBJECTFRAME:
+						var pane:GridPane;
+						switch(e.keyCode) {
+							case GlobalKeyMap.RButton:
+								top_r_btn_click();
+							break;
+							case GlobalKeyMap.CancelButton:
+								object_cancel_click();
+							break;
+							case GlobalKeyMap.ConfirmButton:
+								if (!gpane.expandMode) gpane.expand((GlobalKeyMap.FocusButton as PaneCell).index, true);
+								else detail_click();
+							break;
+							case GlobalKeyMap.SelectButton:
+								correct_click();
+							break;
+							case GlobalKeyMap.LeftArrow:
+								(gpane.expandMode)? gpane.prevScene(): gpane.deltaMove(-1);
+							break;
+							case GlobalKeyMap.RightArrow:
+								(gpane.expandMode)? gpane.nextScene(): gpane.deltaMove(1);
+							break;
+							case GlobalKeyMap.UpArrow:
+								if(!gpane.expandMode) gpane.deltaMove(0);
+							break;
+							case GlobalKeyMap.DownArrow:
+								if(!gpane.expandMode) gpane.deltaMove(0);
+							break;
+						}
+					break;
+					case FrameInstance.INQUIREFRAME:
+						switch(e.keyCode) {
+							case GlobalKeyMap.ConfirmButton:
+								if(playButton.enabled)
+									Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.PLAYBUTTON_CLICK);
+							break;
+							case GlobalKeyMap.CancelButton:
+								if(prevButton.enabled)
+									Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.PREVBUTTON_CLICK);
+							break;
+							case GlobalKeyMap.RButton:
+								gotoPage(FrameInstance.OBJECTFRAME);Transport.Pro['HP'].showlight();
+							break;
+							case GlobalKeyMap.LButton:
+								Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.DETERBUTTON_CLICK);
+							break;
+							case GlobalKeyMap.RightArrow:
+								Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.PLAYBUTTON_CLICK);
+							break;
+							case GlobalKeyMap.LeftArrow:
+								if(prevButton.enabled)
+									Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.PREVBUTTON_CLICK);
+							break;
+						}
+					break;
+					case FrameInstance.PLUGINFRAME:
+						if (coverView.selectedChild == detailCover) {
+							if (e.keyCode == GlobalKeyMap.CancelButton) {
+								Assets.buttonDispatch(smcan_btn);
+							}
+						}
+					break;
+				}
+			}
+			private function attachNewSound(c:Class):void
+			{
+				var ns:Sound = new c();
+				ns.play();
+			}
+			/**@private */
+			public function saveData(link:String):void { };
+			/**@private */
+			public function loadData(link:String):void { };
+		]]>
+	</mx:Script>
+	<mx:Style source="../control_src/Style.css"/>
+	<!---@private-->
+	<mx:Image id="bg" source="@Embed('../lib/background.png')" />
+	<mx:Image source="@Embed('../lib/line.png')" mouseEnabled="false" />
+	
+	<!---@private-->
+	<mx:ViewStack id="pageView" width="256" height="192" creationPolicy="all"  verticalScrollPolicy="off">
+		<!---@private-->
+		<mx:Canvas id="blankPage"/>
+		<!---@private-->
+		<mx:Canvas id="playPage" show="playPage_child.rotationX=90;TweenLite.to(playPage_child,0.5,{rotationX:0})" 
+				hide="TweenLite.to(playPage_child,0.5,{rotationX:-90})">
+			<!---@private-->
+			<mx:Canvas id="playPage_child" x="128" y="96" clipContent="false">
+				<!---@private-->
+				<mx:Button id="playButton" x="-112" y="-60" styleName="playButtonStyle"
+						click="Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.PLAYBUTTON_CLICK);attachNewSound(continue_);"
+						icon="@Embed(source='../lib/skins.swf',symbol='skins.p_icon')" />
+			</mx:Canvas>
+		</mx:Canvas>
+		<!---@private-->
+		<mx:Canvas id="objectPage" verticalScrollPolicy="off" horizontalScrollPolicy="off"
+					show="	objectPage_child.rotationX=90;
+							TweenLite.to(objectPage_child,0.5,{rotationX:0});
+							TweenLite.to(gpane_left,0.5,{x:14.5});
+							TweenLite.to(gpane_right,0.5,{x:241});
+							TweenLite.to(gpane_title_ui,0.5,{alpha:1});
+							gpane.show(oldFrame);" 
+					hide="	TweenLite.to(objectPage_child,0.5,{rotationX:-90});
+							TweenLite.to(gpane_left,0.5,{x:-5.5});
+							TweenLite.to(gpane_right,0.5,{x:261});
+							TweenLite.to(gpane_title_ui,0.5,{alpha:0});">
+			<!---@private-->
+			<mx:UIComponent id="gpane_title_ui" x="23" y="34" alpha="0" />
+			<!---@private-->
+			<mx:Canvas id="objectPage_child" clipContent="false" x="128" y="96"/>
+			<!---@private-->
+			<mx:Button id="gpane_left" x="-5.5" y="60" rotationY="180" width="12" height="91" click="gpane.prevScene();" styleName="arrowButtonStyle"/>
+			<!---@private-->
+			<mx:Button id="gpane_right" x="261" y="60" width="12" height="91" click="gpane.nextScene();" styleName="arrowButtonStyle" />
+		</mx:Canvas>
+		<!---@private-->
+		<mx:Canvas id="rolePage" verticalScrollPolicy="off" horizontalScrollPolicy="off"
+					show="	rolePage_child.rotationX=90;
+							TweenLite.to(rolePage_child,0.5,{rotationX:0});
+							TweenLite.to(rpane_left,0.5,{x:14.5});
+							TweenLite.to(rpane_right,0.5,{x:241});
+							TweenLite.to(rpane_title_ui,0.5,{alpha:1});
+							rpane.show(oldFrame);" 
+					hide="	TweenLite.to(rolePage_child,0.5,{rotationX:-90});
+							TweenLite.to(rpane_left,0.5,{x:-5.5});
+							TweenLite.to(rpane_right,0.5,{x:261});
+							TweenLite.to(rpane_title_ui,0.5,{alpha:0});">
+			<!---@private-->
+			<mx:UIComponent id="rpane_title_ui" x="23" y="34" alpha="0" />
+			<!---@private-->
+			<mx:Canvas id="rolePage_child" x="128" y="96"/>
+			<!---@private-->
+			<mx:Button id="rpane_left" x="-5.5" y="60" rotationY="180" width="12" height="91" click="rpane.prevScene();" styleName="arrowButtonStyle" />
+			<!---@private-->
+			<mx:Button id="rpane_right" x="261" y="60" width="12" height="91" click="rpane.nextScene();" styleName="arrowButtonStyle" />
+		</mx:Canvas>
+		<!---@private-->
+		<frames:ChooseFrame id="choosePage" width="256" height="192" verticalScrollPolicy="off" />
+		<!---@private-->
+		<frames:PhotoFrame id="photoPage" horizontalScrollPolicy="off" verticalScrollPolicy="off" show="TweenLite.to(photoPage,0.5,{alpha:1});" hide="TweenLite.to(photoPage,0.5,{alpha:0});"/>
+		<!---@private-->
+		<frames:ReportFrame id="reportPage" alpha="0" show="TweenLite.to(reportPage,0.5,{alpha:1});" hide="TweenLite.to(reportPage,0.5,{alpha:0});" />
+		<!---@private-->
+		<mx:Canvas id="inquirePage" alpha="0"
+					hide="TweenLite.to(prevButton,0.5,{x:102});TweenLite.to(nextButton,0.5,{x:154});TweenLite.to(inquirePage,0.5,{alpha:0});"
+					show="TweenLite.to(prevButton,0.5,{x:122});TweenLite.to(nextButton,0.5,{x:134});TweenLite.to(inquirePage,0.5,{alpha:1});">
+			<!---@private-->
+			<mx:Button id="nextButton" x="154" y="65" width="106" height="80" styleName="playButtonStyle"
+					icon="@Embed(source='../lib/skins.swf',symbol='skins.p_icon')" 
+					click="Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.PLAYBUTTON_CLICK);attachNewSound(continue_);"/>
+			<!---@private-->
+			<mx:Button id="prevButton" x="102" y="65" rotationY="180" width="106" height="80" styleName="playButtonStyle"
+					icon="@Embed(source='../lib/skins.swf',symbol='skins.p_icon')" 
+					click="Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.PREVBUTTON_CLICK);attachNewSound(continue_);" />
+		</mx:Canvas>
+		<frames:DeteFrame id="detePage"/>
+		<frames:TalkFrame id="talkPage"/>
+		<frames:MoveFrame id="movePage"/>
+		<!---@private-->
+		<mx:Canvas id="filePage" alpha="0" show="TweenLite.to(filePage,0.5,{alpha:1});" hide="TweenLite.to(filePage,0.5,{alpha:0});">
+			<cnt:FileListCOM width="256" height="192"/>
+		</mx:Canvas>
+		<!---@private-->
+		<cnt:SaverCOM id="saver" alpha="0" show="TweenLite.to(saver,0.5,{alpha:1});" hide="TweenLite.to(saver,0.5,{alpha:0});"/>
+	</mx:ViewStack>
+	
+	<!---@private-->
+	<mx:ViewStack id="coverView" creationPolicy="all">
+		<!---@private-->
+		<mx:Canvas id="blankCover">
+			<mx:Image source="@Embed(source='../lib/skins.swf',symbol='_bar.up_0')"/>
+			<mx:Image y="172" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_0')"/>
+		</mx:Canvas>
+		<!---@private-->
+		<mx:Canvas id="playCover">
+			<mx:Image source="@Embed(source='../lib/skins.swf',symbol='_bar.up_1')"/>
+			<mx:Image y="172" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_0')"/>
+			<mx:Button x="178" label="法庭记录" styleName="buttonLabelStyle topRightButtonStyle"	
+				click="gotoPage(FrameInstance.OBJECTFRAME);attachNewSound(qhzw);"/>
+		</mx:Canvas>
+		<mx:Canvas id="talkCover" verticalScrollPolicy="off">
+			<mx:Image source="@Embed(source='../lib/skins.swf',symbol='_bar.up_1')"/>
+			<mx:Image y="160" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_2_1')"/>
+			<mx:Button x="178" label="法庭记录" styleName="buttonLabelStyle topRightButtonStyle"	
+				click="gotoPage(FrameInstance.OBJECTFRAME);attachNewSound(qhzw);"/>
+			<mx:Button y="162.5" label="取消" styleName="buttonLabelStyle downLeftButtonStyle" click="talk_cancel_click();"/>
+		</mx:Canvas>
+		<!---@private-->
+		<mx:Canvas id="objectCover" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+			<!---@private-->
+			<mx:Image id="bar_up_2_1" source="@Embed(source='../lib/skins.swf',symbol='_bar.up_2_1')"/>
+			<!---@private-->
+			<mx:Image id="bar_up_2_2" visible="false" source="@Embed(source='../lib/skins.swf',symbol='_bar.up_2_2')"/>
+			<!---@private-->
+			<mx:Image id="bar_down_2_1" y="160" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_2_1')"/>
+			<!---@private-->
+			<mx:Image id="bar_down_2_2" visible="false" y="160" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_2_2')"/>
+			<!---@private-->
+			<mx:Button id="top_m_btn" x="89" label="指证" styleName="buttonLabelStyle topMiddleButtonStyle" 
+					click="correct_click()"/>
+			<!---@private-->
+			<mx:Button id="top_r_btn" label="人物记录" styleName="buttonLabelStyle topRightButtonStyle" x="178"	click="top_r_btn_click()"/>
+			<mx:Button y="162.5" label="取消" styleName="buttonLabelStyle downLeftButtonStyle" click="object_cancel_click();"/>
+			<!---@private-->
+			<mx:Button id="detail_btn" visible="false" x="178" y="162.5" label="详细" 
+					styleName="buttonLabelStyle downRightButtonStyle" click="detail_click()"/>
+		</mx:Canvas>
+		<!---@private-->
+		<mx:Canvas id="detailCover">
+			<mx:Image source="@Embed(source='../lib/skins.swf',symbol='_bar.up_0')"/>
+			<mx:Image y="166" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_3')"/>
+			<!---@private-->
+			<mx:Button id="smcan_btn" y="171" width="78" height="20.5" label="返回" styleName="buttonLabelStyle downLeftSmallButtonStyle" click="smcan_click();"/>
+		</mx:Canvas>
+		<!---@private-->
+		<mx:Canvas id="inquireCover">
+			<mx:Image source="@Embed(source='../lib/skins.swf',symbol='_bar.up_3')"/>
+			<mx:Image y="172" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_0')"/>
+			<mx:Button label="威慑" styleName="buttonLabelStyle topLeftButtonStyle" click="Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.DETERBUTTON_CLICK);"  />
+			<mx:Button x="178" label="出示" styleName="buttonLabelStyle topRightButtonStyle" 
+						click="gotoPage(FrameInstance.OBJECTFRAME);Transport.Pro['HP'].showlight();attachNewSound(qhzw);"  />
+		</mx:Canvas>
+		<!---@private-->
+		<mx:Canvas id="nullCover"/>
+	</mx:ViewStack>
+</mx:Canvas>

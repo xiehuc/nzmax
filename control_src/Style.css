@@ -1,0 +1,78 @@
+﻿.buttonLabelStyle {
+	fontFamily:微软雅黑;
+	fontSize:12;
+	color:#ffffff;
+	textRollOverColor:#ffffff;
+	textSelectedColor:#ffffff;
+}
+.reportLabelCSS {
+	fontFamily:宋体;
+	fontSize:12;
+	color:#ffffff;
+}
+.talkButtonStyle{
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.cb_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.cb_over');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.cb_down');
+	fontFamily:微软雅黑;
+	fontSize:13;
+	color:#6c3c34;
+	textRollOverColor:#6c3c34;
+	textSelectedColor:#6c3c34;
+}
+.defaultButtonStyle{
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.p_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.p_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.p_down');
+	disabledSkin:Embed(source='../lib/skins.swf',symbol='skins.p_disabled');
+	fontFamily:微软雅黑;
+	fontSize:11;
+	color:#ffffff;
+	textRollOverColor:#ffffff;
+	textSelectedColor:#ffffff;
+}
+.playButtonStyle{
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.p_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.p_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.p_down');
+	disabledSkin:Embed(source='../lib/skins.swf',symbol='skins.p_up'); 
+	disabledIcon:Embed(source='../lib/blank.png');
+}
+.arrowButtonStyle{
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.ra_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.ra_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.ra_down');
+	icon:Embed(source='../lib/skins.swf',symbol='skins.ra_icon');
+	disabledSkin:Embed(source='../lib/skins.swf',symbol='skins.ra_up');
+	disabledIcon:Embed(source='../lib/blank.png');
+}
+.topLeftButtonStyle{
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.l_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.l_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.l_down');
+}
+.topRightButtonStyle{
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.r_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.r_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.r_down');
+}
+.topMiddleButtonStyle{
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.correct_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.correct_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.correct_down');
+}
+.downLeftButtonStyle{
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.can_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.can_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.can_down');
+}
+.downRightButtonStyle{
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.detail_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.detail_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.detail_down');
+}
+.downLeftSmallButtonStyle{
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.smcan_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.smcan_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.smcan_down');
+}

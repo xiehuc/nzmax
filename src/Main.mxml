@@ -1,0 +1,1150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--- 
+   最主要的类.
+   虽然在结构上Main.无疑是最重要的.但是在剧本里面.Main和其他的区别不大.
+   <p>而且关键是.Main里面的东西比较杂</p>
+	 <table class="innertable">
+	 <tr><th>标签</th><td>值</td></tr>
+	 <tr><th>Link:</th><td>Main</td></tr>
+	 <tr><th>可创建:</th><td>否</td></tr>
+	 <tr><th>可存档:</th><td>是</td></tr>
+	 </table>
+-->
+<mx:Application xmlns:com="com.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="256" height="384" xmlns:local="*"
+						preinitialize="preinit()" implements="com.nz.ISaveObject" applicationComplete="main_start()" 
+						layout="absolute" horizontalScrollPolicy="off" verticalScrollPolicy="off" backgroundColor="0x000000">
+	<!---@private -->
+	<mx:Canvas id="all_ca">
+		<!---@private -->
+		<mx:Canvas id="visual_ca">
+			<!---@private -->
+			<mx:Canvas id="bglayer">
+				<!---@private -->
+				<com:Background id="bg" overDemoMode="false" />
+			</mx:Canvas>
+			<!---@private -->
+			<mx:Canvas id="display"/>
+			<!---@private -->
+			<mx:Canvas id="bgexpand"/>
+			<!---@private -->
+			<com:Background id="over_demo" visible="false" blankBackEnable="true" overDemoMode="true" />
+		</mx:Canvas>
+		<!---@private -->
+		<com:HPBar id="hpbar" visible="false" x="166.5" y="8.5"/>
+		<!---@private -->
+		<mx:SWFLoader y="192" id="control_loader" init="control_loader_init()" />
+		<!--@private -->
+		<local:Control id="control" y="192"/>
+		<!---@private -->
+		<mx:Canvas id="pluginlayer" y="192" />
+		<!---@private -->
+		<com:TextPane id="upText" visible="false" y="144" />
+		<!---@private -->
+		<mx:UIComponent id="over"/>
+	</mx:Canvas>
+	<mx:Script>
+		<![CDATA[
+			import codex.assets.Position;
+			import codex.assets.State;
+			import codex.events.BasisEvent;
+			import codex.media.GUILoader;
+			import com.Assets;
+			import com.Effect;
+			import com.EffectTarget;
+			import com.FileManage;
+			import com.FuncMan;
+			import com.greensock.TweenLite;
+			import com.HPBar;
+			import com.Layout;
+			import com.LoaderOptimizer;
+			import com.LoaderProgress;
+			import com.Map;
+			import com.Music;
+			import com.nz.EventListBridge;
+			import com.nz.FrameInstance;
+			import com.nz.GlobalKeyMap;
+			import com.nz.IControl;
+			import com.nz.ICreatable;
+			import com.nz.ILoaderOptimized;
+			import com.nz.IPlugin;
+			import com.nz.ISaveObject;
+			import com.nz.PluginsType;
+			import com.nz.SaveType;
+			import com.nz.Transport;
+			import com.Role;
+			import com.RoleX;
+			import com.SAVEManager;
+			import com.Script;
+			import com.ScriptEvent;
+			import com.TextPane;
+			import flash.display.Bitmap;
+			import flash.display.BitmapData;
+			import flash.display.DisplayObject;
+			import flash.display.MovieClip;
+			import flash.events.ErrorEvent;
+			import flash.events.Event;
+			import flash.events.KeyboardEvent;
+			import flash.events.MouseEvent;
+			import flash.system.LoaderContext;
+			import flash.system.Security;
+			import flash.system.SecurityDomain;
+			import lib.*;
+			import lib.type.*;
+			import mx.containers.Canvas;
+			import mx.controls.Alert;
+			import mx.controls.SWFLoader;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.managers.SystemManager;
+			import org.nochump.zip.PNGEncoder;
+			
+			private const field:String = "Main";
+			private var func:FuncMan;
+			private var mu:Music;
+			private var map:Map;
+			private var ef:Effect;
+			private var config:XML;
+//			private var control:IControl;
+			private var cuScript:Script;//当前的Script
+			private var cuRole:Role = new Role();
+			private var state:Object;//状态对象
+			private var pro:Object;//progress
+			private var prostate:Object;//<court></court>之类
+			private var mode:Object;//指示模式:court:法庭
+			private var zylogo:testing;
+			private var lp:LoaderProgress;
+			
+			private var pluginLink:String = "";
+			private var pluginLoader:SWFLoader;
+			private var tempScript:Script;
+			private function preinit():void
+			{
+				Transport.eventList = new Object();
+				Transport.eventList[EventListBridge.IO_ERROR_EVENT] = global_ioerror_event;
+				Transport.eventList[EventListBridge.LOAD_SCRIPT_EVENT] = load_script;
+				Transport.eventList[EventListBridge.CONTROLBUTTON_EVENT] = deal_button_event_request;
+				Transport.eventList[EventListBridge.PUSH_ERROR] = pushError;
+				Transport.eventList[EventListBridge.CORRECTBUTTON_REQUEST] = deal_correctbutton_request;
+			}
+			private function main_start():void
+			{
+				func = new FuncMan();
+				mode = new Object();
+				mode.court = false;
+				tempScript = new Script();
+				tempScript.addEventListener(ScriptEvent.PROGRESS, s_progress);
+				tempScript.addEventListener(ScriptEvent.PROGRESS_END, s_progress_end);
+				tempScript.addEventListener(Script.SCRIPT_STOP, temp_script_stop);
+				
+				Transport.DisplayRoot["Background"] = bglayer;
+				Transport.DisplayRoot["RoleLayer"] = display;
+				Transport.DisplayRoot["BgExpand"] = bgexpand;
+				Transport.DisplayRoot["Over"] = over;
+				Transport.CreateTypeList["Role"] = Role;
+				Transport.CreateTypeList["Layout"] = Layout;
+				Transport.CreateTypeList["Effect"] = EffectTarget;
+				Transport.CreateTypeList["RoleX"] = RoleX;
+				mu = new Music();
+				map = new Map();
+				map.addEventListener(Script.SCRIPT_PAUSE, deal_event_request);
+				ef = new Effect();
+				ef.addEventListener(Script.SCRIPT_START, deal_event_request);
+				
+				upText.point = this.pointRole;
+				upText.addEventListener(TextPane.START_TRACE, deal_event_request);
+				upText.addEventListener(TextPane.END_TRACE, deal_event_request);
+				upText.addEventListener(TextPane.APPEND, deal_event_request);
+				upText.addEventListener(TextPane.KEYWORD, deal_basisevent_request);
+				
+				state = new Object();
+				
+				pro = new Object();
+				pro["Bg"] = bg;
+				pro["Over"] = over_demo;
+				pro["Music"] = mu;
+				pro["Main"] = this;
+				pro["upText"] = upText;
+				pro["Text"] = upText;
+				pro["HP"] = hpbar;
+				pro["Effect"] = ef;
+				pro["Map"] = map;
+				//下面是Effect使用
+				pro["background"] = bglayer;
+				pro["role"] = display;
+				pro["visual"] = visual_ca;
+				pro["all"] = all_ca;
+				Transport.Pro = pro;
+				
+				pro["Control"] = control;
+				control.gotoPage(FrameInstance.FILEFRAME);
+				this.stage.addEventListener(KeyboardEvent.KEY_UP, control.global_key_event);
+				
+				prostate = new Object();
+				
+				cuRole.group = "null";
+				
+				Transport.KeyMap = new Object();
+				Transport.KeyMap["Enter"] = 13;
+				
+				pluginLoader = new SWFLoader()
+				pluginLoader.visible = false;
+				addChildAt(pluginLoader, 0);
+				
+				lp = new LoaderProgress();
+				lp.addEventListener(LoaderProgress.PROGRESS_FINISH, close_progress);
+				LoaderOptimizer.init();
+				LoaderOptimizer.addEventListener(LoaderOptimizer.SHOW_PROGRESS, show_progress);
+				
+				addEventListener(Script.SCRIPT_START, deal_event_request);
+				addEventListener(Script.SCRIPT_PAUSE, deal_event_request);
+				addEventListener(Script.SCRIPT_INSERT, deal_basisevent_request);
+				addEventListener(Script.SCRIPT_INSERT_SIGN, deal_basisevent_request);
+				addEventListener(Assets.REMOVE_TARGET, deal_event_request);
+				this.stage.addEventListener(KeyboardEvent.KEY_UP, global_key_event_request);
+				
+				addEventListener(Role.START_TALK, deal_event_request);
+				addEventListener(Role.STOP_TALK, deal_event_request);
+				addEventListener(Role.INTERCEPT_END_TRACE, deal_event_request);
+				addEventListener(Role.UNINTERCEPT_END_TRACE, deal_event_request);
+				addEventListener(Role.ROLE_ACTIVE, deal_event_request);
+				addEventListener(Role.SHOW, deal_event_request);
+				addEventListener(Assets.SYNC_ARROW, deal_basisevent_request);
+				addEventListener(Assets.SAVE_EVENT, deal_basisevent_request);
+				addEventListener(SAVEManager.RETURNTOTITLE, deal_event_request);
+				addEventListener(SAVEManager.RESTART, save_read);
+				addEventListener(SAVEManager.INIT, save_read);
+				
+				addEventListener(HPBar.NOHP, deal_event_request);
+				addEventListener(HPBar.HIDE_LIGHT, deal_event_request);
+				
+				func.setFunc("create", { type:Script.ComplexParams, down:false } );
+				func.setFunc("remove", { type:Script.SingleParams } );
+				func.setFunc("removeType", { type:Script.SingleParams } );
+				func.setFunc("courtSet", {type:Script.ComplexParams,down:true,progress:false } );
+				func.setFunc("flyto", { type:Script.SingleParams} );
+				func.setFunc("task", { type:Script.SingleParams } );
+				func.setFunc("checklink", {down:false,progress:false, type:Script.SingleParams } );
+				func.setFunc("plugin", { type:Script.ComplexParams, progress:false } );
+				func.setFunc("pluginUnload", { type:Script.SingleParams } );
+				func.setFunc("xmlns", { type:Script.IgnoreProperties } );
+				
+				SAVEManager.ready();
+				SAVEManager.addEventListener(SAVEManager.READ_SUCCESS, save_read);
+				SAVEManager.addEventListener(SAVEManager.READ_FAILED, save_read);
+				SAVEManager.addEventListener(SAVEManager.PREPARE_DATA, save_read);
+				initLoad();
+			}
+			
+			private function close_progress(e:Event):void 
+			{
+				if(lp.isPopUp)
+					PopUpManager.removePopUp(lp);
+			}
+			
+			private function show_progress(e:BasisEvent):void 
+			{
+				if(!lp.isPopUp){
+					PopUpManager.addPopUp(lp, this, true);
+				}
+				lp.regLoader(e.data);
+			}
+			private function s_progress_end(e:ScriptEvent):void
+			{
+				if (prostate[e.name] != null) {
+					prostate[e.name](false);
+				}
+			}
+			private function s_progress(e:ScriptEvent):void 
+			{
+				var info:Object;
+				var downBoolean:Boolean = true;
+				var progressBoolean:Boolean = true;
+				var progressIndex:int = 0;
+				var cmd:String;
+				//错误检查
+				
+				if (e.value.length() == 0) {
+					if (prostate[e.name] != null) {
+						prostate[e.name](true);
+						cuScript.go("in");
+						return;
+					}else {
+						pushError("没有 " + e.name + "的link\n请仔细检查");
+					}
+				}
+				while (progressIndex < e.value.length()) {
+					cmd = e.value[progressIndex].name();
+					//trace("::" + e.name+"|"+cmd);
+					info = pro[e.name].func.getFunc(cmd);
+					if (info.type == undefined) {
+						pushError(e.name+" 没有 "+cmd+" 属性或方法\n   请仔细检查.");
+						return;
+					}
+					if (info.down == false) downBoolean = false;
+					if (info.progress == false) progressBoolean = false;
+					switch(info.type) {
+						case Script.SingleParams:
+							pro[e.name][cmd](e.value[progressIndex].toString());
+							progressIndex++;
+						break;
+						case Script.NoParams:
+							pro[e.name][cmd]();
+							progressIndex++;
+						break;
+						case Script.Properties:
+							pro[e.name][cmd] = e.value[progressIndex].toString();
+							progressIndex ++;
+						break;
+						case Script.ComplexParams:
+							pro[e.name][cmd](e.node, e.value[progressIndex].toString());
+							progressIndex++;
+						break;
+						case Script.BooleanProperties:
+							pro[e.name][cmd] = Assets.stringToBoolean(e.value[progressIndex].toString());
+							progressIndex++;
+						break;
+						case Script.IgnoreProperties:
+							progressIndex++;
+						break;
+					}
+				}
+				if (downBoolean) {
+					e.currentTarget.go("down");
+				}
+				if (progressBoolean) {
+					e.currentTarget.progress();
+				}else {
+					e.currentTarget.pause();
+				}
+			}
+			private function pushError(t:String):void
+			{
+				Alert.show(t, "Error");
+			}
+			/**
+			 * 镜头移动到所指定的角色.
+			 * 因为Script的限制.是每一句都只能有一个延时的成分.
+			 * 在upText里面已经有一个text延时成分了.
+			 * 所以造成了不能像point那样把flyto包进upText里.
+			 * @param	value 角色的link.
+			 */
+			public function flyto(value:String):void {
+				if (cuRole.linkName == value) {
+					pointRole(value);
+					return;
+				}
+				if (roleOnCourt(cuRole.linkName) && roleOnCourt(value)) {
+					cuScript.pause();
+					cuRole = pro[value];
+					Transport.CurrentRole = pro[value];
+					upText.show(false);
+					upText.name = cuRole.name;
+					TweenLite.to(display.parent, 1.5, { x: -pro[value].x , onComplete:script_start } );
+				}else {
+					pointRole(value);
+				}
+			}
+			/**
+			 * 移除某个plugin.
+			 * @param	link plugin的link.
+			 */
+			public function pluginUnload(link:String):void
+			{
+				var p:IPlugin = pro[link];
+				control.unregPlugin(p);
+				pro[link] = null;
+				SAVEManager.popPluginData(link);
+			}
+			/**
+			 * 加载某个plugin.
+			 * @param	path plugin所在路径.
+			 * @example
+			 * <listing version="3.0">
+			 *  &lt;Main plugin="pointpic_plugin" &gt;
+			 * 			plugins/pointpic.swf
+			 * &lt;/Main&gt;
+			 * </listing>
+			 */
+			public function plugin(path:XML,id:String):void
+			{
+				pluginLink = id;
+				var p:String = path.toString();
+				removeChildAt(0);
+				pluginLoader = new SWFLoader();
+				pluginLoader.visible = false;
+				addChildAt(pluginLoader, 0);
+				pluginLoader.addEventListener(Event.INIT, plugin_init);
+				//pluginLoader.source = (FileManage.getResolvePath(p).replace(File.applicationDirectory.nativePath + "\\", ""));
+				pluginLoader.source = FileManage.getResolvePath(p);
+				SAVEManager.pushPluginData(p, pluginLink);
+			}
+			private function plugin_init(e:Event):void
+			{
+				e.currentTarget.content.addEventListener(FlexEvent.APPLICATION_COMPLETE, plugin_complete);
+			}
+			private function plugin_complete(e:Object):void 
+			{
+				trace(e.currentTarget.application is IPlugin);
+				var plugin:IPlugin = e.currentTarget.application as IPlugin;
+				if (pluginLink != "") {
+					pro[pluginLink] = plugin;
+					pluginLink = "";
+				}
+				switch(plugin.pluginType) {
+					case PluginsType.CONTROL_DETAIL_TYPE:
+						control.regPlugin(plugin);
+					break;
+					case PluginsType.CONTROL_DISPLAY_TYPE:
+						control.regPlugin(plugin);
+					break;
+				}
+				cuScript.start();
+			}
+			/**
+			 * 方便的设置法庭所需要的基本成分.
+			 * 有许多动作.1.设置背景为:bg/法庭.png
+			 * 2.创建l,w,p,j,c,a.其中c不用输入信息.
+			 * 3.创建wf_layout,ab_layout,jb_layout,lf_layout,pf_layout并加载相应的图片.
+			 * 4.创建wi_layout,ai_layout,ji_layout,li_layout,pi_layout并加载相应的图片.
+			 * 
+			 * @param	data 人物列表
+			 * @param	blank
+			 * @example
+			 * <listing version="3.0">
+			 *	&lt;Main courtSet=""&gt;
+			 *		&lt;l name="成步堂" path="成步堂.swf"/&gt;
+			 *		&lt;w name="系锯" path="系锯.swf"/&gt;
+			 *		&lt;p name="亚内" path="亚内.swf"/&gt;
+			 *		&lt;j name="裁判长" path="裁判长.swf"/&gt;
+			 *		&lt;a name="真宵" path="真宵.swf"/&gt;
+			 *	&lt;/Main&gt;
+			 * </listing>
+			 * @example 设置为null.以取消之前courtSet的内容.
+			 * <listing version="3.0">
+			 *	&lt;Main courtSet="null"/&gt;
+			 * </listing>
+			 */
+			public function courtSet(data:XML,blank:String):void
+			{
+				if (blank == "null") {
+					bg.unload();
+					mode.court = false;
+					remove("l;w;p;j;a;c;wf_layout;ab_layout;jb_layout;lf_layout;pf_layout");
+					remove("wi_layout;ai_layout;ji_layout;li_layout;pi_layout");
+					TweenLite.delayedCall(0.5, script_start);
+					return;
+				}
+				bg.load("bg/法庭.png");
+				mode.court = true;
+				newRole("l", data.l.@name, data.l.@path,"lgroup");
+				newRole("w", data.w.@name, data.w.@path,"wgroup");
+				newRole("p", data.p.@name, data.p.@path,"pgroup");
+				pro["p"].autoSide = true;
+				newRole("j", data.j.@name, data.j.@path,"jgroup");
+				newRole("a", data.a.@name, data.a.@path,"agroup");
+				newRole("c", "法庭", "法庭.swf","cgroup");
+				pro["a"].autoSide = true;
+				pro["l"].x = 0;
+				pro["w"].x = 256*2;
+				pro["p"].x = 256*4;
+				pro["j"].x = 256 * 6;
+				pro["a"].x = 256 * 8;
+				pro["c"].x = 256 * 10;
+				var wf:Layout = new Layout(); wf.path = "bgfront.png"; wf.displayParent = "BgExpand"; wf.x = 256 * 2;
+				var ab:Layout = new Layout(); ab.path = "aidestand.png"; ab.displayParent = "Background"; ab.x = 256 * 8;
+				var jb:Layout = new Layout(); jb.path = "judgeseat.png"; jb.displayParent = "Background"; jb.x = 256 * 6;
+				var lf:Layout = new Layout(); lf.path = "lefttable.png"; lf.displayParent = "BgExpand"; lf.x = 0;
+				var pf:Layout = new Layout(); pf.path = "righttable.png"; pf.displayParent = "BgExpand"; pf.x = 256 * 4;
+				pro["wf_layout"] = wf; pro["ab_layout"] = ab; pro["jb_layout"] = jb; pro["lf_layout"] = lf; pro["pf_layout"] = pf;
+				var wi:Layout = new Layout(); wi.x = 256 * 10; wi.displayParent = "BgExpand";
+				var ai:Layout = new Layout(); ai.x = 256 * 10; ai.displayParent = "BgExpand";
+				var ji:Layout = new Layout(); ji.x = 256 * 10; ji.displayParent = "BgExpand";
+				var li:Layout = new Layout(); li.x = 256 * 10; li.displayParent = "BgExpand";
+				var pi:Layout = new Layout(); pi.x = 256 * 10; pi.displayParent = "BgExpand";
+				pro["wi_layout"] = wi; pro["ai_layout"] = ai; pro["ji_layout"] = ji; pro["li_layout"] = li; pro["pi_layout"] = pi;
+				//决计不能用GUILoader,出错
+				pro["l"].active();
+				TweenLite.delayedCall(1, script_start);
+			}
+			private function pointRole(link:String):void
+			{
+				pro[link].active();
+			}
+			private function roleOnCourt(link:String):Boolean
+			{
+				//对于flyto的辅助判断
+				if (link == "l" || link == "p" || link == "w") {
+					return true;
+				}
+				return false;
+			}
+			private function temp_script_stop(e:Event):void 
+			{
+				cuScript = pro["Script"];
+				pro["TempScript"] = null;
+				cuScript.start();
+			}
+			/**
+			 * 快速移除某个创建类型的所有实例.
+			 * @param	type 创建类型
+			 */
+			public function removeType(type:String):void
+			{
+				for (var item:String in pro) {
+					if (pro[item] is ICreatable) {
+						if (pro[item].type == type) {
+							remove(item);
+						}
+					}
+				}
+			}
+			/**
+			 * 移除某个之前创建的实例.
+			 * @param	childs 实例Link列表.用;分隔.
+			 */
+			public function remove(childs:String):void
+			{
+				var list:Array = childs.split(";");
+				for each(var link:String in list) {
+					var target:ICreatable = pro[link] as ICreatable;
+					target.remove();
+					if (target.autoAddDisplayRoot) pro[link].parent.removeChild(target);
+					pro[link] = null;
+				}
+			}
+			/**
+			 * 创建实例.
+			 * <p>如果type设为某个创建类型.那么child都是那个类型的.</p>
+			 * <p>如果type不设的话.可以同时使用许多类型.但是每次都要手动输入</p>
+			 * 
+			 * @param	child 实例列表.
+			 * @param	type 创建类型.
+			 * @example
+			 * <listing version="3.0">
+			 *	&lt;Main create=""&gt;
+			 *		&lt;r type="Role" path="宝月茜.swf" name="宝月茜"/&gt;
+			 *	&lt;/Main&gt;
+			 * </listing>
+			 */
+			public function create(child:XML,type:String):void
+			{
+				var cl:Class;
+				var muliclass:Boolean = false;
+				var name:String;
+				var list:XMLList = child.children();
+				
+				if (type != "") {
+					muliclass = false;
+					cl = Transport.CreateTypeList[type];
+				}else {
+					muliclass = true;
+				}
+				for (var i:int = 0; i < list.length(); i++) {
+					var ct:Object = Transport.CreateTypeList;
+					if (muliclass) cl = Transport.CreateTypeList[list[i].@type.toString()];
+					var target:ICreatable = new cl();
+					if(target.regit) (target as Object).linkName = list[i].name().localName;
+					pro[list[i].name().localName] = target;
+					if (target.autoAddDisplayRoot) target.displayParent = target.displayParent;//强制设置
+					target.creationComplete();
+				}
+				cuScript.go("in");
+			}
+			private function newRole(link:String,name:String, path:String,group:String):void
+			{
+				var role:Role = new Role();
+				role.addEventListener(Event.COMPLETE, update_court_i);
+				role.name = name;
+				role.group = group;
+				role.linkName = link;
+				role.path = path;
+				pro[link] = role;
+				display.addChild(role);
+			}
+			
+			private function update_court_i(e:Event):void 
+			{
+				var r:Role = e.currentTarget as Role;
+				if (r.getOutput("court")[r.linkName] == undefined) {
+					return;
+				}
+				var c:Class = r.getOutput("court")[r.linkName] as Class
+				var bd:BitmapData = new c(256,192);
+				var b:Bitmap = new Bitmap(bd);
+				pro[r.linkName + "i_layout"].source = b;
+			}
+		/**
+		 * 待更新.
+		 * @param	link
+		 */
+		public function checklink(link:String):void
+		{
+			cuScript.pause();
+			var bl:Boolean = true;
+			var ar:Array = link.split(";");
+			for each(var str:String in ar) {
+				if (pro[link] == null) {
+					bl = false;
+					break;
+				}
+			}
+			if (!bl) {
+				if(cuScript.hasChild("FALSE")){
+					cuScript.enter("FALSE");
+				}else {
+					cuScript.go("down");
+				}
+			}else {
+				if (cuScript.hasChild("TRUE")) {
+					cuScript.enter("TRUE");
+				}else {
+					cuScript.go("down");
+				}
+			}
+			cuScript.start();
+		}
+			/**
+			 * 使用程序内置的命令来达到某些特定的功能.
+			 * 任务命令列表:
+			 * <ul>
+			 *	<li><b>证言开始:</b>在证言开始之前使用.</li> 
+			 *	<li><b>证言结束:</b>在证言结束之后使用.</li> 
+			 *	<li><b>询问开始:</b>在询问开始之前使用.</li> 
+			 *	<li><b>询问结束:</b>在询问结束之后使用.</li> 
+			 *	<li><b>震惊四座:</b>震惊四座的效果.依照l-w-p-j的顺序执行.
+			 * 					<p>如果想更改顺序.请手工输入并修改.(要在程序里面改还比较麻烦)</p>
+			 * <listing version="3.0">
+			 *	&lt;l emotion="normal"/&gt;
+			 *	&lt;upText autoSound="false" alpha="0"/&gt;
+			 *	&lt;upText point="l" text="[snd|震惊四座][fsrn|1]" append="true" /&gt;
+			 *	&lt;Script delay="3"/&gt;
+			 *	&lt;w emotion="normal"/&gt;
+			 *	&lt;upText point="w" text="[snd|震惊四座][fsrn|1]" append="true" /&gt;
+			 *	&lt;Script delay="3"/&gt;
+			 *	&lt;p emotion="normal"/&gt;
+			 *	&lt;upText point="p" text="[snd|震惊四座][fsrn|1]" append="true" /&gt;
+			 *	&lt;Script delay="3"/&gt;
+			 *	&lt;j emotion="surprised"/&gt;
+			 *	&lt;upText point="j" text="[snd|震惊四座][fsrn|1]"/&gt;
+			 *	&lt;Script delay="3"/&gt;
+			 *	&lt;upText autoSound="true" alpha="1"/&gt;
+			 *	&lt;upText point="l"/&gt;
+			 * </listing>
+			 * </li> 
+			 * </ul>
+			 * @param	t 任务命令.
+			 * @version 0.6.7
+			 */
+			public function task(t:String):void
+			{
+				switch(t) {
+					case "证言开始":
+						cuScript.pause();
+						zylogo = new lib.testing();
+						over.addChild(zylogo);
+						var lts:test_start = new test_start();
+						over.addChild(lts);
+						TweenLite.delayedCall(2.5, continue_task);
+					break;
+					case "询问开始":
+						state["ask"] = true;
+						cuScript.pause();
+						hpbar.visible = true;
+						control.gotoPage(FrameInstance.NULLFRAME);
+						var lsh:DisplayObject = pro["l"].headMotion(Position.LEFT);
+						var jsh:DisplayObject = pro["p"].headMotion(Position.RIGHT);
+						over.addChild(lsh);
+						over.addChild(jsh);
+						var lis:inquire_start = new inquire_start();
+						over.addChild(lis);
+						//addChild(upText);//把Uptext提到顶端
+						control.playButtonEnabled = true;
+						TweenLite.delayedCall(2.5, Assets.removeTargets, [[jsh,lsh,lis]]);
+						TweenLite.delayedCall(2.5, control.gotoPage, [FrameInstance.PLAYFRAME]);
+					break;
+					case "证言结束":
+						over.removeChild(zylogo);
+						zylogo = null;
+					break;
+					case "询问结束":
+						state["ask"] = false;
+						hpbar.visible = false;
+					break;
+					case "震惊四座":
+						tempScript.oriData = 
+						<nz>
+							<l emotion="normal"/>
+							<upText autoSound="false" alpha="0" />
+							<upText point="l" text="[snd|震惊四座][fsrn|1]" append="true" />
+							<TempScript delay="3"/>
+							<w emotion="normal"/>
+							<upText point="w" text="[snd|震惊四座][fsrn|1]" append="true" />
+							<TempScript delay="3"/>
+							<p emotion="normal"/>
+							<upText point="p" text="[snd|震惊四座][fsrn|1]" append="true" />
+							<TempScript delay="3"/>
+							<j emotion="surprised"/>
+							<upText point="j" text="[snd|震惊四座][fsrn|1]"/>
+							<TempScript delay="3"/>
+							<upText autoSound="true" alpha="1" />
+							<upText point="l"/>
+						</nz>
+						cuScript.pause();
+						cuScript = tempScript;
+						pro["TempScript"] = tempScript;
+						cuScript.start();
+					break;
+				}
+			}
+		private function continue_task():void
+		{
+			control.playButtonEnabled = true;
+		}
+		private function getSeqArray(ori:XMLList,seq:Array):Array
+		{
+			var a:Array = new Array();
+			for (var i:int = 0; i < seq.length; i++) {
+				a[i] = ori.(name() == seq[i]).toString();
+			}
+			return a;
+		}
+		private function save_read(e:Event):void 
+		{
+			switch(e.type) {
+				case SAVEManager.READ_SUCCESS:
+					control.updateSaver(SAVEManager.getData("Info", "Info"));
+				break;
+				case SAVEManager.RESTART:
+					control.gotoPage(FrameInstance.PLAYFRAME);
+					if (over.getChildByName("startScreen") != null) {
+						over.removeChild(over.getChildByName("startScreen"));
+					}
+					cuScript = pro["Script"];
+					cuScript.start();
+				break;
+				case SAVEManager.INIT:
+					control.gotoPage(FrameInstance.PLAYFRAME);
+					var xml:XML = SAVEManager.getData("Create") as XML;
+					trace(xml.toXMLString());
+					var script:Script = new Script();
+					cuScript = script;//暂时更改cuScript以提高兼容性
+					script.oriData = xml;
+					script.addEventListener(ScriptEvent.PROGRESS, s_progress);
+					script.addEventListener(ScriptEvent.PROGRESS_END, s_progress_end);
+					script.addEventListener(Script.SCRIPT_STOP, createScriptStop);
+					script.start();
+					for (var item:String in pro) {
+						if (pro[item] is ISaveObject) {
+							(pro[item] as ISaveObject).loadData(item);
+						}
+					}
+					control.loadData("Control");
+					if (over.getChildByName("startScreen") != null) {
+						over.removeChild(over.getChildByName("startScreen"));
+					}
+				break;
+				case SAVEManager.READ_FAILED:
+					cuScript = pro["Script"];
+					control.updateSaver();
+				break;
+				case SAVEManager.PREPARE_DATA:
+					SAVEManager.cleanData();
+					for (var savetarget:String in pro) {
+						if (pro[savetarget] is ISaveObject) {
+							(pro[savetarget] as ISaveObject).saveData(savetarget);
+						}
+					}
+					control.saveData("Control");
+					var bitmap:BitmapData = new BitmapData(130, 96.5,true,0xffffff);
+					bitmap.draw(this.stage,new Matrix(130/256,0,0,96.5/192));
+					var date:Date = new Date();
+					var s:String = date.getMonth() + "." + date.getDate() + " " +date.toLocaleTimeString();
+					var png:PNGEncoder = new PNGEncoder();
+					var o:Object = [png.encode(bitmap), s];
+					SAVEManager.appendRowData("Info", o, "Info");
+					control.updateSaver(o);
+				break;
+			}
+		}
+		
+		private function createScriptStop(e:Event):void
+		{
+			e.currentTarget.removeEventListener(ScriptEvent.PROGRESS, s_progress);
+			e.currentTarget.removeEventListener(ScriptEvent.PROGRESS_END, s_progress_end);
+			cuScript = pro["Script"];
+			if (SAVEManager.getData("Script")[0] != cuScript.scriptPath) {
+				cuScript.addEventListener(Event.COMPLETE, cuScript_adjust_script_path);
+				cuScript.load(SAVEManager.getData("Script")[0]);
+			}else {
+				cuScript.start();
+				cuScript.go("down");
+				//map.loadData();
+			}
+			control.playButtonEnabled = true;
+		}
+		
+		private function cuScript_adjust_script_path(e:Event):void 
+		{
+			//修正Script路径
+			cuScript.removeEventListener(Event.COMPLETE, cuScript_adjust_script_path);
+			cuScript.loadData("Script");
+			//下面自动开始了
+		}
+			/**@private */
+			public function saveData(mod:String):void
+			{
+				SAVEManager.appendRowData(mod, [cuRole.linkName],this.field);
+			}
+			/**@private */
+			public function loadData(link:String):void
+			{
+				var obj:Object = SAVEManager.getData(link, "Main");
+				for each(var i:Object in pro) {
+					if (i is Role) {
+						if (i.linkName == obj[0]) {
+							(i as Role).active();
+							break;
+						}
+					}
+				}
+			}
+			private function global_key_event_request(e:KeyboardEvent):void 
+			{
+				switch(e.keyCode) {
+					case Transport.KeyMap.Enter:
+						if(!state["ask"])control.openSaver(SaveType.SAVE);
+					break;
+				}
+			}
+			private function script_start():void
+			{
+				cuScript.start();
+				control.playButtonEnabled = false;
+			}
+			private function script_start_event(e:Event):void
+			{
+				script_start();
+			}
+			private function global_ioerror_event(e:IOErrorEvent):void
+			{
+				pushError(e.text);
+			}
+			private function deal_event_request(e:Event):void
+			{
+				switch(e.type) {
+					case Script.SCRIPT_START:
+						script_start();
+					break;
+					case Script.SCRIPT_PAUSE:
+						cuScript.pause();
+						control.playButtonEnabled = false;
+					break;
+					case Script.ENVIRONMENT_CHANGE:
+						if (cuScript.environment == "询问") {
+							control.gotoPage(FrameInstance.INQUIREFRAME);
+							control.playButtonEnabled = false;
+							control.objectModeEnabled = true;
+						}else {
+							control.gotoPage(FrameInstance.PLAYFRAME);
+							control.objectModeEnabled = false;
+						}
+					break;
+					case Script.FINISH:
+						FileManage.writeFinish();
+						FileManage.rescan();
+						dispatchEvent(new Event(SAVEManager.RETURNTOTITLE));
+					break;
+					case TextPane.START_TRACE:
+						cuScript.pause();
+						control.playButtonEnabled = false;
+						if(upText.realName == cuRole.name){
+							cuRole.speak(true);
+							if (upText.name != "" && upText.autoSound) {
+								(cuRole.sex == "male") ? mu.overStream(new lib.type.male()):mu.overStream(new lib.type.female());
+							}
+						}
+						if (upText.name == "" && upText.autoSound) {
+							mu.overStream(new writer());
+						}
+					break;
+					case TextPane.END_TRACE:
+						mu.overStop();
+						cuRole.speak(false);
+						control.playButtonEnabled = true;
+					break;
+					case TextPane.APPEND:
+						mu.overStop();
+						cuRole.speak(false);
+						cuScript.go("down");
+						script_start();
+					break;
+					case Role.INTERCEPT_END_TRACE:
+						upText.addEventListener(TextPane.END_TRACE, e.target.zoomEndSpeakEvent);
+					break;
+					case Role.UNINTERCEPT_END_TRACE:
+						upText.removeEventListener(TextPane.END_TRACE, e.target.zoomEndSpeakEvent);
+					break;
+					case Role.SHOW:
+						trace(e.target);
+						
+					break;
+					case Role.ROLE_ACTIVE:
+						display.parent.x = -pro[e.target.linkName].x;
+						if (e.target.visible == false) {
+							e.target.visible = true;
+							if (e.target.group == cuRole.group) {
+								cuRole.visible = false;
+							}else{
+								for each(var r:Object in pro) {
+									if (r is Role && r.visible == true && r.group == e.target.group && r.linkName != e.target.linkName ) {
+										r.visible = false;
+										break;
+									}
+								}
+							}
+						}
+						cuRole = e.target as Role;
+						upText.name = cuRole.name;
+						Transport.CurrentRole = e.target as Role;
+					break;
+					case Assets.REMOVE_TARGET:
+						e.target.removeEventListener(Assets.REMOVE_TARGET, deal_event_request);
+						var t:MovieClip = e.target as MovieClip;
+						t.gotoAndStop(1);
+						t.parent.removeChild(t);
+					break;
+					case HPBar.NOHP:
+						cuScript.insert(cuScript.getScriptBySign("DEFAULT_NOHP"));
+						cuScript.go("in");
+					break;
+					case SAVEManager.RETURNTOTITLE:
+						bg.unload();
+						mu.stop();
+						cuScript.unload();
+						upText.show(false);
+						ef.cleanAllFilters();
+						upText.cleanPush();
+						for (var i:String in pro) {
+							if (pro[i] is ICreatable) {
+								remove(i);
+							}
+						}
+						var start:MovieClip = new startScreen();
+						start.name = "startScreen";
+						over.addChild(start);
+						control.gotoPage(FrameInstance.FILEFRAME);
+					break;
+				}
+			}
+			private function deal_basisevent_request(e:BasisEvent):void 
+			{
+				switch(e.type) {
+					case Script.SCRIPT_INSERT:
+						cuScript.insert(e.data as XML);
+					break;
+					case Script.SCRIPT_INSERT_SIGN:
+						cuScript.sign();
+						cuScript.gotoSign(e.data as String);
+					break;
+					case Assets.SYNC_ARROW:
+						upText.wait_arr_vi = e.data;
+					break;
+					case Assets.SAVE_EVENT:
+						SAVEManager.prepare();
+						SAVEManager.save(e.data as int);
+					break;
+					case TextPane.KEYWORD:
+						var cmd:Array = (e.data as String).split("|");
+						switch(cmd[0]) {
+							case "vib":ef.vibration(display.parent, Assets.nullReplace(cmd[1],2));break;
+							case "fsrn":ef.flashScreen(this.stage, Assets.nullReplace(cmd[1],0.5));break;
+							case "p":upText.insidePause(Assets.nullReplace(cmd[1], 0.5)); break;
+							case "cls":upText.cleanText();break;
+							case "snd":mu.attachTextSound(cmd[1]); break;
+							case "emo":
+								cuRole.emotion = cmd[1];
+								if (cuRole.isspeaking) {
+									cuRole.speak(true);
+								}
+							break;
+						}
+					break;
+				}
+			}
+			private function deal_correctbutton_request(link:String):void
+			{
+				cuScript.pause();
+				mu.delayVolumn();
+				pro["l"].voice("异议");
+				var successObject:Boolean = false;
+				trace(cuScript.oriData.toXMLString());
+				if (cuScript.hasChild("object")) {
+					for each(var item:XML in cuScript.oriData.object) {
+						trace(item.@link, link);
+						if (item.@link == link) {
+							cuScript.insert(item);
+							cuScript.go("in");
+							successObject = true;
+							break;
+						}
+					}
+					if (!successObject) {
+						cuScript.sign();
+						cuScript.gotoSign("DEFAULT_OBJECT",false);
+					}
+				}else {
+					cuScript.sign();
+					cuScript.gotoSign("DEFAULT_OBJECT",false);
+				}
+			}
+			private function deal_button_event_request(type:String):void 
+			{
+				switch(type) {
+					case Assets.PLAYBUTTON_CLICK:
+						if (upText.state == State.EMERGENCY) {
+							upText.deal_pause();
+							upText.state = State.NORMAL;
+						}else {
+							control.playButtonEnabled = false;
+							if (cuScript.oriData.name().localName == "upText" || cuScript.oriData.name().localName == "Text") {
+								if (cuScript.oriData.@text != undefined || cuScript.oriData.@appendText != undefined)
+									cuScript.go("down");
+							}
+							cuScript.start();
+						}
+					break;
+					case Assets.PREVBUTTON_CLICK:
+						if (cuScript.oriData.parent().@hide != undefined) {
+							cuScript.go("out");
+						}
+						cuScript.go("up");
+						cuScript.start();
+					break;
+					case Assets.DETERBUTTON_CLICK:
+						if(cuScript.hasChild("deter") && upText.wait_arr_vi){
+							cuScript.enter("deter");
+							pro["l"].voice("等下");
+						}
+					break;
+				}
+			}
+			private function initLoad():void
+			{//第一层载入:载入config;
+				GUILoader.ready();
+				GUILoader.pushLoad("config.xml", config_complete);
+			}
+			private function config_complete(e:BasisEvent):void 
+			{//第二层载入:载入control,;
+				config = new XML(e.data.data);
+				if (stage.loaderInfo.parameters.script != null){
+				FileManage.setDirectory(stage.loaderInfo.parameters.script);
+				var start:MovieClip = new lib.startScreen();
+				start.name = "startScreen";
+				over.addChild(start);
+				}else {
+					try{
+					var x:XML = new XML(stage.loaderInfo.parameters.xml);
+					}catch (e:TypeError) {
+						Alert.show(e.message);
+						return ;
+					}
+					load_script_directly(x);
+				}
+				
+				if (config.textFormat != undefined) {
+					upText.initFormat(config.textFormat);
+				}
+				GlobalKeyMap.init(config.keyMap[0]);
+				
+			}
+			private function load_script_directly(x:XML):void
+			{
+				FileManage.setDirectory("script/lab/");
+				init();
+				var infox:XML = <info><require></require></info>
+				FileManage.setWorkIndex({xmlData:infox});
+				var s:Script = new Script();
+				pro["Script"] = s;
+				pro["S"] = s;
+				s.addEventListener(ScriptEvent.PROGRESS, s_progress);
+				s.addEventListener(ScriptEvent.PROGRESS_END,s_progress_end);
+				s.addEventListener(Script.SCRIPT_TURNBACK, deal_event_request);
+				s.addEventListener(Script.ENVIRONMENT_CHANGE, deal_event_request);
+				s.addEventListener(Script.FINISH, deal_event_request);
+				
+				s.loadXML(x);
+				//载入时弹出等待对话框
+				//LoaderOptimizer.displayProgress(s);
+				s.addEventListener(Event.COMPLETE, openSaver_after_loaded);
+				control.gotoPage(FrameInstance.PLAYFRAME);
+				control.playButtonEnabled = false;
+				cuScript = pro["Script"];
+				cuScript.start();
+			}
+			private function load_script(e:Object,i:int):void 
+			{
+				init();
+				FileManage.setWorkIndex(e);
+				var s:Script = new Script();
+				pro["Script"] = s;
+				s.addEventListener(ScriptEvent.PROGRESS, s_progress);
+				s.addEventListener(ScriptEvent.PROGRESS_END,s_progress_end);
+				s.addEventListener(Script.SCRIPT_TURNBACK, deal_event_request);
+				s.addEventListener(Script.ENVIRONMENT_CHANGE, deal_event_request);
+				s.addEventListener(Script.FINISH, deal_event_request);
+				s.loadScript(FileManage.ScriptInfo.script[i].toString());
+				//载入时弹出等待对话框
+				LoaderOptimizer.displayProgress(s);
+				s.addEventListener(Event.COMPLETE,openSaver_after_loaded);
+				//载入完成以后打开control
+			}
+			private function control_loader_init():void
+			{
+				//(control_loader.content as SystemManager).addEventListener(FlexEvent.APPLICATION_COMPLETE, control_loader_finish);
+			}
+			
+			private function openSaver_after_loaded(e:Event):void
+			{
+				control.openSaver(SaveType.READ, true);
+				//点击继续以后执行SAVEManager.INIT;
+			}
+			private function init():void
+			{
+				var show_ef:EffectTarget = new EffectTarget();
+				show_ef.writeTweens(<nz>
+										<frame>
+											<tg1 alpha="0"/>
+										</frame>
+										<frame last="0.5">
+											<tg1 alpha="1"/>
+										</frame>
+									</nz> , "tg1");
+				pro["show_ef"] = show_ef;
+				var hide_ef:EffectTarget = new EffectTarget();
+				hide_ef.writeTweens(<nz>
+										<frame>
+											<tg1 alpha="1"/>
+										</frame>
+										<frame last="0.5">
+											<tg1 alpha="0"/>
+										</frame>
+									</nz> , "tg1");
+				pro["hide_ef"] = hide_ef;
+				var grey_ef:EffectTarget = new EffectTarget();
+				grey_ef.writeFilters(<nz>
+										<grey/>
+									</nz>,"");
+				pro["grey_ef"] = grey_ef;
+			}
+			private function control_loader_finish(e:FlexEvent):void 
+			{
+				/*control = (control_loader.content as SystemManager).application as IControl;
+				control.gotoPage(FrameInstance.FILEFRAME);
+				
+				pro["Control"] = control;*/
+			}
+		]]>
+	</mx:Script>
+	
+</mx:Application>

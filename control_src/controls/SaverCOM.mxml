@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" backgroundColor="0xffffff" backgroundAlpha="0.8"
+			horizontalScrollPolicy="off" verticalScrollPolicy="off" creationComplete="main()">
+	<mx:Script>
+		<![CDATA[
+			import codex.events.BasisEvent;
+			import com.Assets;
+			import com.SAVEManager;
+			import flash.display.Loader;
+			import flash.events.Event;
+			import flash.events.MouseEvent;
+			import mx.events.ItemClickEvent;
+			public var loader:Loader;
+			public var saveIndex:int = 0;
+			private function main():void
+			{
+				loader = new Loader();
+				loader.x = 10;
+				loader.y = 63;
+				photo_ui.addChild(loader);
+			}
+			private function saver_save_event():void 
+			{
+				if(title.text == "Save"){
+					dispatchEvent(new BasisEvent(Assets.SAVE_EVENT, true, false, saveIndex));
+				}else {
+					if (time.text != "") {
+						dispatchEvent(new BasisEvent(SAVEManager.INIT, true));
+					}else {
+						dispatchEvent(new BasisEvent(SAVEManager.RESTART, true));
+					}
+				}
+			}
+			private function saver_back_event(e:MouseEvent):void 
+			{
+				if(restart.label == "返回开始") {
+					dispatchEvent(new Event(SAVEManager.RETURNTOTITLE, true));
+				}else if (restart.label == "重新开始") {
+					dispatchEvent(new BasisEvent(SAVEManager.RESTART, true));
+				}
+			}
+			private function saver_close():void
+			{
+				dispatchEvent(new Event(Event.CLOSE));
+			}
+			private function togbb_click(e:ItemClickEvent ):void
+			{
+				saveIndex = e.index;
+				SAVEManager.read(saveIndex);
+			}
+		]]>
+	</mx:Script>
+	<mx:UIComponent id="photo_ui"/>
+	<mx:Text id="title" text="Save" x="4" y="8" fontSize="34" fontFamily="Lucida Console" />
+	<mx:Text text="选择存档:"  x="5" y="43.3" />
+	<mx:Text text="时间:"  x="145.9" y="64.2" />
+	<mx:Text text="注释:"  x="145.9" y="103" />
+	<mx:Text id="time" x="146.9" y="85.7" width="103"/>
+	<mx:Text id="comment" x="146.9" y="120" width="103" height="44" />
+	<mx:Button label="x" x="231" width="25" height="20" click="saver_close()" />
+	<mx:ToggleButtonBar selectedIndex="0" itemClick="togbb_click(event);" width="130" x="107" y="30">
+		<mx:ArrayCollection>
+			<mx:String>1</mx:String>
+			<mx:String>2</mx:String>
+			<mx:String>3</mx:String>
+		</mx:ArrayCollection>
+	</mx:ToggleButtonBar>
+	<mx:Button label="继续" x="190" y="166" click="saver_close();saver_save_event();" />
+	<mx:Button id="restart" label="重新开始" x="1.5" y="166" click="saver_close();saver_back_event(event);" />
+</mx:Canvas>

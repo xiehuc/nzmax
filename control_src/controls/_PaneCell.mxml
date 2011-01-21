@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" creationComplete="main();">
+	<fx:Script>
+		<![CDATA[
+import flash.events.IOErrorEvent;
+		/**@private */
+		static public const NOTICE:String = "notice_event";
+		/**@private */
+		static public const CREATION_COMPLETE:String = "creation_complete";
+		/**@private */
+		static public const REMOVE:String = "remove_event";
+		/**@private */
+		static public const SIDEBAR_CHECK:String = "sidebar_check";
+		/**@private */
+		static public const EXPAND_MODE_OPEN:String = "expand_mode_open";
+		/**@private */
+		static public const EXPAND_MODE_CLOSE:String = "expand_mode_close";
+		/**@private */
+		static public const SYNC_PANE:String = "sync_pane";
+		/**@private */
+		static public const DETAIL_REG:String = "detail_reg";
+		
+		/**@private */
+		public var field:String;
+		/**@private */
+		public var func:FuncMan;
+		private var _des:String;
+		private var _path:String;
+		private var _detail:XML;
+		/**@private */
+		public var addDescriptXML:XML;
+		/**@private */
+		public var linkName:String;
+		/**@private */
+		public var detailType:String;
+		/**@private */
+		public var page:int;
+		/**@private */
+		public var column:int;
+		/**@private */
+		public var row:int;
+		/**@private */
+		public var expanded:Boolean = false;
+		/**@private */
+		public var hasDetail:Boolean = false;
+		private var reg:Object;
+		/**
+		 * 设置版本序号.
+		 * 暂时好像用不到.以后可能会使用
+		 */
+		public var version:Number=1;//Version
+		
+		//Interface
+		private var _regit:Boolean=true;
+		private var _autoAddDisplayRoot:Boolean=true;
+		private var _type:String;
+		private var _group:String;
+		private var _index:int;
+		/**@private */
+		protected var _parent:String;
+		/**@private */
+		public function set autoAddDisplayRoot(value:Boolean):void { _autoAddDisplayRoot = value; }
+		/**@private */
+		public function get autoAddDisplayRoot():Boolean { return _autoAddDisplayRoot; }
+		/**
+		 * 设置创建类型.
+		 */
+		public function set type(value:String):void { _type = value; }
+		public function get type():String { return _type; }
+		/**@private */
+		public function set regit(value:Boolean):void { _regit = value; }
+		/**@private */
+		public function get regit():Boolean { return _regit };
+		/**@private */
+		public function set group(value:String):void { _group = value; }
+		/**@private */
+		public function get group():String { return _group; }
+		/**@private */
+		public function set index(value:int):void { _index = value; }
+		/**@private */
+		public function get index():int { return _index };
+		/**
+		 * 设置父级显示对象.
+		 * @see com.Layout#displayParent
+		 */
+		public function set displayParent(value:String):void
+		{
+			_parent = value;
+			Transport.DisplayRoot[value].addChild(this as DisplayObject);
+		}
+		public function get displayParent():String {	return _parent; }
+		/**@private */
+		public function saveData(link:String):void
+		{
+			var obj:Object = new Object();
+			for (var key:String in func.getRow()) {
+				var item:Object = func.getFunc(key);
+				obj.type = this.type;
+				if (item.type == Script.Properties || item.type == Script.BooleanProperties) {
+					obj[key] = this[key].toString();
+				}
+			}
+			SAVEManager.appendCreateData(link,obj);
+		}
+		/**@private */
+		public function loadData(link:String):void { };
+		/**@private */
+		public function creationComplete():void
+		{
+			dispatchEvent(new Event(CREATION_COMPLETE,true,true));
+		}
+		/**@private */
+		public function remove():void
+		{
+			dispatchEvent(new Event(REMOVE, true, true));
+		}
+		/**@private */
+		public function select(bl:Boolean = true):void
+		{
+			if (!bl) {
+				border.visible = false;
+				return;
+			}
+			border.visible = true;
+			GlobalKeyMap.FocusButton = this;
+			GroupManage.getGroupManage(this.group).updateIndex(index,true)
+		}
+		/**@private */
+		public function isSelect():Boolean	{return border.visible;}
+
+		/**@private */
+		private function main()
+		{
+			title.x = 23 - 128;
+			title.y = 34 - 106;
+			descript.x = 88 - 128;
+			descript.y = 92 - 106;
+			descript.alpha = 0;
+			loader.addEventListener(IOErrorEvent.IO_ERROR,Transport.eventList[EventListBridge.IO_ERROR_EVENT]);
+			reg = new Object();
+		}
+		private function blank()
+		{
+		}
+		]]>
+	</fx:Script>
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		.title{
+			backgroundColor:#292931;
+			backgroundAlpha:0.95;
+			borderColor:#ffffff;
+			borderAlpha:1;
+		}
+		.descript{
+			backgroundColor:#9bc593;
+			backgroundAlpha:0.95;
+			borderColor:#ffffff;
+			borderAlpha:1;
+		}
+		.border{
+			borderColor:#ffff00;
+			borderAlpha:1;
+		}
+	</fx:Style>
+	<s:BorderContainer id="border" styleName="border">
+		
+	</s:BorderContainer>
+	<mx:SWFLoader id="loader"/>
+	<s:BorderContainer id="title" styleName="title">
+		<s:Label width="210" height="19.6" />
+	</s:BorderContainer>
+	<s:BorderContainer id="descript" styleName="descript">
+		<s:Label width="146" height="44" />
+	</s:BorderContainer>
+	<mx:Label
+</s:Group>

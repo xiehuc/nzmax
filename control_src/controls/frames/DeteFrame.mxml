@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="256" height="192" verticalScrollPolicy="off"
+	 show="onShow()" hide="onHide()" >
+	<mx:Script>
+		<![CDATA[
+		import com.greensock.TweenLite;
+		import com.nz.FrameInstance;
+		import com.nz.Place;
+		import com.nz.IPlugin;
+		import com.nz.PluginsType;
+		import com.nz.Transport;
+		import flash.events.Event;
+		import flash.events.MouseEvent;
+		import flash.display.DisplayObject
+		import mx.controls.Button;
+		[Event(name="close",type="flash.events.Event")]
+		
+		public var place:Place;
+		public var prepareFrame:String;
+		public function init(p:Place):void
+		{
+			place = p;
+			(btn1.getChildAt(0) as Button).enabled = (p.content.find != undefined);
+			(btn3.getChildAt(0) as Button).enabled = (p.content.talk != undefined);
+			(btn4.getChildAt(0) as Button).enabled = (p.content.objection != undefined);
+		}
+		private function onHide():void
+		{
+			TweenLite.to(this, 0.2, { alpha:0 } );
+		}
+		private function onShow():void
+		{
+			this.alpha = 1;
+			btn1.x = 8; btn1.y = 54; btn1.alpha = 1;
+			TweenLite.from(btn1, 0.2, { rotationY:30, z:100 } );
+			btn2.x = 247; btn2.y = 54; btn2.alpha = 1;
+			TweenLite.from(btn2, 0.2, { rotationY: -30, z:100 } );
+			btn3.x = 8; btn3.y = 111; btn3.alpha = 1;
+			TweenLite.from(btn3, 0.2, { rotationY:30, z:100 } );
+			btn4.x = 247; btn4.y = 111; btn4.alpha = 1;
+			TweenLite.from(btn4, 0.2, { rotationY: -30, z:100 } );
+		}
+		private function onClick(e:MouseEvent):void
+		{
+			switch(e.currentTarget.label) {
+				case "交 谈":prepareFrame = FrameInstance.TALKFRAME; break;
+				case "移 动":prepareFrame = FrameInstance.MOVEFRAME; break;
+				case "指 正":
+					prepareFrame = "";
+					Transport.Pro["Script"].insert(place.content.objection[0]);
+					Transport.Pro["Script"].go("in");
+				break;
+				case "调 查":
+					prepareFrame = "";
+					Transport.Pro["Script"].insert(place.content.find[0]);
+					Transport.Pro["Script"].go("in");
+				break;
+			}
+			if (e.currentTarget.parent.x < 100) {
+				TweenLite.to(e.currentTarget.parent, 0.2, { x:74, y:82 ,onComplete:close} );
+			} else {
+				TweenLite.to(e.currentTarget.parent, 0.2, { x:74+111, y:82 ,onComplete:close} );
+			}
+			for (var i:int = 1; i <= 4; i++) {
+				if (this["btn" + i] != e.currentTarget.parent) {
+					TweenLite.to(this["btn" + i], 0.2, { alpha:0 } );
+				}
+			}
+		}
+		/**@private */
+		public function set type(value:String):void { }
+		/**@private */
+		public function get type():String { return "" }
+		/**@private */
+		public function get content():DisplayObject
+		{
+			return this as DisplayObject;
+		}
+		public function close():void
+		{
+			if (prepareFrame == "") {
+				Transport.Pro["Script"].start();
+			}else {
+				dispatchEvent(new Event(Event.CLOSE));
+			}
+		}
+
+		]]>
+	</mx:Script>
+	<mx:Style source="../../Style.css"/>
+	<mx:Canvas id="btn1" x="8" y="54">
+		<mx:Button label="调 查" width="111" height="27" styleName="defaultButtonStyle" click="onClick(event)" />
+	</mx:Canvas>
+	<mx:Canvas id="btn2" x="247" y="54" clipContent="false">
+		<mx:Button label="移 动" width="111" height="27" x="-111" styleName="defaultButtonStyle" click="onClick(event)" />
+	</mx:Canvas>
+	<mx:Canvas id="btn3" x="8" y="111">
+		<mx:Button label="交 谈" width="111" height="27" styleName="defaultButtonStyle"  click="onClick(event)" />
+	</mx:Canvas>
+	<mx:Canvas id="btn4" x="247" y="111" clipContent="false">
+		<mx:Button label="指 正" width="111" height="27" x="-111" styleName="defaultButtonStyle" click="onClick(event)" />
+	</mx:Canvas>
+</mx:Canvas>
