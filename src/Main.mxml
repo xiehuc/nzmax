@@ -41,6 +41,10 @@
 		<com:TextPane id="upText" visible="false" y="144" />
 		<!---@private -->
 		<mx:UIComponent id="over"/>
+		<mx:Canvas mouseEnabled="false">
+			<mx:Image id="ss" alpha="0" source="@Embed('../lib/logo.png')" />
+			<mx:Image id="si" alpha="0" source="@Embed('../lib/nzmaxlogo.png')" />
+		</mx:Canvas>
 	</mx:Canvas>
 	<mx:Script>
 		<![CDATA[
@@ -53,6 +57,7 @@
 			import com.EffectTarget;
 			import com.FileManage;
 			import com.FuncMan;
+			import com.greensock.TimelineLite;
 			import com.greensock.TweenLite;
 			import com.HPBar;
 			import com.Layout;
@@ -92,7 +97,9 @@
 			import lib.type.*;
 			import mx.containers.Canvas;
 			import mx.controls.Alert;
+			import mx.controls.Image;
 			import mx.controls.SWFLoader;
+			import mx.effects.Tween;
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
 			import mx.managers.PopUpManager;
@@ -118,6 +125,7 @@
 			private var pluginLink:String = "";
 			private var pluginLoader:SWFLoader;
 			private var tempScript:Script;
+			private var startMotion:TimelineLite;
 			private function preinit():void
 			{
 				Transport.eventList = new Object();
@@ -190,6 +198,12 @@
 				pluginLoader = new SWFLoader()
 				pluginLoader.visible = false;
 				addChildAt(pluginLoader, 0);
+				
+				startMotion = new TimelineLite();
+				startMotion.append(new TweenLite(ss, 1, { alpha:1 } ));
+				startMotion.append(new TweenLite(ss, 1, { alpha:0 } ), 1.5);
+				startMotion.append(new TweenLite(si, 0, { alpha:0 } ));
+				startMotion.append(new TweenLite(si, 1, { alpha:1 } ));
 				
 				lp = new LoaderProgress();
 				lp.addEventListener(LoaderProgress.PROGRESS_FINISH, close_progress);
@@ -717,9 +731,7 @@
 				break;
 				case SAVEManager.RESTART:
 					control.gotoPage(FrameInstance.PLAYFRAME);
-					if (over.getChildByName("startScreen") != null) {
-						over.removeChild(over.getChildByName("startScreen"));
-					}
+					si.alpha = 0;
 					cuScript = pro["Script"];
 					cuScript.start();
 				break;
@@ -740,9 +752,7 @@
 						}
 					}
 					control.loadData("Control");
-					if (over.getChildByName("startScreen") != null) {
-						over.removeChild(over.getChildByName("startScreen"));
-					}
+					si.alpha = 0;
 				break;
 				case SAVEManager.READ_FAILED:
 					cuScript = pro["Script"];
@@ -930,9 +940,10 @@
 								remove(i);
 							}
 						}
-						var start:MovieClip = new startScreen();
+						/*var start:Image = new com.startScene();
 						start.name = "startScreen";
-						over.addChild(start);
+						over.addChild(start);*/
+						startMotion.play();
 						control.gotoPage(FrameInstance.FILEFRAME);
 					break;
 				}
@@ -1039,9 +1050,10 @@
 				config = new XML(e.data.data);
 				if (stage.loaderInfo.parameters.s != null) {
 				FileManage.setDirectory(stage.loaderInfo.parameters.s,globalhost);
-				var start:MovieClip = new lib.startScreen();
+				/*var start:Image = new com.StartScreen();
 				start.name = "startScreen";
-				over.addChild(start);
+				over.addChild(start);*/
+				startMotion.play();
 				}else {
 					try{
 					var x:XML = new XML(stage.loaderInfo.parameters.xml);
