@@ -99,13 +99,13 @@
 			import mx.managers.SystemManager;
 			import org.nochump.zip.PNGEncoder;
 			
+			public const globalhost:String = "http://nzmaxi.sinaapp.com/";
 			private const field:String = "Main";
 			private var func:FuncMan;
 			private var mu:Music;
 			private var map:Map;
 			private var ef:Effect;
 			private var config:XML;
-//			private var control:IControl;
 			private var cuScript:Script;//当前的Script
 			private var cuRole:Role = new Role();
 			private var state:Object;//状态对象
@@ -1032,13 +1032,13 @@
 			private function initLoad():void
 			{//第一层载入:载入config;
 				GUILoader.ready();
-				GUILoader.pushLoad("config.xml", config_complete);
+				GUILoader.pushLoad(globalhost+"config.xml", config_complete);
 			}
 			private function config_complete(e:BasisEvent):void 
 			{//第二层载入:载入control,;
 				config = new XML(e.data.data);
-				if (stage.loaderInfo.parameters.script != null){
-				FileManage.setDirectory(stage.loaderInfo.parameters.script);
+				if (stage.loaderInfo.parameters.s != null) {
+				FileManage.setDirectory(stage.loaderInfo.parameters.s,globalhost);
 				var start:MovieClip = new lib.startScreen();
 				start.name = "startScreen";
 				over.addChild(start);

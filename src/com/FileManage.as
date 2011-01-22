@@ -18,28 +18,23 @@ package com
 	{
 		[Bindable]
 		static public var data:ArrayCollection = new ArrayCollection();
-		//static public var ScriptDirectory:File;
 		static public var ScriptDirectory:String;
-		//static public var CommonDirectory:File = File.applicationDirectory.resolvePath("comlib");
-		//static public var SaveDirectory:File;
 		static public var SaveDirectory:String;
 		static public var ScriptInfo:XML;
-		//static private var list:Array;//directoryFile,infoXML
 		static private var directory:String;
-		//static private var infoStream:FileStream;
+		static private var host:String;
 		
 		static private var filelist:XML;
 		static private var commonFileList:XML;
-		
-		static public function setDirectory(dir:String):void
+		static public function setDirectory(dir:String,globalhost:String = ""):void
 		{
 			//第一步
+			host = globalhost;
 			directory = dir;
-		//	list = new Array();
 			data.removeAll();
 			var u:URLLoader = new URLLoader();
 			u.addEventListener(Event.COMPLETE,com_info_complete);
-			u.load(new URLRequest("comlib/info.xml"));
+			u.load(new URLRequest(host+"comlib/info.xml"));
 			rescan();
 		}
 		static public function setWorkIndex(f:Object):void
@@ -49,12 +44,6 @@ package com
 			ScriptInfo = f.xmlData;
 			filelist = f.xmlData.require[0];
 		}
-		/*static public function setWorkIndex(f:Object):void
-		{
-			SaveDirectory = File.applicationDirectory.resolvePath("save");
-			ScriptDirectory = f.file;
-			ScriptInfo = f.xmlData;
-		}*/
 		static public function getResolvePath(path:String,dic:XML = null):String
 		{
 			var fl:XML;
@@ -67,29 +56,10 @@ package com
 				if(commonFileList.file.(@path == path) == undefined){
 					Alert.show("IO错误,找不到路径:\n"+path);
 				}
-				return commonFileList.file.(@path == path).@url;
+				return host+commonFileList.file.(@path == path).@url;
 			}
 			return ScriptDirectory + fl.file.(@path == path).@url;
 		}
-		/*static public function getResolvePath(path:String,dic:File = null):String
-		{
-			if (dic == null) {
-				dic = ScriptDirectory;
-			}
-			var f:File = dic.resolvePath(path);
-			if (f.exists == false) {
-				f = CommonDirectory.resolvePath(path);
-			}
-			return f.nativePath;
-		}*/
-		
-		/*static public function setDirectory(dir:File):void
-		{
-		directory = dir;
-		list = new Array();
-		data = new ArrayCollection();
-		rescan();
-		}*/
 		static public function rescan():void
 		{
 			data.removeAll();
@@ -150,12 +120,6 @@ package com
 			var xml:XML = new XML(e.currentTarget.data);
 			data.addItem({label:xml.name.toString(),finish:xml.finish.toString(),xmlData:xml});
 		}
-		/*static private function info_load_complete(e:Event):void 
-		{
-			var xml:XML = new XML(e.currentTarget.data);
-			list[e.currentTarget.index][1] = xml;
-			data.addItem( { label:xml.name.toString(), file:list[e.currentTarget.index][0],finish:xml.finish.toString() ,xmlData:xml} );
-		}*/
 		public function FileManage() 
 		{
 			
