@@ -63,7 +63,8 @@
 				return;
 			}
 			path = value;
-			content.load(new URLRequest(FileManage.getResolvePath(path)));
+			LoaderOptimizer.dispatchLoad(content, FileManage.getResolvePath(path),true);
+			//content.load(new URLRequest(FileManage.getResolvePath(path)));
 		}
 		/**
 		 * 读取动画并显示.
