@@ -106,7 +106,8 @@
 			import mx.managers.SystemManager;
 			import org.nochump.zip.PNGEncoder;
 			
-			public const globalhost:String = "http://nzmaxi.sinaapp.com/";
+			//public const globalhost:String = "http://nzmaxi.sinaapp.com/";
+			public const globalhost:String = "http://localhost/nzmaxi/";
 			private const field:String = "Main";
 			private var func:FuncMan;
 			private var mu:Music;
@@ -252,16 +253,16 @@
 			
 			private function close_progress(e:Event):void 
 			{
-				if(lp.isPopUp)
-					PopUpManager.removePopUp(lp);
+				/*if (lp.isPopUp)
+					PopUpManager.removePopUp(lp);*/
 			}
 			
 			private function show_progress(e:BasisEvent):void 
 			{
-				if(!lp.isPopUp){
+				/*if(!lp.isPopUp){
 					PopUpManager.addPopUp(lp, this, true);
 				}
-				lp.regLoader(e.data);
+				lp.regLoader(e.data);*/
 			}
 			private function s_progress_end(e:ScriptEvent):void
 			{

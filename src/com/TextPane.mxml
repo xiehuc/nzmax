@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+
+	 用来控制文本显示的类.
+	 
+	 <table class="innertable">
+	 <tr><th>标签</th><td>值</td></tr>
+	 <tr><th>Link:</th><td>Text</td></tr>
+	 <tr><th>OldLink:</th><td>upText</td></tr>
+	 <tr><th>version:</th><td>0.8</td></tr>
+	 <tr><th>可创建:</th><td>否</td></tr>
+	 <tr><th>可存档:</th><td>是</td></tr>
+	 </table>
+-->
+<nz:BasicGroup xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:nz="com.nz.*"
+    xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx" 
+	 mouseChildren="false" mouseEnabled="false" implements="com.nz.ISaveObject" creationComplete="main()"
+	>
+	<fx:Script>
+		<![CDATA[
+		import codex.assets.State;
+		import codex.events.BasisEvent;
+		import com.greensock.TimelineLite;
+		import com.greensock.TweenLite;
+		import com.nz.EventListBridge;
+		import com.nz.Transport;
+		import flash.display.Bitmap;
+		import flash.display.BitmapData;
+		import flash.display.DisplayObject;
+		import flash.display.GraphicsGradientFill;
+		import flash.utils.Timer;
+		import flashx.textLayout.elements.BreakElement;
+		import flashx.textLayout.elements.FlowElement;
+		import flashx.textLayout.elements.ParagraphElement;
+		import flashx.textLayout.elements.SpanElement;
+		import flashx.textLayout.elements.TextFlow;
+		import flashx.textLayout.formats.TextLayoutFormat;
+		import mx.controls.Alert;
+		import mx.controls.Image;
+		import mx.core.FlexSprite;
+		import spark.components.Group;
+		import spark.utils.TextFlowUtil;
+		/** @private */
+		static public const START_TRACE:String = "start_trace";
+		/** @private */
+		static public const PAUSE_TRACE:String = "pause_trace";
+		/** @private */
+		static public const TYPE_WORD:String = "type_word";
+		/** @private */
+		static public const END_TRACE:String = "end_trace";
+		/** @private */
+		static public const KEYWORD:String = "keyword";
+		/** @private */
+		static public const APPEND:String = "append";
+		/** @private */
+		static public const APPEND_START:String = "append_start";
+		/** @private */
+		public const field:String = "global";
+		private var style:Object;
+		private var halfHeight:Number;
+		private var upMove:Number;
+		private var timer:Timer;
+		private var fmt:TextLayoutFormat;
+		
+		/**
+		 * 设置realName.
+		 * 这个参数将会和 当前角色 的 <code>name</code> 比较.
+		 * 如果相同的话. 当前角色 将会开始说话(如果能够得话).
+		 * 
+		 * <p><b>注意:</b>通常的技巧是 紧接着 <code>point</code>
+		 * 设置 realName="" 来让 当前角色 不说话.</p>
+		 * 
+		 * @example 以下代码来达到上述技巧
+		 * <listing version="3.0">
+		 *  &lt;Text point="l" realName="" text="..."/&gt;
+		 * </listing>
+		 */
+		public var realName:String;
+		/** @private */
+		public var state:String;
+		/**
+		 * 用于设置文本输出结束后是否启用playButton.
+		 * 就是下屏幕的那个大大的按钮是否enable.
+		 * 对directText无效.
+		 * 效力只能持续一句的范围.
+		 * @example
+		 * <listing version="3.0">
+		 *  &lt;Text text="成步堂1" append="true" /&gt;
+		 *  &lt;Text text="成步堂2"  /&gt;
+		 * </listing>
+		 */
+		public var append:Boolean;
+		/**
+		 * 控制长文本超出后是否清除以前的文字.
+		 * <p>如果设置为 true,那么清除文字.之后继续输出</p>
+		 * <p>如果设置为 false,那么产生一个动画.移动文字到上一行.之后继续输出</p>
+		 * 具体的可以参见附带的示例剧本
+		 */
+		public var autoclean:Boolean = false;
+		/**
+		 * 控制长文本超出后是否等待.
+		 * <p>如果设置为 true,将会启动playButton.</p>
+		 * <p>如果设置为 false,那么直接继续</p>
+		 * 具体的可以参见附带的示例剧本
+		 */
+		public var autowait:Boolean = false;
+		/**
+		 * 控制是否输出文本时声音.(与[snd]无关)
+		 * <p>如果设置为 true,那么根据一下依据,输出对应的声音.
+		 * <ul><li>如果name="",就是不显示名字框.那么输出打字音</li>
+		 * <li>否则.如果当前角色的sex属性为 female,输出女性文本声音(就是比较尖的那个),反之....</li></ul></p>
+		 * 一般不用设置
+		 */
+		public var autoSound:Boolean = true;
+		private var _name:String;
+		private var _speed:int;
+		private var _text:String;
+		private var index:int;
+		private var leftPushPath:String;
+		private var rightPushPath:String;
+		private const regleft:RegExp = /\[/g;
+		private const regright:RegExp = /]/g;
+		private var waitArr:TimelineLite;
+		
+		/**
+		 * 快速指定当前角色.
+		 * <br>
+		 * 可以快速将舞台指向某个角色.无动画.<br>
+		 * 有动画的是 Main flyto.
+		 * 
+		 * @param role:Role 所指定的角色的Link.
+		 * @see com.Main
+		 */
+		public var point:Function;
+		//这样子要比用dispatchEvent(POINT_ROLE)快些;
+		
+		/** @private */
+		private function main():void
+		{
+			
+			timer = new Timer(150);
+			timer.addEventListener(TimerEvent.TIMER, timer_tracer);
+			timer.stop();
+			state = State.NORMAL;
+			speed = 20;//default:8
+			
+			style = new Object();
+			style["blue"] = new SpanElement();
+			style["blue"].color = "#6bc6f7";
+			style["green"] = new SpanElement();
+			style["green"].color = "#00f700";
+			style["red"] = new SpanElement();
+			style["red"].color = "#ff3300";
+			style["white"] = new SpanElement();
+			style["white"].color = "#ffffff";
+			style["orange"] = new SpanElement();
+			style["orange"].color = "#f5ba52";
+			style["cb"] = style["blue"];
+			style["cg"] = style["green"];
+			style["cr"] = style["red"];
+			style["cw"] = style["white"];
+			style["co"] = style["orange"];
+			
+			fmt = new TextLayoutFormat();
+			fmt.paddingLeft = 15;
+			fmt.paddingRight = 15;
+			fmt.paddingTop = 13;
+			fmt.color = "#ffffff";
+			
+			halfHeight = textField.height / 2;
+			upMove = 14;
+			
+			arr.visible = false;
+			waitArr = new TimelineLite();
+			waitArr.append(new TweenLite(arr, 0.5, { x:245 } ));
+			waitArr.append(new TweenLite(arr, 0.5, { x:240, onComplete:waitArr.restart } ));
+			
+			leftPushTab.y = rightPushTab.y = 20 - 192 + 48;
+			leftPushTab.x = 20;
+			rightPushTab.x = 256 - 20 - 48;
+			
+			func.setFunc("name", { type:Script.Properties } );
+			func.setFunc("realName", { type:Script.Properties} );
+			func.setFunc("point", { type:Script.SingleParams} );
+			func.setFunc("text", { type:Script.Properties, down:false } );
+			func.setFunc("appendText", { type:Script.SingleParams,down:false} );
+			func.setFunc("directText", { type:Script.Properties , progress:false } );
+			func.setFunc("writeTextDirectely", { type:Script.SingleParams } );
+			func.setFunc("append", { type:Script.BooleanProperties } );
+			func.setFunc("autoclean", { type:Script.BooleanProperties } );
+			func.setFunc("autowait", { type:Script.BooleanProperties } );
+			func.setFunc("autoSound", { type:Script.BooleanProperties } );
+			func.setFunc("speed", { type:Script.Properties } );
+			func.setFunc("leftPush", { type:Script.SingleParams } );
+			func.setFunc("rightPush", { type:Script.SingleParams } );
+			func.setFunc("cleanPush", { type:Script.NoParams } );
+			func.setFunc("cleanText", { type:Script.NoParams } );
+		}
+		/**
+		 * 用于设置名字框显示的文字.
+		 * 以后被 <code>point</code> 替代.
+		 * 
+		 * <p>在设置时会同时设置 <code>realName</code></p>
+		 * 
+		 * @example 以下代码通常不用
+		 * <listing version="3.0">
+		 *  &lt;Text name="成步堂" /&gt;
+		 * </listing>
+		 */
+		override public function get name():String
+		{
+			return _name;
+		}
+		override public function set name(value:String):void
+		{
+			_name = value;
+			realName = value;
+			nameField.text = value;
+			if (value == "") {
+				upArea.visible = false;
+			}else if (upArea.visible == false) {
+				upArea.visible = true;
+			}
+		}
+		/**
+		 * 用于动画显示文本.
+		 * 是最常用的属性之一.
+		 * 
+		 * <p>
+		 * 可以设置html标签.但是在xml文件内不能直接输入&lt; 和 &gt;
+		 * 所以将这两个符号用[ ] 代替.<br>
+		 * <ul><li> 例如 text="换[br]行"</li></ul>
+		 * 但是.不是所有的html标签都能用.因为动画输出文字的缘故.故只有很少量的标签可以用.
+		 * 没有测试
+		 * </p>
+		 * 
+		 * <p>
+		 * 另外还顺便创建了五个颜色标签.分别是
+		 * <table class="innertable">
+		 * <tr><th>标签</th><th>旧兼容</th><th>详细</th></tr>
+		 * <tr><td>blue</td><td>cb</td><td>color blur : #6bc6f7</td></tr>
+		 * <tr><td>green</td><th>cg</th><td>color green : #00f700</td></tr>
+		 * <tr><td>red</td><th>cr</th><td>color red : #ff3300</td></tr>
+		 * <tr><td>orange</td><th>co</th><td>color orange : #f5ba52</td></tr>
+		 * <tr><td>white</td><th>cw</th><td>color white : #ffffff</td></tr>
+		 * </table>
+		 * 无论设置什么颜色.都最后请设置为cw.而不能用带反斜杠的.
+		 * <ul><li> 例如 text="这里是[red]关键[/red]证物"</li></ul>
+		 * </p>
+		 * 
+		 * <p>
+		 * 另外还创建了其他的标签用于处理复杂的文本动画
+		 * 这些标签可以带一个参数.用 | 来分隔.
+		 * <ul>
+		 * <li><b>vib:</b>vibration,用于产生一个屏幕震动的动画.有1,2,3这三个程度大小
+		 * 				<p>params:<i>int</i>,default:<i>2</i></p></li>
+		 * <li><b>fsrn:</b>flashScreen,用于产生一个闪屏的动画(就是一片白色)
+		 * 		 		<p><b>注意:</b>如果时间小于0.5的话.会闪一下就消失.如果时间大于0.5的话.会闪一下然后慢慢消失.</p>
+		 * 				<p>params:<i>time</i>,defalut:<i>0.5</i></p></li>
+		 * <li><b>p:</b>pause,用于暂停.<p>params:<i>time</i>,default:<i>0.5</i></p></li>
+		 * <li><b>cls:</b>clean screen,用于清除文本框文本.</li>
+		 * <li><b>snd:</b>sound,用于输出一个声音.可以是文件或是库中的音乐.详见com.Music.
+		 * 				<p>params:<i>sound tag or sound file</i></p></li>
+		 * <li><b>emo:</b>emotion,用于在文本中更改 当前角色 的emotion值.注意必须是可以speaking的.
+		 * 				<p>params:<i>emotion</i></p></li>
+		 * </ul>
+		 * </p>
+		 * 
+		 * <p><b>注意:</b>不用每次都加上point.如果上一个已经指定了 当前角色 的话</p>
+		 * 
+		 * @example 以下代码用于输出带暂停1秒的文本动画
+		 * <listing version="3.0">
+		 *  &lt;Text text="以下代码用于输出带暂停[p|1]1秒的文本动画" /&gt;
+		 * </listing>
+		 */
+		public function get text():String
+		{
+			return _text;
+		}
+		/** @private */
+		/**
+		 * 用于输出文本动画(不清除上一次的文本).
+		 * 通常和 <code>append</code>连用
+		 * <p>用法和 <code>text</code>完全一致.只是不会清除上一次的文本.通常中间夹了一些其他的脚本</p>
+		 * 
+		 * @example 
+		 * <listing version="3.0">
+		 *  &lt;Text text="这是第一句" append="true"/&gt;
+		 *  &lt;Script delay="3" /&gt;
+		 *  &lt;Text appendText="这是第一句" /&gt;
+		 * </listing>
+		 */
+		public function appendText(value:String):void
+		{
+			if (!this.visible) this.visible = true;
+			_text += value;
+			_text = _text.replace(regleft,"<");
+			_text = _text.replace(regright, ">");
+			timer.start();
+			dispatchEvent(new Event(TextPane.START_TRACE));
+		}
+/**
+		 * 用于输出文本,无动画.
+		 * <p>用法和 <code>text</code>完全一致.只是没有动画效果.通常是在开始证言的时候用一下</p>
+		 * <p><b>注意:</b>因为没有动画.所以text的一些限制也没有课.html标签可以使用反斜杠了.</p>
+		 * <ul><li> 例如 directText="这里是[b]关键[/b][i]证物[/i]"</li></ul>
+		 */
+		public function set directText(value:String):void
+		{
+			writeTextDirectely(value);
+			dispatchEvent(new Event(TextPane.END_TRACE));
+		}
+		/**
+		 * 用于设置文本输出速度.
+		 * 计算方法是: timer.delay = 1000 / _speed / 2 * 1.5;
+		 * 细节就不用管了.自己多试几个数就是了.
+		 * @default 8
+		 */
+		public function get speed():int
+		{
+			return _speed;
+		}
+		public function set speed(value:int):void
+		{
+			_speed = value;
+			timer.delay = 1000 / _speed / 2 * 1.5;
+		}
+		/**
+		 * 用于左推出图片.
+		 * 就是在左上角有个小图片.通常是证物的图片.
+		 * @param	path 是ObjectItem的Link,RoleItem的Link,或是路径.
+		 * @example 比如你在之前创建了一个 photo_oi 的ObjectItem.
+		 * <listing version="3.0">
+		 *  &lt;Text leftPush="photo_oi"/&gt;
+		 * </listing>
+		 * @example 如果你之前并没有创建的话.就直接引用路径就是了.
+		 * <listing version="3.0">
+		 *  &lt;Text leftPush="照片.jpg"/&gt;
+		 * </listing>
+		 */
+		public function leftPush(path:String):void
+		{
+			leftPushPath = path;
+			if (Transport.Pro[path] != null) {
+				var data:BitmapData = Transport.Pro[path].imageCopy();
+				pushImage(leftPushTab,data);
+			}else {
+				(leftPushTab.getChildAt(0) as Image).load(new URLRequest(FileManage.getResolvePath(path)));
+				pushImage(leftPushTab);
+			}
+		}
+		/**
+		 * 用于右推出图片.
+		 * 详见 leftPush
+		 */
+		public function rightPush(path:String):void
+		{
+			rightPushPath = path;
+			if (Transport.Pro[path] != null) {
+				var data:BitmapData = Transport.Pro[path].imageCopy();
+				pushImage(rightPushTab,data);
+			}else {
+				(rightPushTab.getChildAt(0) as Image).load(new URLRequest(FileManage.getResolvePath(path)));
+				pushImage(rightPushTab);
+			}
+		}
+		/**
+		 * 用于清除推出的图片.
+		 * 左右通吃.
+		 */
+		public function cleanPush():void
+		{
+			leftPushPath = rightPushPath = null;
+			leftPushTab.alpha = rightPushTab.alpha = 0;
+		}
+		/**
+		 * 用于清除文本框文本.
+		 * [cls]的原型就是它.
+		 */
+		public function cleanText():void
+		{
+			var p:ParagraphElement = textField.textFlow.getChildAt(0) as ParagraphElement;
+			while (p.numChildren > 0)
+				p.removeChildAt(0);
+			p.addChild(new SpanElement());
+			textField.textFlow.hostFormat = fmt;
+		}
+		/**@private */
+		public function saveData(mod:String):void
+		{
+			var obj:Object = { name:name,
+							//	writeTextDirectely:textField.html,
+								writeTextDirectely:textField.text,
+								autoclean:this.autoclean,
+								autowait:this.autowait,
+								autoSound:this.autoSound,
+								speed:this.speed};
+			if (leftPushPath != null) obj.leftPush = leftPushPath;
+			if (leftPushPath != null) obj.leftPush = leftPushPath;
+			if (rightPushPath != null) obj.rightPush = rightPushPath;
+			SAVEManager.appendData(mod,obj);
+		}
+		/**@private */
+		public function loadData(link:String):void { };
+		/**@private */
+		public function pushImage(target:Group,data:BitmapData = null):void
+		{
+			if (data != null) {
+				(target.getChildAt(0) as Image).source = new Bitmap(data);
+			}
+			target.alpha = 0;
+			target.width = target.height = 30;
+			TweenLite.to(target, 0.5, { alpha:1, width:48,height:48 } );
+		}
+		/**@private */
+		public function initFormat(xml:XMLList):void
+		{
+			//fmt.fontFamily = xml.family;
+			fmt.fontSize = xml.size;
+			fmt.paddingLeft = xml.paddingLeft;
+			fmt.paddingRight = xml.paddingRight;
+			fmt.paddingTop = xml.paddingTop;
+			//fmt.color = xml.color;
+		}		
+		public function set text(value:String):void
+		{
+			if (!this.visible) this.visible = true;
+			index = 0;
+			_text = value;
+			_text = _text.replace(regleft,"<");
+			_text = _text.replace(regright, ">");
+			textField.y = 0;
+			textField.height = 48;
+			timer.start();
+			cleanText();
+			dispatchEvent(new Event(TextPane.START_TRACE));
+		}
+		private function timer_tracer(e:TimerEvent):void 
+		{
+			if (index < _text.length) {
+				prase_one_word();
+				if (textField.isTruncated) {
+					if (autoclean) index-=2;//配合deal_pause的cleanText
+					if(autowait){
+						state = State.EMERGENCY;
+						timer.stop();
+						dispatchEvent(new Event(TextPane.END_TRACE));
+					}else {
+						if(autoclean){
+							timer.stop();
+							TweenLite.delayedCall(0.3, deal_pause);
+							//设置短暂字幕暂停时间
+						}else {
+							deal_pause();
+						}
+					}
+				}
+			}else {
+				timer.stop();
+				if (append) {
+					append = false;
+					dispatchEvent(new Event(TextPane.APPEND));
+				}else{
+					dispatchEvent(new Event(TextPane.END_TRACE));
+				}
+			}
+		}
+		/**@private */
+		public function deal_pause():void
+		{
+			if (autowait) {
+				if (autoclean) {
+					cleanText();
+					dispatchEvent(new Event(START_TRACE));
+					timer.start();
+				}else {
+					TweenLite.to(textField, 1, {y:textField.y-upMove,height:textField.height+upMove, onComplete:go_on_after_pause } );
+				}
+			}else {
+				if (autoclean) {
+					cleanText();
+					timer.start();
+				}else {
+					timer.stop();
+					Transport.CurrentRole.speak(false);
+					Transport.Pro.Music.overStop();
+					TweenLite.to(textField, 1, { y:textField.y-upMove,height:textField.height+upMove, onComplete:go_on_after_pause } );
+				}
+			}
+		}
+		private function go_on_after_pause():void
+		{
+			if (!autowait) {
+				Transport.CurrentRole.speak(true);
+				Transport.Pro.Music.overContinue();
+			}else {
+				dispatchEvent(new Event(START_TRACE));
+			}
+			timer.start();
+		}
+		private function prase_one_word():void
+		{
+			if (_text.charAt(index) == "<") {
+					var endIndex:int = _text.indexOf(">", index) + 1;
+					var w:String = _text.slice(index+1, endIndex-1);
+					index += w.length+2;
+					var p:ParagraphElement = textField.textFlow.getChildAt(0) as ParagraphElement;
+					var s:SpanElement;
+					if (w.charAt(0) == '/') {
+						s = style["white"].deepCopy() as SpanElement;
+						s.text = _text.charAt(index++);
+						p.addChild(s);
+					}else {
+						if (w == "br")
+						p.addChild(new BreakElement());
+						else if (style[w] != undefined) {
+							s = style[w].shallowCopy() as SpanElement;
+							s.text = _text.charAt(index++);
+							p.addChild(s);
+						}else
+							dispatchEvent(new BasisEvent(TextPane.KEYWORD, false, false, w));
+					}
+				}else {
+					(textField.textFlow.getLastLeaf() as SpanElement).text += _text.charAt(index);
+					index++;
+				}
+		}
+		/**@private */
+		public function writeTextDirectely(value:String):void
+		{
+			if (!this.visible) this.visible = true;
+			index = 0;
+			_text = value;
+			_text = _text.replace(regleft,"<");
+			_text = _text.replace(regright, ">");
+			textField.y = 0;
+			textField.height = 48;
+			cleanText();
+			while (index < _text.length) {
+				prase_one_word();
+			}
+			//textField.text = _text;
+		}
+		/**@private */
+		public function show(vi:Boolean):void
+		{
+			if(autoVi)
+				this.visible = vi;
+		}
+		/**@private */
+		public function insidePause(time:Number):void
+		{
+			timer.stop();
+			Transport.Pro["Music"].overStop();
+			if (Transport.CurrentRole.isspeaking) {
+				Transport.CurrentRole.speak(false);
+				TweenLite.delayedCall(time, Transport.CurrentRole.speak,[true]);
+			}
+			TweenLite.delayedCall(time, timer.start);
+			TweenLite.delayedCall(time, Transport.Pro["Music"].overContinue);
+		}
+		
+		/**@private */
+		public function set wait_arr_vi(bo:Boolean):void
+		{
+			if(bo==true){
+				arr.visible = true;
+				waitArr.restart();
+			}else {
+				arr.visible = false;
+				waitArr.stop();
+			}
+		}
+		/**@private */
+		public function get wait_arr_vi():Boolean
+		{
+			return arr.visible;
+		}
+		
+		
+		]]>
+	</fx:Script>
+	<fx:Style source="../style.css"/>
+	<s:Group id="upArea" y="-19.50">
+		<s:Graphic>
+			<s:Rect x="2" y="1.95" width="46" height="16"
+					radiusX="0.05" radiusY="0.05" bottomRightRadiusX="3" bottomRightRadiusY="3">
+				<s:stroke>
+					<s:SolidColorStroke color="#000073" alpha="0.73" />
+				</s:stroke>
+				<s:fill>
+					<s:SolidColor color="#5e649c" alpha="0.65"/>
+				</s:fill>
+			</s:Rect>
+			<s:Rect x="1" y="1" width="46.1" height="16" radiusX="1.05" radiusY="1.05">
+				<s:stroke>
+					<s:SolidColorStroke color="#393939" />
+				</s:stroke>
+			</s:Rect>
+			<s:Rect width="48" height="18" radiusX="2" radiusY="2">
+				<s:stroke>
+					<s:SolidColorStroke color="#848484" />
+				</s:stroke>
+			</s:Rect>
+		</s:Graphic>
+		<s:Label id="nameField" width="48" height="18"/>
+	</s:Group>
+	
+	<s:Group>
+		<s:Graphic>
+			<s:Rect radiusX="5" radiusY="5" width="256" height="48">
+				<s:stroke>
+					<s:SolidColorStroke color="white" />
+				</s:stroke>
+				<s:fill>
+					<s:SolidColor color="black" alpha="0.65"/>
+				</s:fill>
+			</s:Rect>
+		</s:Graphic>
+		<s:RichText id="textField" maxDisplayedLines="-1" lineBreak="toFit" width="256" height="48">
+			<!--s:mask>{tmask}</s:mask-->
+		</s:RichText>
+		<!--s:Graphic id="tmask">
+		<s:Rect width="{textField.width-30}" height="30" x="15" y="11">
+			<s:fill>
+				<s:SolidColor color="white"/>
+			</s:fill>
+		</s:Rect>
+		</s:Graphic-->
+		<s:Graphic id="arr" x="240" y="36.2" width="8.1" height="9.35">
+			<s:Path data="M 51.38 29.65 L 0.03 59.30 0.03 0.00 Z ">
+				<s:fill>
+					<s:SolidColor color="#FFFFFF"/>
+				</s:fill>
+			</s:Path>
+		</s:Graphic>
+	</s:Group>
+	<s:Group id="leftPushTab">
+		<mx:Image width="100%" height="100%" />
+	</s:Group>
+	<s:Group id="rightPushTab">
+		<mx:Image width="100%" height="100%" />
+	</s:Group>
+</nz:BasicGroup>

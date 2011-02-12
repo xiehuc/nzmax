@@ -1,0 +1,11 @@
+#nameField{
+	color:#FFFFFF;
+	textAlign:"center";
+	verticalAlign:"middle";
+}
+#textField{
+	color:#FFFFFF;
+	paddingLeft:15;
+	paddingRight:15;
+	paddingTop:13;
+}
