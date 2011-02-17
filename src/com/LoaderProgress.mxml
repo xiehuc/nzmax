@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel title="加载进度" xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="main()">
+<mx:Panel title="加载进度" xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="main()" layout="vertical">
 	<mx:Script>
 		<![CDATA[
 		import com.nz.ILoaderOptimized;
 		import flash.display.DisplayObject;
+		import flash.display.Loader;
 		import flash.events.Event;
 		import mx.controls.ProgressBar;
 		import mx.controls.ProgressBarLabelPlacement;
@@ -42,9 +43,14 @@
 				dispatchEvent(new Event(PROGRESS_FINISH));
 			}
 		}
+		private function skip_click():void
+		{
+			dispatchEvent(new Event(PROGRESS_FINISH));
+		}
 		]]>
 	</mx:Script>
-	<mx:VBox id="tlist">
-		
+	<mx:VBox horizontalAlign="right">
+		<mx:VBox id="tlist"></mx:VBox>
+		<mx:Button label="跳过" click="skip_click()" />
 	</mx:VBox>
 </mx:Panel>

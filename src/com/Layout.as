@@ -112,6 +112,7 @@
 			type = "Layout";
 			_parent = "";
 			this.addEventListener(Event.COMPLETE, loader_complete);
+			//this.addEventListener(IOErrorEvent.IO_ERROR, Transport.eventList[EventListBridge.IO_ERROR_EVENT]);
 			func = new FuncMan();
 			func.setFunc("x", {type:Script.Properties } );
 			func.setFunc("y", {type:Script.Properties } );

@@ -65,6 +65,6 @@
 			<mx:String>3</mx:String>
 		</mx:ArrayCollection>
 	</mx:ToggleButtonBar>
-	<mx:Button label="继续" x="190" y="166" click="saver_close();saver_save_event();" />
+	<mx:Button color="red" label="继续" x="190" y="166" click="saver_close();saver_save_event();" />
 	<mx:Button id="restart" label="重新开始" x="1.5" y="166" click="saver_close();saver_back_event(event);" />
 </mx:Canvas>

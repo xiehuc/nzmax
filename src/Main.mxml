@@ -10,9 +10,10 @@
 	 <tr><th>可存档:</th><td>是</td></tr>
 	 </table>
 -->
-<mx:Application xmlns:com="com.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="256" height="384" xmlns:local="*"
+<s:Application xmlns:com="com.*" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:nz="com.nz.*"
+    xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx" width="256" height="384" xmlns:local="*"
 						preinitialize="preinit()" implements="com.nz.ISaveObject" applicationComplete="main_start()" 
-						layout="absolute" horizontalScrollPolicy="off" verticalScrollPolicy="off" backgroundColor="0x000000">
+						backgroundColor="0x000000">
 	<!---@private -->
 	<mx:Canvas id="all_ca">
 		<!---@private -->
@@ -20,19 +21,19 @@
 			<!---@private -->
 			<mx:Canvas id="bglayer">
 				<!---@private -->
-				<com:Background id="bg" overDemoMode="false" />
+				<!--com:Background id="bg" overDemoMode="false" /-->
+				<com:Background id="bg"/>
 			</mx:Canvas>
 			<!---@private -->
 			<mx:Canvas id="display"/>
 			<!---@private -->
 			<mx:Canvas id="bgexpand"/>
 			<!---@private -->
-			<com:Background id="over_demo" visible="false" blankBackEnable="true" overDemoMode="true" />
+			<!--com:Background id="over_demo" visible="false" blankBackEnable="true" overDemoMode="true" /-->
+			<com:Background id="over_demo" visible="false" />
 		</mx:Canvas>
 		<!---@private -->
 		<com:HPBar id="hpbar" visible="false" x="166.5" y="8.5"/>
-		<!---@private -->
-		<mx:SWFLoader y="192" id="control_loader" init="control_loader_init()" />
 		<!--@private -->
 		<local:Control id="control" y="192"/>
 		<!---@private -->
@@ -41,12 +42,12 @@
 		<com:TextPane id="upText" visible="false" y="144" />
 		<!---@private -->
 		<mx:UIComponent id="over"/>
-		<mx:Canvas mouseEnabled="false">
-			<mx:Image id="ss" alpha="0" source="@Embed('../lib/logo.png')" />
-			<mx:Image id="si" alpha="0" source="@Embed('../lib/nzmaxlogo.png')" />
-		</mx:Canvas>
+		<s:Group mouseEnabled="false">
+			<mx:Image id="ss" alpha="0" source="@Embed('../lib/logo.svg')"/>
+			<s:BitmapImage id="si" alpha="0" source="@Embed('../lib/nzmaxlogo.png')"/>
+		</s:Group>
 	</mx:Canvas>
-	<mx:Script>
+	<fx:Script>
 		<![CDATA[
 			import codex.assets.Position;
 			import codex.assets.State;
@@ -106,8 +107,8 @@
 			import mx.managers.SystemManager;
 			import org.nochump.zip.PNGEncoder;
 			
-			//public const globalhost:String = "http://nzmaxi.sinaapp.com/";
-			public const globalhost:String = "http://localhost/nzmaxi/";
+			public const globalhost:String = "http://nzmaxi.sinaapp.com/";
+			//public const globalhost:String = "http://localhost/nzmaxi/";
 			private const field:String = "Main";
 			private var func:FuncMan;
 			private var mu:Music;
@@ -198,7 +199,7 @@
 				
 				pluginLoader = new SWFLoader()
 				pluginLoader.visible = false;
-				addChildAt(pluginLoader, 0);
+				addElementAt(pluginLoader, 0);
 				
 				startMotion = new TimelineLite();
 				startMotion.append(new TweenLite(ss, 1, { alpha:1 } ));
@@ -253,16 +254,17 @@
 			
 			private function close_progress(e:Event):void 
 			{
-				/*if (lp.isPopUp)
-					PopUpManager.removePopUp(lp);*/
+				if (lp.isPopUp)
+					PopUpManager.removePopUp(lp);
 			}
 			
 			private function show_progress(e:BasisEvent):void 
 			{
-				/*if(!lp.isPopUp){
+				if(!lp.isPopUp){
 					PopUpManager.addPopUp(lp, this, true);
 				}
-				lp.regLoader(e.data);*/
+				trace(e.currentTarget);
+				lp.regLoader(e.data);
 			}
 			private function s_progress_end(e:ScriptEvent):void
 			{
@@ -388,7 +390,7 @@
 				removeChildAt(0);
 				pluginLoader = new SWFLoader();
 				pluginLoader.visible = false;
-				addChildAt(pluginLoader, 0);
+				addElementAt(pluginLoader, 0);
 				pluginLoader.addEventListener(Event.INIT, plugin_init);
 				//pluginLoader.source = (FileManage.getResolvePath(p).replace(File.applicationDirectory.nativePath + "\\", ""));
 				pluginLoader.source = FileManage.getResolvePath(p);
@@ -443,14 +445,13 @@
 			public function courtSet(data:XML,blank:String):void
 			{
 				if (blank == "null") {
-					bg.unload();
 					mode.court = false;
 					remove("l;w;p;j;a;c;wf_layout;ab_layout;jb_layout;lf_layout;pf_layout");
 					remove("wi_layout;ai_layout;ji_layout;li_layout;pi_layout");
 					TweenLite.delayedCall(0.5, script_start);
 					return;
 				}
-				bg.load("bg/法庭.png");
+				bg.path = "bg/法庭.png";
 				mode.court = true;
 				newRole("l", data.l.@name, data.l.@path,"lgroup");
 				newRole("w", data.w.@name, data.w.@path,"wgroup");
@@ -930,7 +931,7 @@
 						cuScript.go("in");
 					break;
 					case SAVEManager.RETURNTOTITLE:
-						bg.unload();
+						//bg.unload();
 						mu.stop();
 						cuScript.unload();
 						upText.show(false);
@@ -941,9 +942,6 @@
 								remove(i);
 							}
 						}
-						/*var start:Image = new com.startScene();
-						start.name = "startScreen";
-						over.addChild(start);*/
 						startMotion.play();
 						control.gotoPage(FrameInstance.FILEFRAME);
 					break;
@@ -1051,9 +1049,6 @@
 				config = new XML(e.data.data);
 				if (stage.loaderInfo.parameters.s != null) {
 				FileManage.setDirectory(stage.loaderInfo.parameters.s,globalhost);
-				/*var start:Image = new com.StartScreen();
-				start.name = "startScreen";
-				over.addChild(start);*/
 				startMotion.play();
 				}else {
 					try{
@@ -1095,33 +1090,32 @@
 				cuScript = pro["Script"];
 				cuScript.start();
 			}
+			private function openSaver_after_loaded(e:Event):void
+			{
+				control.openSaver(SaveType.READ, true);
+				//pro["Script"].start();
+				//点击继续以后执行SAVEManager.INIT;
+			}
 			private function load_script(e:Object,i:int):void 
 			{
 				init();
 				FileManage.setWorkIndex(e);
 				var s:Script = new Script();
+				
 				pro["Script"] = s;
 				s.addEventListener(ScriptEvent.PROGRESS, s_progress);
 				s.addEventListener(ScriptEvent.PROGRESS_END,s_progress_end);
 				s.addEventListener(Script.SCRIPT_TURNBACK, deal_event_request);
 				s.addEventListener(Script.ENVIRONMENT_CHANGE, deal_event_request);
 				s.addEventListener(Script.FINISH, deal_event_request);
+
 				s.loadScript(FileManage.ScriptInfo.script[i].toString());
+				s.addEventListener(Event.COMPLETE, openSaver_after_loaded);
+				
 				//载入时弹出等待对话框
-				LoaderOptimizer.displayProgress(s);
-				s.addEventListener(Event.COMPLETE,openSaver_after_loaded);
-				//载入完成以后打开control
-			}
-			private function control_loader_init():void
-			{
-				//(control_loader.content as SystemManager).addEventListener(FlexEvent.APPLICATION_COMPLETE, control_loader_finish);
-			}
-			
-			private function openSaver_after_loaded(e:Event):void
-			{
-				control.openSaver(SaveType.READ, true);
-				//点击继续以后执行SAVEManager.INIT;
-			}
+				//LoaderOptimizer.displayProgress(s);
+				
+			}			
 			private function init():void
 			{
 				var show_ef:EffectTarget = new EffectTarget();
@@ -1158,6 +1152,6 @@
 				pro["Control"] = control;*/
 			}
 		]]>
-	</mx:Script>
+	</fx:Script>
 	
-</mx:Application>
+</s:Application>

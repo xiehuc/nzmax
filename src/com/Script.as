@@ -504,8 +504,8 @@
 			autostart = start;
 			scriptPath = path;
 			urlLoader.load(new URLRequest(FileManage.getResolvePath(path)));
-			
-			//LoaderOptimizer.dispatchLoad(urlLoader, FileManage.getResolvePath(path));
+			//LoaderOptimizer.dispatchLoad(urlLoader, FileManage.getResolvePath(path), true);
+			//LoaderOptimizer.displayProgress(urlLoader);
 		}
 		public function loadXML(x:XML):void
 		{
@@ -557,7 +557,8 @@
 			_script.ignoreProcessinginstructions = true;
 			_script.ignoreWhitespace = true;
 			
-			LoaderOptimizer.presetLoad(_script);
+			
+			//LoaderOptimizer.presetLoad(_script);
 			
 			_cuXML = _script.copy();
 			index = 0; length = _cuXML.children().length();

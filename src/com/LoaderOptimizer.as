@@ -85,7 +85,7 @@ package com
 			}
 		}
 		
-		public static function displayProgress(target:ILoaderOptimized):void
+		public static function displayProgress(target:Object):void
 		{
 			dispatchLoader(target);
 		}

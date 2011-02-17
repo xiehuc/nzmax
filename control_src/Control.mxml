@@ -46,8 +46,10 @@
 			import flash.display.Loader;
 			import flash.events.Event;
 			import flash.events.KeyboardEvent;
+			import flash.events.TimerEvent;
 			import flash.media.Sound;
 			import flash.utils.Dictionary;
+			import flash.utils.Timer;
 			import mx.containers.ViewStack;
 			import mx.controls.Button;
 			import mx.controls.List;
@@ -285,6 +287,7 @@
 				currentFrame = page;
 				pageView.selectedChild.dispatchEvent(new FlexEvent(FlexEvent.HIDE));
 				TweenLite.delayedCall(0.5, continueGotoPage);
+				
 			}
 			private function continueGotoPage():void
 			{
