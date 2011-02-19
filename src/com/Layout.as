@@ -1,7 +1,6 @@
 ﻿package com
 {
 	import com.nz.EventListBridge;
-	import com.nz.IComponent;
 	import com.nz.ILoaderOptimized;
 	import flash.display.DisplayObject;
 	import flash.display.Loader;

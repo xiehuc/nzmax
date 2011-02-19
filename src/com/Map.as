@@ -34,6 +34,7 @@
 		private var placelist:Object;
 		private var currentPlace:String;
 		private var processor:int = 0;
+		public const version:String = "0.7.5.8";
 		/**@private */
 		public function Map() 
 		{
@@ -108,7 +109,7 @@
 			}
 			var p:Place = getPlace(place);
 			if (!p.enable) p.enable = true;
-			Transport.Pro["Bg"].load(p.oriXML.@background);
+			Transport.Pro["Bg"].path = p.oriXML.@background;
 			currentPlace = place;
 			if (p.content != null) {
 				processor = 0;

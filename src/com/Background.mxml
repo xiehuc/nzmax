@@ -20,7 +20,7 @@
 		<![CDATA[
 		/**@private */
 		public const field:String = "global";
-		
+		public const version:String = "0.8.1.9";
 		private function main():void
 		{
 		}

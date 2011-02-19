@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!---
    控制Control的类.
-   就是下屏幕的所有.
+   就是下方控制窗口所包含的范围.
 	 <table class="innertable">
 	 <tr><th>标签</th><td>值</td></tr>
 	 <tr><th>Link:</th><td>Control</td></tr>
@@ -13,7 +13,7 @@
 				xmlns:viewStackEffects="org.efflex.mx.viewStackEffects.*" xmlns:frames="controls.frames.*"
 				xmlns:cnt="controls.*"
 				width="256" height="192" verticalScrollPolicy="off" horizontalScrollPolicy="off"
-				implements="com.nz.IControl,com.nz.ISaveObject">
+				implements="com.nz.ISaveObject">
 	<mx:Script>
 		<![CDATA[
 			import com.HPBar;
@@ -59,6 +59,7 @@
 			import mx.events.FlexEvent;
 			import mx.events.ItemClickEvent;
 			
+			public const version:String = "0.8.1.9"
 			/**@private */
 			public const field:String = "Control";
 			/**@private */
@@ -142,7 +143,6 @@
 				func.setFunc("pushObjection", { type:Script.SingleParams, down:false, progress:false } );
 				func.setFunc("cleanPushObjection", { type:Script.NoParams } );
 				
-				//this.stage.addEventListener(KeyboardEvent.KEY_UP, global_key_event);
 			}
 			
 			private function deter_close(e:Event):void 
@@ -197,6 +197,7 @@
 					gotoPage(FrameInstance.OBJECTFRAME);
 				}
 			}
+			/**@private*/
 			public function showPanel(p:Place):void
 			{
 				gotoPage(FrameInstance.DETEFRAME);
@@ -262,6 +263,7 @@
 			/**
 			 * 跳转到指定页面.
 			 * <p>由于自动辅助.这个的需要已经减少许多了.页面列表:</p>
+			 * @param	page 指定页面
 			 * <ul>
 			 * <li><b>PLAYFRAME:</b>基本剧情控制的页面.中间有一个大大的按钮.右上有一个法庭记录的按钮</li>
 			 * <li><b>OBJECTFRAME:</b>证物存放的页面.</li>
@@ -272,7 +274,6 @@
 			 * <li><b>FILEFRAME:</b>剧本选择页面.有一个列表</li>
 			 * <li><b>SAVERFRAME:</b>存档控制页面.</li>
 			 * </ul>
-			 * @param	page 指定页面
 			 */
 			public function gotoPage(page:String):void
 			{
@@ -536,6 +537,7 @@
 				}
 			}
 		}
+			/**@private*/
 			public function global_key_event(e:KeyboardEvent):void 
 			{
 				switch(currentFrame) {
@@ -739,8 +741,11 @@
 					icon="@Embed(source='../lib/skins.swf',symbol='skins.p_icon')" 
 					click="Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.PREVBUTTON_CLICK);attachNewSound(continue_);" />
 		</mx:Canvas>
+		<!---@private-->
 		<frames:DeteFrame id="detePage"/>
+		<!---@private-->
 		<frames:TalkFrame id="talkPage"/>
+		<!---@private-->
 		<frames:MoveFrame id="movePage"/>
 		<!---@private-->
 		<mx:Canvas id="filePage" alpha="0" show="TweenLite.to(filePage,0.5,{alpha:1});" hide="TweenLite.to(filePage,0.5,{alpha:0});">
@@ -764,6 +769,7 @@
 			<mx:Button x="178" label="法庭记录" styleName="buttonLabelStyle topRightButtonStyle"	
 				click="gotoPage(FrameInstance.OBJECTFRAME);attachNewSound(qhzw);"/>
 		</mx:Canvas>
+		<!---@private-->
 		<mx:Canvas id="talkCover" verticalScrollPolicy="off">
 			<mx:Image source="@Embed(source='../lib/skins.swf',symbol='_bar.up_1')"/>
 			<mx:Image y="160" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_2_1')"/>

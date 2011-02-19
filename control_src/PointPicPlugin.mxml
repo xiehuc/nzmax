@@ -52,7 +52,8 @@
 			private var _enabled:Boolean;
 			private var dragState:Boolean;
 			private var crossDelta:int = 3;//Cross移动的最小距离
-			
+				
+			public const version:String = "0.7.0.0";
 			private function main():void
 			{
 				var c:Cross_ = new Cross_();

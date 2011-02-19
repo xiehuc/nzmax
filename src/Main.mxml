@@ -34,7 +34,7 @@
 		</mx:Canvas>
 		<!---@private -->
 		<com:HPBar id="hpbar" visible="false" x="166.5" y="8.5"/>
-		<!--@private -->
+		<!---@private -->
 		<local:Control id="control" y="192"/>
 		<!---@private -->
 		<mx:Canvas id="pluginlayer" y="192" />
@@ -43,7 +43,9 @@
 		<!---@private -->
 		<mx:UIComponent id="over"/>
 		<s:Group mouseEnabled="false">
+			<!---@private-->
 			<mx:Image id="ss" alpha="0" source="@Embed('../lib/logo.svg')"/>
+			<!---@private-->
 			<s:BitmapImage id="si" alpha="0" source="@Embed('../lib/nzmaxlogo.png')"/>
 		</s:Group>
 	</mx:Canvas>
@@ -69,7 +71,6 @@
 			import com.nz.EventListBridge;
 			import com.nz.FrameInstance;
 			import com.nz.GlobalKeyMap;
-			import com.nz.IControl;
 			import com.nz.ICreatable;
 			import com.nz.ILoaderOptimized;
 			import com.nz.IPlugin;
@@ -107,6 +108,7 @@
 			import mx.managers.SystemManager;
 			import org.nochump.zip.PNGEncoder;
 			
+			public const version:String = "0.8.1.9";
 			public const globalhost:String = "http://nzmaxi.sinaapp.com/";
 			//public const globalhost:String = "http://localhost/nzmaxi/";
 			private const field:String = "Main";

@@ -32,6 +32,7 @@
 		private var _perhp:Number = 20;
 		private var _hp:Number = 100;
 		private var sp:hpbar;
+		public const version:String = "0.6.5.6";
 		/**@private */
 		public function HPBar() 
 		{

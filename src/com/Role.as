@@ -44,6 +44,7 @@
 	 */
 	public class Role extends Layout
 	{
+		public const version:String = "0.8.1.9"
 		private var _group:String = "auto";
 		/**
 		 * 设置显示组.
@@ -94,9 +95,13 @@
 		 * <p>在courtSet时已经自动的将l,p,a的autoSide打开了</p>
 		 */
 		public var autoSide:Boolean = false;
+		/**@private*/
 		protected var childFunc:Object;//本来是FuncMan 但是错误提示无法将FuncMan@xxx转化为FuncMan
+		/**@private*/
 		protected var _emotion:String;
+		/**@private*/
 		protected var mc:MovieClip;
+		/**@private*/
 		protected var labelToIndex:Object;
 		private var _name:String = "";
 		/**@private */
@@ -204,6 +209,7 @@
 				Transport.Pro["upText"].show(false);
 			}
 		}
+		/**@private*/
 		protected function action_start(e:Event):void
 		{
 			mc.removeEventListener(Event.FRAME_CONSTRUCTED, action_start);
@@ -372,6 +378,7 @@
 			(mc.sex == undefined) ? this.sex = "male":this.sex = mc.sex;
 			 //强制把之前emotion没有执行完的补上
 		}
+		/**@private*/
 		protected function action_end():void
 		{
 			if (loop > 1) {

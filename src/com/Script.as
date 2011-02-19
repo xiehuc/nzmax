@@ -72,6 +72,8 @@
 		private var _cuXML:XML;
 		private var _state:String;
 		private var _sign_store:Object;
+		//public const version:String = "0.8.1.9";
+		
 		/**
 		 * 用于控制Control的询问界面和普通界面的自动辅助.
 		 * <p>可选值:询问</p>
