@@ -8,7 +8,11 @@
 	 */
 	public class ScriptEvent extends Event 
 	{
+		static public const START:String = "script_start";
+		static public const STOP:String = "script_stop";
+		static public const END:String = "script_end";
 		static public const PROGRESS:String = "script_progress";
+		static public const STEPCASE:String = "script_stepcase";
 		static public const PROGRESS_END:String = "script_progress_end";
 		private var _name:String;
 		private var _value:XMLList;

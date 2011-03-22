@@ -8,6 +8,7 @@
 	 */
 	public class Transport
 	{
+		static public var send:Function;
 		static public var Pro:Object;
 		static public var DisplayRoot:Object = new Object();
 		static public var CreateTypeList:Object = new Object();

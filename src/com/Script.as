@@ -47,6 +47,9 @@
 		static public const SCRIPT_TURNBACK:String = "script_turnback";
 		/**@private */
 		static public const SCRIPT_STOP:String = "script_stop";
+		//当脚本终结时候发出.由go()判断
+		/**@private */
+		static public const SCRIPT_END:String = "script_end";
 		/**@private */
 		static public const FINISH:String = "finish";
 		/**@private */
@@ -70,7 +73,6 @@
 		private var urlLoader:URLLoader = new URLLoader();
 		private var _script:XML;
 		private var _cuXML:XML;
-		private var _state:String;
 		private var _sign_store:Object;
 		//public const version:String = "0.8.1.9";
 		
@@ -104,18 +106,25 @@
 		private var autostart:Boolean;
 		/**@private */
 		public var scriptPath:String;
+		private var isrunning:Boolean;
+		public var downbreak:Boolean = false;
+		public var xmlStack:Array;//脚本处理栈
 		/**@private */
 		public function Script() 
 		{
 			path = new Array();
 			permit = new Object();
-			
+			isrunning = false;
 			_sign_store = new Object();
 			_func = new FuncMan();
+			xmlStack = new Array();
+			
+			this.addEventListener(ScriptEvent.STEPCASE, stepcase);
+			
 			func.setFunc("go", { down:false,progress:true,type:Script.SingleParams} );
 			func.setFunc("stop", { down:false, progress:false, type:Script.NoParams } );
 			func.setFunc("finish", { down:false, progress:false, type:Script.NoParams } );
-			func.setFunc("pause", { down:true, progress:false, type:Script.NoParams } );
+			func.setFunc("resume", { down:false, progress:false, type:Script.NoParams } );
 			func.setFunc("load", { type:Script.SingleParams } );
 			func.setFunc("jump", { down:false, progress:true, type:Script.SingleParams } );
 			func.setFunc("pathto", { down:false, progress:true, type:Script.SingleParams } );
@@ -175,6 +184,46 @@
 				go("down");
 			}
 		}
+		private function receivexml(cmd:XML):void
+		{
+			this.go("down");
+			xmlStack.push(_cuXML);
+			xmlStack.push(index);
+			xmlStack.push(length);
+			this.addEventListener(Script.SCRIPT_END, popStack);
+			_cuXML = cmd.children()[0];
+			index = 0;
+			length = cmd.children().length();
+			//_cuXML = cmd.copy();
+			progress();
+		}
+		private function popStack(e:Event):void
+		{
+			length = xmlStack.pop();
+			index = xmlStack.pop();
+			_cuXML = xmlStack.pop();
+			if (xmlStack.length == 0)
+				this.removeEventListener(Script.SCRIPT_END, popStack);
+			progress();
+		}
+
+		public function receive(cmd:*):void
+		{
+			if (cmd is XML){
+				receivexml(cmd);
+				return;
+			}
+			var node:XML = new XML(cmd);
+			var value:XMLList = node.attributes();
+			var controller:String = node.name().localName;
+			if (controller == "Script") 
+				dispatchEvent(new ScriptEvent(ScriptEvent.STEPCASE, false, false, controller, value));
+			else{
+				dispatchEvent(new ScriptEvent(ScriptEvent.PROGRESS, false, false,
+						node.name().localName, value, node));
+			}
+		}
+
 		private function send_environmentchange_event():void 
 		{
 			dispatchEvent(new Event(ENVIRONMENT_CHANGE));
@@ -228,12 +277,12 @@
 					index = path.pop(); 
 					_cuXML = _cuXML.parent().parent().children()[index];
 					length = _cuXML.parent().children().length();
-					dispatchEvent(new ScriptEvent(ScriptEvent.PROGRESS_END, false, false, _cuXML.name().localName));
+					//dispatchEvent(new ScriptEvent(ScriptEvent.PROGRESS_END, false, false, _cuXML.name().localName));
 					if (check) environmentCheck();
 				break;
 				case "outdown":
 					if (_cuXML.parent().parent() == null) {
-						this.stop();
+						dispatchEvent(new Event(Script.SCRIPT_END));
 					}else{
 						this.go("out");
 						this.go("down");
@@ -248,8 +297,10 @@
 		/**@private */
 		public function stop():void
 		{
-			_state = State.STOP;
-			dispatchEvent(new Event(SCRIPT_STOP));
+			isrunning = false;
+			dispatchEvent(new Event(ScriptEvent.STOP));
+			//_state = State.STOP;
+			//dispatchEvent(new Event(SCRIPT_STOP));
 		}
 		/**
 		 * 剧本终止语句.
@@ -277,12 +328,6 @@
 		public function showChapter(index:int):void
 		{
 			FileManage.writeShowChapter(index);
-		}
-		/**@private */
-		public function pause():void
-		{
-			//等效于设定 func.setFunc({down:true,progress:false});
-			_state = State.PAUSE;
 		}
 		/**
 		 * 高级多次跳转.
@@ -360,8 +405,8 @@
 				}else {
 					go("in");
 				}
-				_state = State.PAUSE;
-				if(_start) start();
+				//_state = State.PAUSE;
+				//if(_start) start();
 			}else {
 				Transport.getEvent(EventListBridge.PUSH_ERROR)("Script 找不到 " + key + " 的标记(Sign)");
 			}
@@ -373,6 +418,8 @@
 		 */
 		public function delay(time:Number):void
 		{
+			isrunning = false;
+			this.go("down");
 			TweenLite.delayedCall(time, start);
 		}
 		/**
@@ -396,8 +443,8 @@
 					 }else{
 						//go("down");
 					 }
-					 _state = State.PAUSE;
-					 start();
+					 //_state = State.PAUSE;
+					 //start();
 					 return;
 				 }else {
 					 if (element.hasComplexContent()) {
@@ -436,7 +483,7 @@
 		public function loadData(link:String):void
 		{
 			var obj:Object = SAVEManager.getData(link);
-			_state = State.PAUSE;
+			//_state = State.PAUSE;
 			pathto(obj[1]);
 			_sign_store = obj[2];
 			permit = obj[3];
@@ -447,17 +494,23 @@
 			return _func;
 		}
 		/**@private */
+		public function resume():void
+		{
+			isrunning = true;
+		}
+		/**@private */
 		public function start():void
 		{
-			if (_state != State.START) {
-				_state = State.START;
+			if (!isrunning) {
+				isrunning = true;
 				progress();
 			}
 		}
 		/**@private */
 		public function reset():void
 		{
-			_state = State.STOP;
+			//_state = State.STOP;
+			isrunning = false;
 			_cuXML = _script;
 			index = 0; length = _cuXML.children().length();
 			_cuXML = _cuXML.children()[0];
@@ -526,7 +579,7 @@
 			dispatchEvent(new Event(Event.COMPLETE));
 			
 			if (autostart) {
-				_state = State.PAUSE;
+				//_state = State.PAUSE;
 				start();
 			}
 		}
@@ -560,7 +613,7 @@
 			_script.ignoreWhitespace = true;
 			
 			
-			//LoaderOptimizer.presetLoad(_script);
+			LoaderOptimizer.presetLoad(_script);
 			
 			_cuXML = _script.copy();
 			index = 0; length = _cuXML.children().length();
@@ -569,29 +622,53 @@
 			dispatchEvent(e);
 			
 			if (autostart) {
-				_state = State.PAUSE;
+				//_state = State.PAUSE;
 				start();
 			}
 		}
-		/**@private */
-		public function progress():void
+		private function stepcase(e:ScriptEvent):void
 		{
-			if (_state != State.START) {
-				return;
+			var info:Object;
+			var progressIndex:int = 0;
+			var cmd:String;
+			//错误检查
+			while (progressIndex < e.value.length()) {
+				cmd = e.value[progressIndex].name();
+				info = func.getFunc(cmd);
+				switch(info.type) {
+					case Script.SingleParams:
+						this[cmd](e.value[progressIndex].toString());
+					break;
+					case Script.NoParams:
+						this[cmd]();
+					break;
+				}
+				progressIndex++;
 			}
-			var value:XMLList;
-			var node:XML;
-			//trace(_cuXML.toXMLString());
-			value = _cuXML.attributes();
-			node = _cuXML;
-			dispatchEvent(new ScriptEvent(ScriptEvent.PROGRESS, false, false,
+		}
+		private function progress():void
+		{
+			while (isrunning) {
+				var value:XMLList = _cuXML.attributes();
+				var node:XML = _cuXML;
+				var controller:String = _cuXML.name().localName;
+				if (controller == "Script") 
+					dispatchEvent(new ScriptEvent(ScriptEvent.STEPCASE, false, false, controller, value, node));
+				else{
+					dispatchEvent(new ScriptEvent(ScriptEvent.PROGRESS, false, false,
 							_cuXML.name().localName, value, node));
+					if (downbreak)
+						downbreak = false;
+					else
+						this.go("down");
+				}
+			}
 		}
 		/**@private */
-		public function get state():String
+		/*public function get state():String
 		{
 			return _state;
-		}
+		}*/
 		/**@private */
 		public function set oriData(x:XML):void
 		{

@@ -157,6 +157,7 @@
 		 */
 		public function applyToTarget(t:String):void
 		{
+			Transport.send("<Script stop=''/>")
 			var d:XML = data.copy();
 			if (method == "applyTweens" && replaceObject != null) {
 				var nar:Array = t.split(";");

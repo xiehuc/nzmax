@@ -21,6 +21,7 @@ package com
 		static public var ScriptDirectory:String;
 		static public var SaveDirectory:String;
 		static public var ScriptInfo:XML;
+		static public var define_complete:Function;
 		static private var directory:String;
 		static private var host:String;
 		
@@ -114,6 +115,10 @@ package com
 		{
 			var xml:XML = new XML(e.currentTarget.data);
 			commonFileList = xml.require[0];
+			for each(var x:XML in xml.child("import")) {
+				var define:URLLoader = new URLLoader(new URLRequest(x.toString()));
+				define.addEventListener(Event.COMPLETE, define_complete);
+			}
 		}
 		static private function info_load_complete(e:Event):void
 		{

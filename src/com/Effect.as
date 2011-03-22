@@ -93,7 +93,8 @@
 			_whiteScreen.graphics.endFill();
 			
 			func = new FuncMan();
-			func.setFunc("applyFilters", { type:Script.ComplexParams,down:true,progress:false } );
+			//func.setFunc("applyFilters", { type:Script.ComplexParams,down:true,progress:false } );
+			func.setFunc("applyFilters", { type:Script.ComplexParams,down:true } );
 			func.setFunc("cleanFilters", { type:Script.SingleParams } );
 			func.setFunc("cleanAllFilters", { type:Script.NoParams } );
 			func.setFunc("applyMotion", { down:true, progress:false, type:Script.ComplexParams } );//每一帧都要有完全滤镜列表.或者前面多余后面
@@ -141,7 +142,7 @@
 				var fi:* = setFilter(filter);
 				getFilterManager(target).addFilter(filter.name().localName, fi);
 			}
-			TweenLite.delayedCall(0.1, script_start);//保证顺利执行
+			//TweenLite.delayedCall(0.1, script_start);//保证顺利执行
 		}
 		/**
 		 * 用于设定多帧动态滤镜.
@@ -167,6 +168,7 @@
 		 */
 		public function applyMotion(data:XML,target:String):void
 		{
+			Transport.send("<Script stop=''/>");
 			motionTarget = target;
 			motionDic = new Dictionary();
 			var objectList:Object = new Object();
@@ -214,6 +216,7 @@
 		 */
 		public function applyTweens(data:XML,target:String):void
 		{
+			Transport.send("<Script stop=''/>");
 			var last:Number;
 			var mTimeline:TimelineLite = new TimelineLite({onComplete:script_start});
 			for each(var frame:XML in data.children()) {

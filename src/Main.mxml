@@ -109,14 +109,15 @@
 			import org.nochump.zip.PNGEncoder;
 			
 			public const version:String = "0.8.1.9";
-			public const globalhost:String = "http://nzmaxi.sinaapp.com/";
-			//public const globalhost:String = "http://localhost/nzmaxi/";
+			//public const globalhost:String = "http://nzmaxi.sinaapp.com/";
+			public const globalhost:String = "http://localhost/nzmaxi/";
 			private const field:String = "Main";
 			private var func:FuncMan;
 			private var mu:Music;
 			private var map:Map;
 			private var ef:Effect;
 			private var config:XML;
+			private var define:XML;
 			private var cuScript:Script;//当前的Script
 			private var cuRole:Role = new Role();
 			private var state:Object;//状态对象
@@ -128,26 +129,25 @@
 			
 			private var pluginLink:String = "";
 			private var pluginLoader:SWFLoader;
-			private var tempScript:Script;
 			private var startMotion:TimelineLite;
 			private function preinit():void
 			{
+				Transport.send = send_command;
 				Transport.eventList = new Object();
 				Transport.eventList[EventListBridge.IO_ERROR_EVENT] = global_ioerror_event;
 				Transport.eventList[EventListBridge.LOAD_SCRIPT_EVENT] = load_script;
 				Transport.eventList[EventListBridge.CONTROLBUTTON_EVENT] = deal_button_event_request;
 				Transport.eventList[EventListBridge.PUSH_ERROR] = pushError;
 				Transport.eventList[EventListBridge.CORRECTBUTTON_REQUEST] = deal_correctbutton_request;
+				FileManage.define_complete = this.define_complete;
 			}
+			
 			private function main_start():void
 			{
+				define = <nz></nz>;
 				func = new FuncMan();
 				mode = new Object();
 				mode.court = false;
-				tempScript = new Script();
-				tempScript.addEventListener(ScriptEvent.PROGRESS, s_progress);
-				tempScript.addEventListener(ScriptEvent.PROGRESS_END, s_progress_end);
-				tempScript.addEventListener(Script.SCRIPT_STOP, temp_script_stop);
 				
 				Transport.DisplayRoot["Background"] = bglayer;
 				Transport.DisplayRoot["RoleLayer"] = display;
@@ -204,7 +204,7 @@
 				addElementAt(pluginLoader, 0);
 				
 				startMotion = new TimelineLite();
-				startMotion.append(new TweenLite(ss, 1, { alpha:1 } ));
+				startMotion.append(new TweenLite(ss, 1, {onStart:sm_start, alpha:1 } ));
 				startMotion.append(new TweenLite(ss, 1, { alpha:0 } ), 1.5);
 				startMotion.append(new TweenLite(si, 0, { alpha:0 } ));
 				startMotion.append(new TweenLite(si, 1, { alpha:1 } ));
@@ -253,7 +253,16 @@
 				SAVEManager.addEventListener(SAVEManager.PREPARE_DATA, save_read);
 				initLoad();
 			}
-			
+			private function sm_start():void
+			{
+				si.parent.visible = true;
+				si.alpha = 0;
+				ss.alpha = 0;
+			}
+			private function send_command(cmd:String):void
+			{
+				pro["Script"].receive(cmd);
+			}
 			private function close_progress(e:Event):void 
 			{
 				if (lp.isPopUp)
@@ -282,7 +291,8 @@
 				var progressIndex:int = 0;
 				var cmd:String;
 				//错误检查
-				
+				if (e.name == "Script")
+					return;
 				if (e.value.length() == 0) {
 					if (prostate[e.name] != null) {
 						prostate[e.name](true);
@@ -328,14 +338,7 @@
 						break;
 					}
 				}
-				if (downBoolean) {
-					e.currentTarget.go("down");
-				}
-				if (progressBoolean) {
-					e.currentTarget.progress();
-				}else {
-					e.currentTarget.pause();
-				}
+				e.currentTarget.downbreak = !downBoolean;
 			}
 			private function pushError(t:String):void
 			{
@@ -354,7 +357,7 @@
 					return;
 				}
 				if (roleOnCourt(cuRole.linkName) && roleOnCourt(value)) {
-					cuScript.pause();
+					cuScript.stop();
 					cuRole = pro[value];
 					Transport.CurrentRole = pro[value];
 					upText.show(false);
@@ -598,7 +601,7 @@
 		 */
 		public function checklink(link:String):void
 		{
-			cuScript.pause();
+			cuScript.stop();
 			var bl:Boolean = true;
 			var ar:Array = link.split(";");
 			for each(var str:String in ar) {
@@ -658,7 +661,7 @@
 			{
 				switch(t) {
 					case "证言开始":
-						cuScript.pause();
+						cuScript.stop();
 						zylogo = new lib.testing();
 						over.addChild(zylogo);
 						var lts:test_start = new test_start();
@@ -667,7 +670,7 @@
 					break;
 					case "询问开始":
 						state["ask"] = true;
-						cuScript.pause();
+						cuScript.stop();
 						hpbar.visible = true;
 						control.gotoPage(FrameInstance.NULLFRAME);
 						var lsh:DisplayObject = pro["l"].headMotion(Position.LEFT);
@@ -689,29 +692,11 @@
 						state["ask"] = false;
 						hpbar.visible = false;
 					break;
-					case "震惊四座":
-						tempScript.oriData = 
-						<nz>
-							<l emotion="normal"/>
-							<upText autoSound="false" alpha="0" />
-							<upText point="l" text="[snd|震惊四座][fsrn|1]" append="true" />
-							<TempScript delay="3"/>
-							<w emotion="normal"/>
-							<upText point="w" text="[snd|震惊四座][fsrn|1]" append="true" />
-							<TempScript delay="3"/>
-							<p emotion="normal"/>
-							<upText point="p" text="[snd|震惊四座][fsrn|1]" append="true" />
-							<TempScript delay="3"/>
-							<j emotion="surprised"/>
-							<upText point="j" text="[snd|震惊四座][fsrn|1]"/>
-							<TempScript delay="3"/>
-							<upText autoSound="true" alpha="1" />
-							<upText point="l"/>
-						</nz>
-						cuScript.pause();
-						cuScript = tempScript;
-						pro["TempScript"] = tempScript;
-						cuScript.start();
+					default:
+						if (define.define.(@name == t) != undefined) {
+							var txml:XML = define.define.(@name == t)[0];
+							cuScript.receive(txml);
+						}
 					break;
 				}
 			}
@@ -735,7 +720,7 @@
 				break;
 				case SAVEManager.RESTART:
 					control.gotoPage(FrameInstance.PLAYFRAME);
-					si.alpha = 0;
+					si.parent.visible = false;
 					cuScript = pro["Script"];
 					cuScript.start();
 				break;
@@ -756,7 +741,7 @@
 						}
 					}
 					control.loadData("Control");
-					si.alpha = 0;
+					si.parent.visible = false;
 				break;
 				case SAVEManager.READ_FAILED:
 					cuScript = pro["Script"];
@@ -851,7 +836,7 @@
 						script_start();
 					break;
 					case Script.SCRIPT_PAUSE:
-						cuScript.pause();
+						cuScript.stop();
 						control.playButtonEnabled = false;
 					break;
 					case Script.ENVIRONMENT_CHANGE:
@@ -870,7 +855,7 @@
 						dispatchEvent(new Event(SAVEManager.RETURNTOTITLE));
 					break;
 					case TextPane.START_TRACE:
-						cuScript.pause();
+						cuScript.stop();
 						control.playButtonEnabled = false;
 						if(upText.realName == cuRole.name){
 							cuRole.speak(true);
@@ -891,7 +876,8 @@
 						mu.overStop();
 						cuRole.speak(false);
 						cuScript.go("down");
-						script_start();
+						cuScript.start();
+						control.playButtonEnabled = false;
 					break;
 					case Role.INTERCEPT_END_TRACE:
 						upText.addEventListener(TextPane.END_TRACE, e.target.zoomEndSpeakEvent);
@@ -972,6 +958,7 @@
 							case "vib":ef.vibration(display.parent, Assets.nullReplace(cmd[1],2));break;
 							case "fsrn":ef.flashScreen(this.stage, Assets.nullReplace(cmd[1],0.5));break;
 							case "p":upText.insidePause(Assets.nullReplace(cmd[1], 0.5)); break;
+							case "s":upText.speed = Assets.nullReplace(cmd[1], 15); break;
 							case "cls":upText.cleanText();break;
 							case "snd":mu.attachTextSound(cmd[1]); break;
 							case "emo":
@@ -986,7 +973,7 @@
 			}
 			private function deal_correctbutton_request(link:String):void
 			{
-				cuScript.pause();
+				cuScript.stop();
 				mu.delayVolumn();
 				pro["l"].voice("异议");
 				var successObject:Boolean = false;
@@ -1067,6 +1054,12 @@
 				}
 				GlobalKeyMap.init(config.keyMap[0]);
 				
+			}
+			private function define_complete(e:Event):void
+			{
+				//在FileManager加载完成comlib的import标签之后调度
+				var x:XML = new XML(e.currentTarget.data);
+				define.appendChild(x.children());
 			}
 			private function load_script_directly(x:XML):void
 			{

@@ -258,6 +258,7 @@
 		 * 		 		<p><b>注意:</b>如果时间小于0.5的话.会闪一下就消失.如果时间大于0.5的话.会闪一下然后慢慢消失.</p>
 		 * 				<p>params:<i>time</i>,defalut:<i>0.5</i></p></li>
 		 * <li><b>p:</b>pause,用于暂停.<p>params:<i>time</i>,default:<i>0.5</i></p></li>
+		 * <li><b>s:</b>speed,用于设置速度.<p>params:<i>int</i>,default:<i>15</i></p></li>
 		 * <li><b>cls:</b>clean screen,用于清除文本框文本.</li>
 		 * <li><b>snd:</b>sound,用于输出一个声音.可以是文件或是库中的音乐.详见com.Music.
 		 * 				<p>params:<i>sound tag or sound file</i></p></li>
@@ -307,6 +308,7 @@
 		 */
 		public function set directText(value:String):void
 		{
+			Transport.send("<Script stop=''/>");
 			writeTextDirectely(value);
 			dispatchEvent(new Event(TextPane.END_TRACE));
 		}

@@ -315,6 +315,7 @@
 		*/
 		public function voice(name:String):void
 		{
+			Transport.send("<Script stop=''/>")
 			Transport.Pro.upText.show(false);
 			switch(name) {
 				case "异议":

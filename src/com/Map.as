@@ -40,7 +40,8 @@
 		{
 			placelist = new Object();
 			_func = new FuncMan();
-			func.setFunc("source", { type:Script.Properties ,progress:false} );
+			//func.setFunc("source", { type:Script.Properties ,progress:false} );
+			func.setFunc("source", { type:Script.Properties } );
 			func.setFunc("gotoPlace", { type:Script.SingleParams } );
 			func.setFunc("select", { type:Script.ComplexParams , progress:true, down:false } );
 			func.setFunc("update", { type:Script.ComplexParams } );
@@ -70,6 +71,7 @@
 		}
 		public function set source(path:String):void
 		{
+			Transport.send("<Script stop=''/>");
 			_source = path;
 			var u:URLLoader = new URLLoader();
 			u.load(new URLRequest(FileManage.getResolvePath(path)));
@@ -109,11 +111,11 @@
 			}
 			var p:Place = getPlace(place);
 			if (!p.enable) p.enable = true;
-			Transport.Pro["Bg"].path = p.oriXML.@background;
+			Transport.send("<Bg path='"+p.oriXML.@background+"'/>");
 			currentPlace = place;
 			if (p.content != null) {
 				processor = 0;
-				Transport.Pro["upText"].visible = false;
+				Transport.send("<Text visible='false'/>");
 				updateAll();
 			}
 		}
@@ -197,7 +199,8 @@
 			if (p.version < Number(content.version.toString())) {
 				p.content = content;
 			}else if(p.version > Number(content.version.toString())){
-				Transport.Pro["Script"].go("down");
+				//Transport.Pro["Script"].go("down");
+				Transport.send("<Script go='down'/>");
 				return;
 			}
 		}
@@ -270,8 +273,7 @@
 		{
 			map = new XML(e.currentTarget.data);
 			searchplace(map.map[0]);
-			
-			Transport.Pro["Script"].start();
+			Transport.send("<Script start=''/>");
 		}
 		private function searchplace(target:XML):void
 		{
