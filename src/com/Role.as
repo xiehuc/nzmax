@@ -1,8 +1,5 @@
 ﻿package com
 {
-	import codex.assets.Position;
-	import codex.events.BasisEvent;
-	import codex.manager.GroupManage;
 	import com.nz.EventListBridge;
 	import com.nz.IGroupManage;
 	import flash.utils.getDefinitionByName;
@@ -24,7 +21,6 @@
 	import flash.events.Event;
 	import flash.media.Sound;
 	import flash.net.URLRequest;
-	import codex.media.GUILoader;
 	import com.greensock.TweenLite;
 	import lib.speedline;
 	import mx.controls.Alert;

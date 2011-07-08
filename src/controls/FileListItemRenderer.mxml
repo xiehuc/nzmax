@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" verticalAlign="middle">
+	<mx:Script>
+		<![CDATA[
+			import com.FileManage;
+			import flash.events.FocusEvent;
+			import flash.events.MouseEvent;
+			import mx.controls.Alert
+			override protected function commitProperties():void
+			{
+				super.commitProperties();
+				if (data == null) return;
+				im.source = FileManage.getResolvePath(data.xmlData.logo.toString() , data.xmlData.require[0]);
+				la.text = data.label;
+			}
+			private function play_click(e:MouseEvent):void
+			{
+				dispatchEvent(new MouseEvent(MouseEvent.DOUBLE_CLICK));
+			}
+			private function btn_click():void
+			{
+				var xml:XML = data.xmlData;
+				var t:String = "剧本名称:\t" + data.label+
+								"\n原创:\t"+xml.author+
+								"\n编译:\t" + xml.translator +
+								"\n游戏时间:\t"+xml.playTime+
+								"\n介绍:\t"+xml.introduce;
+				Alert.show(t, "信息");
+			}
+		]]>
+	</mx:Script>
+	<mx:Image id="im" height="29" width="29" scaleContent="true"/>
+	<mx:Label id="la" width="100%"/>
+	<mx:Button upSkin="@Embed('../../lib/nButton.svg')" 
+				overSkin="@Embed('../../lib/nButton.svg')" 
+				downSkin="@Embed('../../lib/nButtonPressed.svg')" 
+				click="btn_click();"/>
+	<mx:Button upSkin="@Embed('../../lib/play.svg')" 
+				overSkin="@Embed('../../lib/play.svg')" 
+				downSkin="@Embed('../../lib/playPressed.svg')" 
+				click="play_click(event);"/>
+</mx:HBox>

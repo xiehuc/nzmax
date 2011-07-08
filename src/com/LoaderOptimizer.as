@@ -1,6 +1,5 @@
 package com 
 {
-	import codex.events.BasisEvent;
 	import com.nz.ILoaderOptimized;
 	import flash.display.InteractiveObject;
 	import flash.events.Event;

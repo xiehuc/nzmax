@@ -27,5 +27,5 @@
 		
 		]]>
 	</fx:Script>
-	<fx:Style source="../style.css"/>
+	<fx:Style source="../stylem.css"/>
 </nz:Layout>

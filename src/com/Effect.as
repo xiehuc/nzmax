@@ -1,7 +1,5 @@
 ﻿package com
 {
-	import codex.manager.FilterManager;
-	import codex.Note;
 	import com.greensock.events.TweenEvent;
 	import com.greensock.TimelineLite;
 	import flash.display.DisplayObject;
