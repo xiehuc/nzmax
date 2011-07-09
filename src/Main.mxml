@@ -75,7 +75,7 @@
 			import com.nz.SaveType;
 			import com.nz.Transport;
 			import com.Role;
-			import com.RoleX;
+			import com.RoleG;
 			import com.SAVEManager;
 			import com.Script;
 			import com.ScriptEvent;
@@ -88,6 +88,7 @@
 			import flash.events.Event;
 			import flash.events.KeyboardEvent;
 			import flash.events.MouseEvent;
+			import flash.net.URLRequest;
 			import flash.system.LoaderContext;
 			import flash.system.Security;
 			import flash.system.SecurityDomain;
@@ -102,6 +103,7 @@
 			import mx.events.ListEvent;
 			import mx.managers.PopUpManager;
 			import mx.managers.SystemManager;
+			import org.bytearray.gif.player.GIFPlayer;
 			import org.nochump.zip.PNGEncoder;
 			
 			public const version:String = "0.8.1.9";
@@ -115,7 +117,7 @@
 			private var config:XML;
 			private var define:XML;
 			private var cuScript:Script;//当前的Script
-			private var cuRole:Role = new Role();
+			private var cuRole:Object = new Role();
 			private var state:Object;//状态对象
 			private var pro:Object;//progress
 			private var prostate:Object;//<court></court>之类
@@ -152,7 +154,7 @@
 				Transport.CreateTypeList["Role"] = Role;
 				Transport.CreateTypeList["Layout"] = Layout;
 				Transport.CreateTypeList["Effect"] = EffectTarget;
-				Transport.CreateTypeList["RoleX"] = RoleX;
+				Transport.CreateTypeList["RoleG"] = RoleG;
 				mu = new Music();
 				map = new Map();
 				map.addEventListener(Script.SCRIPT_PAUSE, deal_event_request);
@@ -191,6 +193,7 @@
 				prostate = new Object();
 				
 				cuRole.group = "null";
+				
 				
 				Transport.KeyMap = new Object();
 				Transport.KeyMap["Enter"] = 13;
@@ -900,7 +903,7 @@
 								}
 							}
 						}
-						cuRole = e.target as Role;
+						cuRole = e.target;
 						upText.name = cuRole.name;
 						Transport.CurrentRole = e.target as Role;
 					break;

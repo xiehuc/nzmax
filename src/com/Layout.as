@@ -36,7 +36,7 @@
 	 */
 	public class Layout extends SWFLoader implements ICreatable,ISaveObject,ILoaderOptimized
 	{
-		private var _path:String = "";
+		protected var _path:String = "";
 		/**@private */
 		public var func:FuncMan;
 		/**@private */

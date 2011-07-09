@@ -51,6 +51,7 @@
     <element path="lib\library.swc" />
     <element path="lib\contLib.swc" />
     <element path="lib\greensock.swc" />
+    <element path="lib\gifplayer.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
@@ -84,6 +85,6 @@
   <options>
     <option showHiddenPaths="False" />
     <option testMovie="Custom" />
-    <option testMovieCommand="http://localhost/nzmaxi/play.php?s=http://127.0.0.1/nzmaxi_script/the_reverse_of_yanei/" />
+    <option testMovieCommand="http://localhost/nzmaxi/play.php?s=http://127.0.0.1/nzmaxi_script/welcome2/" />
   </options>
 </project>
