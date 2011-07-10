@@ -1,21 +1,25 @@
 #!/bin/bash
+
+if [ ! $1 ] ;then
+    echo "Usage: makerole.sh <dirname>"
+    exit
+fi
+
 cd $1
 for gif in *.gif
 do
     swf=$(basename "$gif" .gif).swf
-    gif2swf -o "_$swf" $gif
-    swfcombine -to $swf "_$swf"
+    gif2swf -r24 -o "_$swf" $gif
+    swfcombine -r24 -to $swf "_$swf"
     rm "_$swf"
 done
 ori=$(find . -iname "*.swf")
-dst=""
-for item in $ori
-do
-dst+="$(basename $item .swf)=$item "
-done
-echo $dst
-#out=$(basename `pwd`)
-swfcombine -Nazo ../$1.swf $ori
+#dst=""
+#for item in $ori
+#do
+#dst+="$(basename $item .swf)=$item "
+#done
+swfcombine -F11 -r24 -NBazo ../$1.swf $ori
 cd ..
 if [ ! -e $1.xml ]
 then
@@ -26,10 +30,15 @@ then
     <name></name>
     <engname>$1</engname>
     <sex></sex>
-    <version></version>
-    <!--
-$ori
-    -->
+    <version>0.9</version>
+    <!--">>$1.xml
+    i=0
+    for item in $ori
+    do
+        i=`expr $i + 1`
+        echo "$item   $i" >>$1.xml
+    done
+    echo "-->
 </role>" >>$1.xml
 fi
 

@@ -85,6 +85,6 @@
   <options>
     <option showHiddenPaths="False" />
     <option testMovie="Custom" />
-    <option testMovieCommand="http://localhost/nzmaxi/play.php?s=http://127.0.0.1/nzmaxi_script/welcome2/" />
+    <option testMovieCommand="http://localhost/nzmaxi/play.php?s=http://localhost/nzmaxi_script/welcome2/" />
   </options>
 </project>

@@ -75,7 +75,7 @@
 			import com.nz.SaveType;
 			import com.nz.Transport;
 			import com.Role;
-			import com.RoleG;
+			import com.RoleX;
 			import com.SAVEManager;
 			import com.Script;
 			import com.ScriptEvent;
@@ -103,12 +103,11 @@
 			import mx.events.ListEvent;
 			import mx.managers.PopUpManager;
 			import mx.managers.SystemManager;
-			import org.bytearray.gif.player.GIFPlayer;
 			import org.nochump.zip.PNGEncoder;
 			
 			public const version:String = "0.8.1.9";
-			public const globalhost:String = "http://nzmaxi.sinaapp.com/";
-			//public const globalhost:String = "http://localhost/nzmaxi/";
+			//public const globalhost:String = "http://nzmaxi.sinaapp.com/";
+			public const globalhost:String = "http://localhost/nzmaxi/";
 			private const field:String = "Main";
 			private var func:FuncMan;
 			private var mu:Music;
@@ -154,7 +153,7 @@
 				Transport.CreateTypeList["Role"] = Role;
 				Transport.CreateTypeList["Layout"] = Layout;
 				Transport.CreateTypeList["Effect"] = EffectTarget;
-				Transport.CreateTypeList["RoleG"] = RoleG;
+				Transport.CreateTypeList["RoleX"] = RoleX;
 				mu = new Music();
 				map = new Map();
 				map.addEventListener(Script.SCRIPT_PAUSE, deal_event_request);
@@ -562,6 +561,7 @@
 				}
 				for (var i:int = 0; i < list.length(); i++) {
 					var ct:Object = Transport.CreateTypeList;
+					trace(list[i].@type.toString());
 					if (muliclass) cl = Transport.CreateTypeList[list[i].@type.toString()];
 					var target:ICreatable = new cl();
 					if(target.regit) (target as Object).linkName = list[i].name().localName;
@@ -889,6 +889,8 @@
 						
 					break;
 					case Role.ROLE_ACTIVE:
+					//---
+						//---
 						display.parent.x = -pro[e.target.linkName].x;
 						if (e.target.visible == false) {
 							e.target.visible = true;
@@ -904,8 +906,9 @@
 							}
 						}
 						cuRole = e.target;
+						trace(cuRole.name);
 						upText.name = cuRole.name;
-						Transport.CurrentRole = e.target as Role;
+						//Transport.CurrentRole = e.target;
 					break;
 					case Assets.REMOVE_TARGET:
 						e.target.removeEventListener(Assets.REMOVE_TARGET, deal_event_request);
@@ -962,9 +965,7 @@
 							case "snd":mu.attachTextSound(cmd[1]); break;
 							case "emo":
 								cuRole.emotion = cmd[1];
-								if (cuRole.isspeaking) {
-									cuRole.speak(true);
-								}
+								cuRole.speak(true);
 							break;
 						}
 					break;
