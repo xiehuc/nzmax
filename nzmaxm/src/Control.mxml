@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui:Core xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" implements="nz.support.IControl" xmlns:nz="nz.*" creationComplete="main(event)" xmlns:frames="ui.frames.*" xmlns:ui="ui.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import nz.Transport;
+			import nz.enum.FrameInstance;
+			
+			import ui.views.*;
+			
+			protected function main(event:FlexEvent):void
+			{
+				//tb.hideTabBar(false);
+				vn1.hideActionBar(false);
+				
+				pageList[FrameInstance.PLAYFRAME] = ui.views.PlayView;
+				pageList[FrameInstance.OBJECTFRAME] = ui.views.ObjectView;
+				pageList[FrameInstance.FILEFRAME] = ui.views.FileView;
+				/*pageList[FrameInstance.ROLEFRAME] = ;
+				 = [filePage, nullCover];
+				pageList[FrameInstance.CHOOSEFRAME] = [choosePage, nullCover];
+				pageList[FrameInstance.INQUIREFRAME] = [inquirePage, inquireCover];
+				pageList[FrameInstance.DETEFRAME] = [detePage, playCover];
+				pageList[FrameInstance.TALKFRAME] = [talkPage, talkCover];
+				pageList[FrameInstance.MOVEFRAME] = [movePage, talkCover];
+				pageList[FrameInstance.SAVERFRAME] = [saver, nullCover];
+				pageList[FrameInstance.NULLFRAME] = [blankPage, nullCover];*/
+				pushPage(FrameInstance.FILEFRAME);
+			}
+			override public function pushPage(page:String):void
+			{
+				vn1.pushView(pageList[page]);
+				vn1.hideActionBar(false);
+			}
+			override public function popPage():void
+			{
+				vn1.popView();
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+
+	<s:ViewNavigator id="vn1" firstView="ui.views.PlayView">
+		
+	</s:ViewNavigator>
+</ui:Core>

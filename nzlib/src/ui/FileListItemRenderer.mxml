@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"  xmlns:s="library://ns.adobe.com/flex/spark">
+	<fx:Script>
+		<![CDATA[
+			import flash.events.FocusEvent;
+			import flash.events.MouseEvent;
+			override protected function commitProperties():void
+			{
+				/*super.commitProperties();
+				if (data == null) return;
+				im.source = FileManage.getResolvePath(data.xmlData.logo.toString() , data.xmlData.require[0]);
+				la.text = data.label;*/
+			}
+			private function play_click(e:MouseEvent):void
+			{
+				dispatchEvent(new MouseEvent(MouseEvent.DOUBLE_CLICK));
+			}
+			private function btn_click():void
+			{
+				/*var xml:XML = data.xmlData;
+				var t:String = "剧本名称:\t" + data.label+
+								"\n原创:\t"+xml.author+
+								"\n编译:\t" + xml.translator +
+								"\n游戏时间:\t"+xml.playTime+
+								"\n介绍:\t"+xml.introduce;
+				Alert.show(t, "信息");*/
+				
+			}
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:HorizontalLayout/>
+	</s:layout>
+	<!--s:Image id="im" height="29" width="29"/-->
+	<s:Label id="la" width="100%" height="100%" text="{data.label}" textAlign="center"
+			 verticalAlign="middle"/>
+	<!--s:Button skinClass="ui.skins.StartButton"
+				click="btn_click();"/-->
+	<s:Button skinClass="ui.skins.StartButton"
+				click="play_click(event);"/>
+</s:ItemRenderer>

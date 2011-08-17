@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark" applicationDPI="160" xmlns:nz="nz.*" 
+			   creationComplete="main(event)" xmlns:local="*" xmlns:frames="ui.frames.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import nz.manager.FileManager;
+			protected var fm:FileManage;
+			protected var log:FileStream;
+			protected function main(event:FlexEvent):void
+			{
+				log = new FileStream();
+				log.open(File.documentsDirectory.resolvePath("log.txt"),FileMode.WRITE);
+				//kernel
+				kernel.preinit();
+				kernel.regist("error",pushError);
+				kernel.regist("log",pushError);
+				kernel.link(control);
+				
+				kernel.init();
+				kernel.initConfig();
+				addElementAt(kernel.upScreen,0);
+				kernel.upScreen.scaleX = kernel.upScreen.scaleY = 1.25;
+				control.scaleX = control.scaleY = 1.25;
+				
+			}
+			private function pushError(e:String):void
+			{
+				log.writeUTF(e+"\n");
+			}
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:VerticalLayout gap="0"/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<nz:Kernel id="kernel"/>
+	</fx:Declarations>
+	<local:Control id="control"/>
+</s:Application>
