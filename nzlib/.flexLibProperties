@@ -14,6 +14,9 @@
     <classEntry path="nz.support.IRole"/>
     <classEntry path="ui.skins.PlayButton"/>
     <classEntry path="nz.component.Cover"/>
+    <classEntry path="ui.PaneItem"/>
+    <classEntry path="ui.PaneItemRenderer"/>
+    <classEntry path="nz.enum.Mode"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

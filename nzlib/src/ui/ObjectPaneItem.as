@@ -12,10 +12,10 @@
 	 * </table>
 	 * @author CodeX
 	 */
-	public class ObjectPaneCell extends PaneCell
+	public class ObjectPaneItem extends PaneItem
 	{
 		/**@private */
-		public function ObjectPaneCell() 
+		public function ObjectPaneItem() 
 		{
 			type = "ObjectItem";
 			_parent = "ObjectPane";

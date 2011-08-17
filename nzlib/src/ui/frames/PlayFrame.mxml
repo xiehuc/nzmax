@@ -10,17 +10,18 @@
 			import nz.enum.Assets;
 			import nz.enum.EventListBridge;
 			import nz.enum.FrameInstance;
+			import nz.enum.Mode;
 		]]>
 	</fx:Script>
 	<fx:Style source="../../Style.css"/>
 	<s:Image source="@Embed(source='../lib/skins.swf',symbol='_bar.up_1')"/>
 	<s:Image y="172" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_0')"/>
-	<s:Button x="178" label="法庭记录" styleName="buttonLabelStyle topRightButtonStyle"
+	<s:Button x="178" label="法庭记录" styleName="buttonLabelStyle topRightButtonStyle" 
 			  click="Transport.c.pushPage(FrameInstance.OBJECTFRAME)"/>
 	<s:Group id="playPage" show="playPage_child.rotationX=90;TweenLite.to(playPage_child,0.5,{rotationX:0})" 
 			   hide="TweenLite.to(playPage_child,0.5,{rotationX:-90})">
 		<s:Group id="playPage_child" x="128" y="96">
-			<s:Button id="playButton" x="-112" y="-60" styleName="playButtonStyle"
+			<s:Button id="playButton" x="-112" y="-60" styleName="playButtonStyle" enabled="{Mode.playButtonEnabled}"
 					   click="Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.PLAYBUTTON_CLICK);"/>
 		</s:Group>
 	</s:Group>

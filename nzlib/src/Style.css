@@ -1,6 +1,10 @@
 @namespace s "library://ns.adobe.com/flex/spark";  
 @namespace mx "library://ns.adobe.com/flex/halo";  
 
+
+#pane{
+	contentBackgroundColor:#CB9966;
+}
 .buttonLabelStyle {
 	fontFamily:微软雅黑;
 	fontSize:12;

@@ -13,6 +13,7 @@
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	
+	import mx.collections.ArrayCollection;
 	import mx.core.FlexSprite;
 	import mx.core.UIComponent;
 	
@@ -134,6 +135,7 @@
 		public function set displayParent(value:String):void
 		{
 			_parent = value;
+			var dp:ArrayCollection
 			Transport.DisplayRoot[value].addChild(this as DisplayObject);
 		}
 		public function get displayParent():String {	return _parent; }

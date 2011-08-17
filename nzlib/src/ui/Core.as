@@ -1,6 +1,8 @@
 // ActionScript file
 package ui
 {
+	import mx.collections.ArrayCollection;
+	
 	import nz.Transport;
 	import nz.component.Script;
 	import nz.manager.FuncMan;
@@ -26,13 +28,18 @@ package ui
 		/**@private */
 		public var currentFrame:String;
 		private var oldFrame:String;
-		
+		public var objectDp:ArrayCollection;
+		public var roleDp:ArrayCollection;
 		public function Core()
 		{
 			pageList = new Object();
+			objectDp = new ArrayCollection();
+			roleDp = new ArrayCollection();
 			
-			Transport.CreateTypeList["ObjectItem"] = ObjectPaneCell;
-			Transport.CreateTypeList["RoleItem"] = RolePaneCell;
+			Transport.CreateTypeList["ObjectItem"] = ObjectPaneItem;
+			Transport.CreateTypeList["RoleItem"] = RolePaneItem;
+			Transport.DisplayRoot["ObjectPane"] = objectDp;
+			Transport.DisplayRoot["RolePane"] = roleDp;
 			
 			objectModeEnabled = false;
 			
@@ -48,6 +55,10 @@ package ui
 			
 		}
 		public function popPage():void
+		{
+			
+		}
+		public function replacePage(page:String):void
 		{
 			
 		}

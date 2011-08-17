@@ -12,10 +12,10 @@
 	 * </table>
 	 * @author CodeX
 	 */
-	public class RolePaneCell extends PaneCell
+	public class RolePaneItem extends PaneItem
 	{
 		/**@private */
-		public function RolePaneCell() 
+		public function RolePaneItem() 
 		{
 			type = "RoleItem";
 			_parent = "RolePane";

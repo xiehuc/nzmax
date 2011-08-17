@@ -2,6 +2,7 @@
 {
 	import flash.utils.Dictionary;
 	
+	import nz.enum.Mode;
 	import nz.support.IControl;
 	import nz.support.IFileManager;
 

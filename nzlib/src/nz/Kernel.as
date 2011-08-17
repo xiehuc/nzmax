@@ -32,6 +32,7 @@ package nz
 	import nz.enum.BasisEvent;
 	import nz.enum.EventListBridge;
 	import nz.enum.FrameInstance;
+	import nz.enum.Mode;
 	import nz.enum.ScriptEvent;
 	import nz.enum.State;
 	import nz.manager.FileManager;
@@ -237,31 +238,6 @@ package nz
 		}
 		public function afterinit():void
 		{
-			var show_ef:EffectTarget = new EffectTarget();
-			show_ef.writeTweens(<nz>
-									<frame>
-										<tg1 alpha="0"/>
-									</frame>
-									<frame last="0.5">
-										<tg1 alpha="1"/>
-									</frame>
-								</nz> , "tg1");
-			pro["show_ef"] = show_ef;
-			var hide_ef:EffectTarget = new EffectTarget();
-			hide_ef.writeTweens(<nz>
-									<frame>
-										<tg1 alpha="1"/>
-									</frame>
-									<frame last="0.5">
-										<tg1 alpha="0"/>
-									</frame>
-								</nz> , "tg1");
-			pro["hide_ef"] = hide_ef;
-			var grey_ef:EffectTarget = new EffectTarget();
-			grey_ef.writeFilters(<nz>
-									<grey/>
-								</nz>,"");
-			pro["grey_ef"] = grey_ef;
 		}
 		public function link(obj:*):void
 		{
@@ -620,7 +596,7 @@ package nz
 		private function script_start():void
 		{
 			cuScript.start();
-			control.playButtonEnabled = false;
+			Mode.playButtonEnabled = false;
 		}
 		private function start_story(e:Event):void
 		{
@@ -635,12 +611,12 @@ package nz
 					break;
 				case Script.SCRIPT_PAUSE:
 					cuScript.stop();
-					control.playButtonEnabled = false;
+					Mode.playButtonEnabled = false;
 					break;
 				case Script.ENVIRONMENT_CHANGE:
 					if (cuScript.environment == "询问") {
 						//control.gotoPage(FrameInstance.INQUIREFRAME);
-						control.playButtonEnabled = false;
+						Mode.playButtonEnabled = false;
 						control.objectModeEnabled = true;
 					}else {
 						//control.gotoPage(FrameInstance.PLAYFRAME);
@@ -654,7 +630,7 @@ package nz
 					break;
 				case TextPane.START_TRACE:
 					cuScript.stop();
-					control.playButtonEnabled = false;
+					Mode.playButtonEnabled = false;
 					if(upText.realName == cuRole.name){
 						cuRole.speak(true);
 						if (upText.name != "" && upText.autoSound) {
@@ -668,14 +644,14 @@ package nz
 				case TextPane.END_TRACE:
 					mu.overStop();
 					cuRole.speak(false);
-					control.playButtonEnabled = true;
+					Mode.playButtonEnabled = true;
 					break;
 				case TextPane.APPEND:
 					mu.overStop();
 					cuRole.speak(false);
 					cuScript.go("down");
 					cuScript.start();
-					control.playButtonEnabled = false;
+					Mode.playButtonEnabled = false;
 					break;
 				case Role.INTERCEPT_END_TRACE:
 					upText.addEventListener(TextPane.END_TRACE, e.target.zoomEndSpeakEvent);
@@ -776,7 +752,7 @@ package nz
 						upText.deal_pause();
 						upText.state = State.NORMAL;
 					}else {
-						control.playButtonEnabled = false;
+						Mode.playButtonEnabled = false;
 						if (cuScript.oriData.name().localName == "upText" || cuScript.oriData.name().localName == "Text") {
 							if (cuScript.oriData.@text != undefined || cuScript.oriData.@appendText != undefined)
 								cuScript.go("down");

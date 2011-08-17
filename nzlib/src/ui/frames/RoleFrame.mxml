@@ -19,15 +19,8 @@
 			protected function main(event:FlexEvent):void
 			{
 				// TODO Auto-generated method stub
-				/*pane.addEventListener(PaneCell.NOTICE, noticePaneCell);
-				pane.addEventListener(PaneCell.SIDEBAR_CHECK, sidebar_check);
-				pane.addEventListener(PaneCell.EXPAND_MODE_OPEN, pane_expand_open);
-				pane.addEventListener(PaneCell.EXPAND_MODE_CLOSE, pane_expand_close);
-				pane.addEventListener(PaneCell.SYNC_PANE, sync_pane_event);
-				pane.addEventListener(PaneCell.DETAIL_REG, pane_reg_detail);*/
 				objectMode(false);
-				trace(":::"+Transport.DisplayRoot["ObjectPane"].toString());
-				pane.dataProvider = Transport.DisplayRoot["ObjectPane"];
+				pane.dataProvider = Transport.DisplayRoot["RolePane"];
 			}
 			public function objectMode(bool:Boolean):void
 			{
@@ -53,7 +46,7 @@
 	<s:Button id="top_m_btn" x="89" label="指证" styleName="buttonLabelStyle topMiddleButtonStyle" 
 			   />
 	<!---@private-->
-	<s:Button id="top_r_btn" label="人物记录" styleName="buttonLabelStyle topRightButtonStyle" x="178" click="Transport.c.replacePage(FrameInstance.ROLEFRAME);"/>
+	<s:Button id="top_r_btn" label="证物记录" styleName="buttonLabelStyle topRightButtonStyle" x="178" click="Transport.c.replacePage(FrameInstance.OBJECTFRAME);"/>
 	<s:Button y="162.5" label="取消" styleName="buttonLabelStyle downLeftButtonStyle" click="Transport.c.popPage();"/>
 	<!---@private-->
 	<s:Button id="detail_btn" visible="false" x="178" y="162.5" label="详细" 

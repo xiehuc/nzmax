@@ -17,6 +17,7 @@
 				pageList[FrameInstance.PLAYFRAME] = 0;
 				pageList[FrameInstance.OBJECTFRAME] = 1;
 				pageList[FrameInstance.FILEFRAME] = 2;
+				pageList[FrameInstance.ROLEFRAME] = 3;
 				
 				pushPage(FrameInstance.FILEFRAME);
 				
@@ -32,6 +33,12 @@
 				stack.pop();
 				vs.selectedIndex = stack[stack.length-1];
 			}
+			override public function replacePage(page:String):void
+			{
+				var i:int = pageList[page];
+				stack[stack.length-1] = i;
+				vs.selectedIndex = i;
+			}
 			
 		]]>
 	</fx:Script>
@@ -45,6 +52,9 @@
 		</s:NavigatorContent>
 		<s:NavigatorContent>
 			<local:FileFrame/>
+		</s:NavigatorContent>
+		<s:NavigatorContent>
+			<frames:RoleFrame/>
 		</s:NavigatorContent>
 	</mx:ViewStack>
 </ui:Core>

@@ -18,6 +18,7 @@
 				pageList[FrameInstance.PLAYFRAME] = ui.views.PlayView;
 				pageList[FrameInstance.OBJECTFRAME] = ui.views.ObjectView;
 				pageList[FrameInstance.FILEFRAME] = ui.views.FileView;
+				pageList[FrameInstance.ROLEFRAME] = ui.views.RoleView;
 				/*pageList[FrameInstance.ROLEFRAME] = ;
 				 = [filePage, nullCover];
 				pageList[FrameInstance.CHOOSEFRAME] = [choosePage, nullCover];
@@ -32,11 +33,14 @@
 			override public function pushPage(page:String):void
 			{
 				vn1.pushView(pageList[page]);
-				vn1.hideActionBar(false);
 			}
 			override public function popPage():void
 			{
 				vn1.popView();
+			}
+			override public function replacePage(page:String):void
+			{
+				vn1.replaceView(pageList[page]);
 			}
 			
 		]]>
