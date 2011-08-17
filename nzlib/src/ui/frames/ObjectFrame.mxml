@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<s:Group  xmlns:fx="http://ns.adobe.com/mxml/2009"  xmlns:s="library://ns.adobe.com/flex/spark"
+	width="256" height="192" creationComplete="main(event)"
+	>
+	<fx:Script>
+		<![CDATA[
+			import com.greensock.TweenLite;
+			
+			import cont.Title_;
+			
+			import mx.events.FlexEvent;
+			
+			import nz.Transport;
+			import nz.enum.Assets;
+			import nz.enum.EventListBridge;
+			
+			import ui.GridPane;
+			import ui.PaneCell;
+			
+			public var pane:GridPane;
+			
+			protected function main(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				pane = new GridPane("ObjectPane");
+				pane.name = "gpane";
+				pane.group = "gpaneCellGroup";
+				pane.title = gpane_title;
+				pane.x = 23+105-128; pane.y = 56+50-96;
+				/*pane.addEventListener(PaneCell.NOTICE, noticePaneCell);
+				pane.addEventListener(PaneCell.SIDEBAR_CHECK, sidebar_check);
+				pane.addEventListener(PaneCell.EXPAND_MODE_OPEN, pane_expand_open);
+				pane.addEventListener(PaneCell.EXPAND_MODE_CLOSE, pane_expand_close);
+				pane.addEventListener(PaneCell.SYNC_PANE, sync_pane_event);
+				pane.addEventListener(PaneCell.DETAIL_REG, pane_reg_detail);*/
+				pane.dispatchEvent(new Event(PaneCell.SIDEBAR_CHECK));
+				objectPage_child.addElement(pane);
+				objectMode(false);
+			}
+			public function objectMode(bool:Boolean):void
+			{
+				top_m_btn.visible = bool;
+				top_r_btn.visible =  !bool;
+				bar_up_2_1.visible = !bool;
+				bar_up_2_2.visible = bool;
+				bar_down_2_1.visible = !bool;
+				bar_down_2_2.visible = bool;
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Style source="../../Style.css"/>
+	<s:Image id="bar_up_2_1" source="@Embed(source='../lib/skins.swf',symbol='_bar.up_2_1')"/>
+	<!---@private-->
+	<s:Image id="bar_up_2_2" visible="false" source="@Embed(source='../lib/skins.swf',symbol='_bar.up_2_2')"/>
+	<!---@private-->
+	<s:Image id="bar_down_2_1" y="160" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_2_1')"/>
+	<!---@private-->
+	<s:Image id="bar_down_2_2" visible="false" y="160" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_2_2')"/>
+	<!---@private-->
+	<s:Button id="top_m_btn" x="89" label="指证" styleName="buttonLabelStyle topMiddleButtonStyle" 
+			   />
+	<!---@private-->
+	<s:Button id="top_r_btn" label="人物记录" styleName="buttonLabelStyle topRightButtonStyle" x="178"/>
+	<s:Button y="162.5" label="取消" styleName="buttonLabelStyle downLeftButtonStyle" click="Transport.popPage();"/>
+	<!---@private-->
+	<s:Button id="detail_btn" visible="false" x="178" y="162.5" label="详细" 
+			   styleName="buttonLabelStyle downRightButtonStyle" />
+	<s:Button id="gpane_title" x="23" y="34" alpha="0" skinClass="ui.skins.PaneTitle" />
+	<!---@private-->
+	<s:Group id="objectPage_child" x="128" y="96"/>
+	<!---@private-->
+	<s:Button id="gpane_left" x="-5.5" y="60" rotationY="180" width="12" height="91" styleName="arrowButtonStyle"/>
+	<!---@private-->
+	<s:Button id="gpane_right" x="261" y="60" width="12" height="91" styleName="arrowButtonStyle" />
+</s:Group>

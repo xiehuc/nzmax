@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="main()">
+	<fx:Script>
+		<![CDATA[
+		import nz.manager.FuncMan;
+		/**@private */
+		public var func:FuncMan;
+		/**@private */
+		public var autoVi:Boolean = true;
+		/**@private */
+		private function main():void
+		{
+			func = new FuncMan();
+			func.setFunc("x", {type:Script.Properties } );
+			func.setFunc("y", {type:Script.Properties } );
+			func.setFunc("alpha", { type:Script.Properties } );
+			func.setFunc("visible", { type:Script.BooleanProperties } );
+			func.setFunc("autoVi", { type:Script.BooleanProperties } );
+		}
+		]]>
+	</fx:Script>
+</s:Group>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkButtonSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+				   xmlns:s="library://ns.adobe.com/flex/spark"
+				   xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+				   width="78" height="30">
+     
+    <fx:Metadata>
+        <![CDATA[ 
+        [HostComponent("spark.components.Button")]
+        ]]>
+    </fx:Metadata>
+        
+    <!-- states -->
+    <s:states>
+        <s:State name="up" />
+        <s:State name="over" />
+        <s:State name="down" />
+        <s:State name="disabled" />
+    </s:states>
+    
+	<s:Path left="0" right="0" top="0" bottom="0" 
+			data="M 64 30 L 15 30 L 0 17 L 0 0 L 78 0 L 78 17 L 64 30">
+		<s:stroke>
+			<s:SolidColorStroke color="#FFFFFF"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="#414141" color.down="#b4b4b4"/>
+		</s:fill>
+	</s:Path>
+	
+	<s:Path left="2" right="2" top="2" bottom="3" 
+			data="M 64 30 L 15 30 L 0 15 L 0 0 L 78 0 L 78 15 L 64 30">
+	<s:stroke>
+		<s:LinearGradientStroke caps="none" joints="miter" miterLimit="4" rotation="90"
+								weight="1">
+			<s:GradientEntry alpha="1.0" color="#a47a59" color.down="#fff720" ratio="0"/>
+			<s:GradientEntry alpha="1.0" color="#6a2800" color.down="#d68b20" ratio="1"/>
+		</s:LinearGradientStroke>
+	</s:stroke>
+	<s:fill>
+		<s:SolidColor color="#7a3000" color.down="#ef9b20"/>
+	</s:fill>
+	</s:Path>
+	
+	<s:Path verticalCenter="0" horizontalCenter="0"
+			data="M 0 21.25 L 13.5 0 L 27.75 21.25 L 0 21.25">
+		<s:fill>
+			<s:SolidColor color="#a17654" color.down="#ffa626"/>
+		</s:fill>
+	</s:Path>
+	
+    
+    <!-- layer 8: text -->
+    <!--- @copy spark.components.supportClasses.ButtonBase#labelDisplay  -->
+    <s:Label id="labelDisplay"
+             textAlign="center"
+             maxDisplayedLines="1"
+             horizontalCenter="0" verticalCenter="1" verticalAlign="middle"
+             left="10" right="10" top="2" bottom="2">
+    </s:Label>
+    
+</s:SparkButtonSkin>

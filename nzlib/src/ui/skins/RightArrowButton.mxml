@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkButtonSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+				   xmlns:s="library://ns.adobe.com/flex/spark"
+				   xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+				   width="12" height="91">
+     
+    <fx:Metadata>
+        <![CDATA[ 
+        [HostComponent("spark.components.Button")]
+        ]]>
+    </fx:Metadata>
+        
+    <!-- states -->
+    <s:states>
+        <s:State name="up" />
+        <s:State name="over" />
+        <s:State name="down" />
+        <s:State name="disabled" />
+    </s:states>
+	
+	<s:Path left="0" right="0" top="0" bottom="0"
+			data="M -19 0.51 Q -19 2.16 -20.2 3.31 Q -21.35 4.51 -23 4.51 L -23 85.56 Q -21.35 85.56 -20.2 86.71 Q -19 87.91 -19 89.56 L -13 89.56 L -13 0.51 L -19 0.51"
+			rotation="-180" transformX="-18" transformY="45.035">
+		<s:fill>
+			<s:SolidColor color="#ffffff"/>
+		</s:fill>
+	</s:Path>
+	<s:Path left="1" right="1" top="1" bottom="1"
+			data="M -19 0.51 Q -19 2.16 -20.2 3.31 Q -21.35 4.51 -23 4.51 L -23 85.56 Q -21.35 85.56 -20.2 86.71 Q -19 87.91 -19 89.56 L -13 89.56 L -13 0.51 L -19 0.51"
+			rotation="-180" transformX="-18" transformY="45.035">
+		<s:stroke>
+			<s:SolidColorStroke color="#491B01" color.down="#d68b20"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="#7b2e02" color.down="#ef9b20"/>
+		</s:fill>
+	</s:Path>
+	
+	<s:Path verticalCenter="0" horizontalCenter="0" data="M 0 0 L 4.4 4.4 L 0 9 L 0 0">
+		<s:fill>
+			<s:SolidColor color="#FFFFFF"/>
+		</s:fill>
+	</s:Path>
+	
+    
+    <!-- layer 8: text -->
+    <!--- @copy spark.components.supportClasses.ButtonBase#labelDisplay  -->
+    <s:Label id="labelDisplay"
+             textAlign="center"
+             maxDisplayedLines="1"
+             horizontalCenter="0" verticalCenter="1" verticalAlign="middle"
+             left="10" right="10" top="2" bottom="2">
+    </s:Label>
+    
+</s:SparkButtonSkin>

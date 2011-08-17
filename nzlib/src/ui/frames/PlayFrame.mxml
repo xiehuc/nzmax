@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<s:Group  xmlns:fx="http://ns.adobe.com/mxml/2009"  xmlns:s="library://ns.adobe.com/flex/spark"
+	width="256" height="192"
+	>
+	<fx:Script>
+		<![CDATA[
+			import com.greensock.TweenLite;
+			
+			import nz.Transport;
+			import nz.enum.Assets;
+			import nz.enum.EventListBridge;
+			import nz.enum.FrameInstance;
+		]]>
+	</fx:Script>
+	<fx:Style source="../../Style.css"/>
+	<s:Image source="@Embed(source='../lib/skins.swf',symbol='_bar.up_1')"/>
+	<s:Image y="172" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_0')"/>
+	<s:Button x="178" label="法庭记录" styleName="buttonLabelStyle topRightButtonStyle"
+			  click="Transport.pushPage(FrameInstance.OBJECTFRAME)"/>
+	<s:Group id="playPage" show="playPage_child.rotationX=90;TweenLite.to(playPage_child,0.5,{rotationX:0})" 
+			   hide="TweenLite.to(playPage_child,0.5,{rotationX:-90})">
+		<s:Group id="playPage_child" x="128" y="96">
+			<s:Button id="playButton" x="-112" y="-60" styleName="playButtonStyle"
+					   click="Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.PLAYBUTTON_CLICK);"/>
+		</s:Group>
+	</s:Group>
+</s:Group>

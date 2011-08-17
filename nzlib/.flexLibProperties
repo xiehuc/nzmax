@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="nz.Kernel"/>
+    <classEntry path="nz.support.IControl"/>
+    <classEntry path="nz.support.IFileManager"/>
+    <classEntry path="ui.frames.MoveFrame"/>
+    <classEntry path="ui.frames.ChooseFrame"/>
+    <classEntry path="ui.frames.PhotoFrame"/>
+    <classEntry path="ui.frames.DeteFrame"/>
+    <classEntry path="ui.frames.TalkFrame"/>
+    <classEntry path="ui.frames.ReportFrame"/>
+    <classEntry path="ui.frames.ChooseButton"/>
+    <classEntry path="nz.support.IRole"/>
+    <classEntry path="ui.skins.PlayButton"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

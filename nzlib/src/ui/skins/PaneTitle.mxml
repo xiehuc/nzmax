@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkButtonSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+				   xmlns:s="library://ns.adobe.com/flex/spark"
+				   xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+				   width="210" height="20">
+     
+    <fx:Metadata>
+        <![CDATA[ 
+        [HostComponent("spark.components.Button")]
+        ]]>
+    </fx:Metadata>
+        
+    <!-- states -->
+    <s:states>
+        <s:State name="up" />
+        <s:State name="over" />
+        <s:State name="down" />
+        <s:State name="disabled" />
+    </s:states>
+    
+	<s:Rect left="0" right="0" top="0" bottom="0">
+		<s:fill>
+			<s:SolidColor color="#292931" alpha="0.95"/>
+		</s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="#ffffff"/>
+		</s:stroke>
+	</s:Rect>
+	
+	
+    
+    <!-- layer 8: text -->
+    <!--- @copy spark.components.supportClasses.ButtonBase#labelDisplay  -->
+    <s:Label id="labelDisplay" left="10" right="10" top="2" bottom="2" color="#edac52"
+			 fontWeight="bold" horizontalCenter="0" maxDisplayedLines="1" textAlign="center"
+			 verticalAlign="middle" verticalCenter="1"
+			 fontWeight.up="bold">
+    </s:Label>
+    
+</s:SparkButtonSkin>
