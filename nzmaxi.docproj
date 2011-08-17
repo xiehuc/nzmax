@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<docProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <pageTitle>Nzmax/Nzmaxi 0.8.1 Help</pageTitle>
-  <classPaths></classPaths>
-  <sourcesList></sourcesList>
-  <outputDirectory>help</outputDirectory>
-  <activeCompiler>1</activeCompiler>
-  <extraOptions>-doc-classes ChangeLog Control Main PointPicPlugin com.Background com.Effect com.EffectTarget com.HPBar com.Layout com.Map com.Music com.Role com.Script com.TextPane com.nz.ICreatable com.nz.IGroupManage com.nz.ILoaderOptimized com.nz.IPlugin com.nz.ISaveObject com.nz.ObjectItemType controls.ObjectPaneCell controls.PaneCell controls.RolePaneCell controls.frames.ChooseFrame controls.frames.PhotoFrame controls.frames.ReportFrame  -exclude-dependencies=true -source-path src control_src D:\USER\Documents\ActionScript\as -library-path   lib "D:\SOFTWARE\Adobe\Adobe Flash Builder 4\sdks\4.1.0\frameworks\libs" "D:\SOFTWARE\Adobe\Adobe Flash Builder 4\sdks\4.1.0\frameworks\libs\air" </extraOptions>
-</docProject>
