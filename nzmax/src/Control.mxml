@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui:Core xmlns:fx="http://ns.adobe.com/mxml/2009"   xmlns:ui="ui.*" xmlns:mx="library://ns.adobe.com/flex/mx" creationComplete="main(event)"
+		 xmlns:s="library://ns.adobe.com/flex/spark" implements="nz.support.IControl" xmlns:frames="ui.frames.*" xmlns:local="*">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import nz.Transport;
+			import nz.enum.FrameInstance;
+			private var stack:Vector.<int>;
+			
+			protected function main(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				stack = new Vector.<int>();
+				stack.push(0);
+				
+				pageList[FrameInstance.PLAYFRAME] = 0;
+				pageList[FrameInstance.OBJECTFRAME] = 1;
+				pageList[FrameInstance.FILEFRAME] = 2;
+				
+				pushPage(FrameInstance.FILEFRAME);
+				
+			}
+			override public function pushPage(page:String):void
+			{
+				var i:int = pageList[page];
+				stack.push(i);
+				vs.selectedIndex = i;
+			}
+			override public function popPage():void
+			{
+				stack.pop();
+				vs.selectedIndex = stack[stack.length-1];
+			}
+			
+		]]>
+	</fx:Script>
+	<frames:BackFrame/>
+	<mx:ViewStack id="vs">
+		<s:NavigatorContent>
+			<frames:PlayFrame/>
+		</s:NavigatorContent>
+		<s:NavigatorContent>
+			<frames:ObjectFrame/>
+		</s:NavigatorContent>
+		<s:NavigatorContent>
+			<local:FileFrame/>
+		</s:NavigatorContent>
+	</mx:ViewStack>
+</ui:Core>

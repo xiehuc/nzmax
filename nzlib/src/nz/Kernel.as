@@ -17,6 +17,7 @@ package nz
 	import mx.core.UIComponent;
 	
 	import nz.component.Background;
+	import nz.component.Cover;
 	import nz.component.Effect;
 	import nz.component.EffectTarget;
 	import nz.component.HPBar;
@@ -57,6 +58,7 @@ package nz
 		protected var config:XML;
 		
 		protected var display:Group;
+		protected var cover:Cover;
 		
 		[Bindable]
 		public var upScreen:Group;
@@ -85,7 +87,7 @@ package nz
 			Transport.send = send_command;
 			Transport.eventList = new Object();
 			Transport.eventList[EventListBridge.IO_ERROR_EVENT] = global_ioerror_event;
-			//Transport.eventList[EventListBridge.LOAD_SCRIPT_EVENT] = load_script;
+			Transport.eventList[EventListBridge.LOAD_SCRIPT_EVENT] = loadStory;
 			Transport.eventList[EventListBridge.CONTROLBUTTON_EVENT] = deal_button_event_request;
 			//Transport.eventList[EventListBridge.PUSH_ERROR] = pushError;
 			//Transport.eventList[EventListBridge.CORRECTBUTTON_REQUEST] = deal_correctbutton_request;
@@ -115,10 +117,12 @@ package nz
 			//var pluginlayer:Group = new Group();
 			upText = new TextPane();
 			var over:UIComponent = new UIComponent();
+			cover = new Cover();
 			all.addElement(visual_ca);
 			all.addElement(hpbar);
 			all.addElement(upText);
 			all.addElement(over);
+			all.addElement(cover);
 			upScreen = new Group();
 			upScreen.addElement(all);
 			over_demo.visible = false;
@@ -226,6 +230,7 @@ package nz
 			func.setFunc("xmlns", { type:Script.IgnoreProperties } );
 			
 			SAVEManager.ready();
+			FileManager.initComlib();
 			/*SAVEManager.addEventListener(SAVEManager.READ_SUCCESS, save_read);
 			SAVEManager.addEventListener(SAVEManager.READ_FAILED, save_read);
 			SAVEManager.addEventListener(SAVEManager.PREPARE_DATA, save_read);*/
@@ -263,6 +268,7 @@ package nz
 			trace(obj is IControl);
 			if(obj is IControl){
 				control = obj;
+				Transport.c = control;
 			}
 		}
 		public function regist(str:String,func:Function):void
@@ -292,7 +298,6 @@ package nz
 			var l:URLLoader = new URLLoader();
 			l.load(new URLRequest(infoPath));
 			l.addEventListener(Event.COMPLETE,load_story_complete);
-			
 		}
 		private function load_story_complete(e:Event):void
 		{
@@ -620,6 +625,7 @@ package nz
 		private function start_story(e:Event):void
 		{
 			script_start();
+			(cover.parent as Group).removeElement(cover);
 		}
 		private function deal_event_request(e:Event):void
 		{
@@ -642,9 +648,9 @@ package nz
 					}
 					break;
 				case Script.FINISH:
-					FileManager.writeFinish();
+					/*FileManager.writeFinish();
 					FileManager.rescan();
-					dispatchEvent(new Event(SAVEManager.RETURNTOTITLE));
+					dispatchEvent(new Event(SAVEManager.RETURNTOTITLE));*/
 					break;
 				case TextPane.START_TRACE:
 					cuScript.stop();

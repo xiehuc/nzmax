@@ -14,7 +14,6 @@ package nz.manager
 	public class FileManager
 	{
 		[Bindable]
-		static public var data:ArrayCollection = new ArrayCollection();
 		static public var ScriptDirectory:String;
 		static public var SaveDirectory:String;
 		static public var ScriptInfo:XML;
@@ -24,16 +23,19 @@ package nz.manager
 		
 		static private var filelist:XML;
 		static private var commonFileList:XML;
-		static public function setDirectory(dir:String,globalhost:String = ""):void
+		static public function initComlib(host:String = ""):void
 		{
-			//第一步
-			host = globalhost;
-			directory = dir;
-			data.removeAll();
 			var u:URLLoader = new URLLoader();
 			u.addEventListener(Event.COMPLETE,com_info_complete);
 			u.load(new URLRequest(host+"comlib/info.xml"));
-			rescan();
+		}
+		/**
+		 * 需要首先调用setDirectory.然后用载入info.xml然后调用setStoryInfo;
+		 */
+		static public function setDirectory(dir:String,globalhost:String = ""):void
+		{
+			host = globalhost;
+			directory = dir;
 		}
 		static public function setStoryInfo(info:XML):void
 		{
@@ -61,15 +63,6 @@ package nz.manager
 				return host+commonFileList.file.(@path == path).@url;
 			}
 			return ScriptDirectory + fl.file.(@path == path).@url;
-		}
-		static public function rescan():void
-		{
-			data.removeAll();
-			var infoFile:String = directory+"/info.xml";
-			var urlloader:URLLoader = new URLLoader();
-			urlloader.load(new URLRequest(infoFile));
-			urlloader.addEventListener(Event.COMPLETE,info_load_complete);
-			
 		}
 		/*static public function rescan():void
 		{
@@ -104,14 +97,6 @@ package nz.manager
 			infoStream.writeUTFBytes(ScriptInfo.toXMLString());
 			infoStream.close();
 		}*/
-		static public function writeShowChapter(i:int):void
-		{
-			
-		}
-		static public function writeFinish():void
-		{
-			
-		}
 		static private function com_info_complete(e:Event):void
 		{
 			var xml:XML = new XML(e.currentTarget.data);
@@ -120,11 +105,6 @@ package nz.manager
 				var define:URLLoader = new URLLoader(new URLRequest(x.toString()));
 				define.addEventListener(Event.COMPLETE, define_complete);
 			}
-		}
-		static private function info_load_complete(e:Event):void
-		{
-			var xml:XML = new XML(e.currentTarget.data);
-			data.addItem({label:xml.name.toString(),finish:xml.finish.toString(),xmlData:xml});
 		}
 		public function FileManager() 
 		{

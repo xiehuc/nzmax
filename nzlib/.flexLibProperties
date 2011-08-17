@@ -13,6 +13,7 @@
     <classEntry path="ui.frames.ChooseButton"/>
     <classEntry path="nz.support.IRole"/>
     <classEntry path="ui.skins.PlayButton"/>
+    <classEntry path="nz.component.Cover"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

@@ -332,7 +332,7 @@
 		 */
 		public function showChapter(index:int):void
 		{
-			FileManager.writeShowChapter(index);
+			//FileManager.writeShowChapter(index);
 		}
 		/**
 		 * 高级多次跳转.

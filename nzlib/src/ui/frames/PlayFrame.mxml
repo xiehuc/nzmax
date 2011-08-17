@@ -16,7 +16,7 @@
 	<s:Image source="@Embed(source='../lib/skins.swf',symbol='_bar.up_1')"/>
 	<s:Image y="172" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_0')"/>
 	<s:Button x="178" label="法庭记录" styleName="buttonLabelStyle topRightButtonStyle"
-			  click="Transport.pushPage(FrameInstance.OBJECTFRAME)"/>
+			  click="Transport.c.pushPage(FrameInstance.OBJECTFRAME)"/>
 	<s:Group id="playPage" show="playPage_child.rotationX=90;TweenLite.to(playPage_child,0.5,{rotationX:0})" 
 			   hide="TweenLite.to(playPage_child,0.5,{rotationX:-90})">
 		<s:Group id="playPage_child" x="128" y="96">

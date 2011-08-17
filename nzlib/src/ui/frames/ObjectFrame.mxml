@@ -62,7 +62,7 @@
 			   />
 	<!---@private-->
 	<s:Button id="top_r_btn" label="人物记录" styleName="buttonLabelStyle topRightButtonStyle" x="178"/>
-	<s:Button y="162.5" label="取消" styleName="buttonLabelStyle downLeftButtonStyle" click="Transport.popPage();"/>
+	<s:Button y="162.5" label="取消" styleName="buttonLabelStyle downLeftButtonStyle" click="Transport.c.popPage();"/>
 	<!---@private-->
 	<s:Button id="detail_btn" visible="false" x="178" y="162.5" label="详细" 
 			   styleName="buttonLabelStyle downRightButtonStyle" />
