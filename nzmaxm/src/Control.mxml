@@ -45,7 +45,7 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
 
-	<s:ViewNavigator id="vn1" firstView="ui.views.PlayView">
+	<s:ViewNavigator id="vn1" firstView="ui.views.FileView">
 		
 	</s:ViewNavigator>
 </ui:Core>

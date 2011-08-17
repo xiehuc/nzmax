@@ -13,6 +13,7 @@
 			import nz.enum.Assets;
 			import nz.enum.EventListBridge;
 			import nz.enum.FrameInstance;
+			import nz.manager.FileManager;
 			
 			import spark.events.IndexChangeEvent;
 			
@@ -22,20 +23,24 @@
 			protected function main(event:FlexEvent):void
 			{
 				dp = new ArrayCollection();
-				
-				var dir:File = File.applicationDirectory.resolvePath("story");
-				var lst:Array = dir.getDirectoryListing();
-				for each(var f:File in lst){
-					var s:FileStream = new FileStream();
-					s.open(f.resolvePath("info.xml"),FileMode.READ);
-					var xml:XML = new XML(s.readUTFBytes(s.bytesAvailable));
-					dp.addItem({label:xml.name.toString(),finish:xml.finish.toString(),xmlData:xml,dir:f.name});	
+				if(stage.loaderInfo.parameters.s != null){
+					var u:URLLoader = new URLLoader();
+					u.load(new URLRequest(stage.loaderInfo.parameters.s));
+					u.addEventListener(Event.COMPLETE,complete);
 				}
+				/*if (stage.loaderInfo.parameters.s != null) {
+					FileManager.setDirectory(stage.loaderInfo.parameters.s,globalhost);
+				}*/
+			}
+			protected function complete(e:Event):void
+			{
+				var xml:XML = new XML(e.currentTarget.data);
+				dp.addItem({label:xml.name.toString(),finish:xml.finish.toString(),xmlData:xml,path:stage.loaderInfo.parameters.s});
 			}
 			
 			protected function startStory(event:IndexChangeEvent):void
 			{
-				Transport.eventList[EventListBridge.LOAD_SCRIPT_EVENT]("story/"+list.selectedItem.dir+"/info.xml");
+				Transport.eventList[EventListBridge.LOAD_SCRIPT_EVENT](list.selectedItem.path);
 				Transport.c.pushPage(FrameInstance.PLAYFRAME);
 			}
 			

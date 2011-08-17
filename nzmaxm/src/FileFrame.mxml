@@ -36,7 +36,7 @@
 			protected function startStory(event:IndexChangeEvent):void
 			{
 				Transport.eventList[EventListBridge.LOAD_SCRIPT_EVENT]("story/"+list.selectedItem.dir+"/info.xml");
-				Transport.c.popPage();
+				Transport.c.pushPage(FrameInstance.PLAYFRAME);
 			}
 			
 		]]>
