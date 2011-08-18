@@ -94,7 +94,8 @@
 	<!---@private-->
 	<s:Button id="detail_btn" visible="false" x="178" y="162.5" label="详细" 
 			   styleName="buttonLabelStyle downRightButtonStyle" />
-	<s:TextInput id="pane_title" x="23" y="34" width="210" editable="false"/>
+	<s:TextInput id="pane_title" x="23" y="34" width="210" editable="false"
+				 height.normal="22"/>
 	<!---@private-->
 	<s:List id="pane" width="200" height="100" borderVisible="false" horizontalCenter="0" skinClass="ui.skins.GridPaneSkin" horizontalScrollPolicy="off" verticalScrollPolicy="off"
 			itemRenderer="ui.PaneItemRenderer" verticalCenter="9" itemRollOver="pane_itemRollOverHandler(event)" change="pane_changeHandler(event)">

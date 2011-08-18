@@ -16,6 +16,8 @@
 			import nz.enum.EventListBridge;
 			import nz.enum.FrameInstance;
 			
+			import spark.events.IndexChangeEvent;
+			
 			override protected function main(event:FlexEvent):void
 			{
 				// TODO Auto-generated method stub
@@ -28,6 +30,11 @@
 			{
 				// TODO Auto-generated method stub
 				Transport.c.replacePage(FrameInstance.OBJECTFRAME);
+			}
+			override protected function pane_changeHandler(event:IndexChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				Transport.c.pushPage(FrameInstance.ROLEDETAILFRAME);
 			}
 			
 		]]>

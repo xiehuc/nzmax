@@ -23,11 +23,17 @@
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	
+	import mx.graphics.SolidColor;
+	
+	import nz.Transport;
 	import nz.manager.FilterManager;
 	import nz.manager.FuncMan;
 	import nz.manager.SAVEManager;
-	import nz.Transport;
 	import nz.support.ISaveObject;
+	
+	import spark.components.BorderContainer;
+	import spark.components.Group;
+	import spark.primitives.Rect;
 	
 	/**
 	 * 用来控制特效显示的类.
@@ -40,11 +46,11 @@
 	 * @see com.EffectTarget
 	 * @author CodeX
 	 */
-	public class Effect extends EventDispatcher implements ISaveObject
+	public class Effect extends BorderContainer implements ISaveObject
 	{
-		[Embed(source = "../../../lib/effect/zoomblur.pbj", mimeType = "application/octet-stream")]private var zoomBlurPB:Class;
+		/*[Embed(source = "../../../lib/effect/zoomblur.pbj", mimeType = "application/octet-stream")]private var zoomBlurPB:Class;
 		[Embed(source = "../../../lib/effect/sharpen.pbj", mimeType = "application/octet-stream")]private var sharpenPB:Class;
-		[Embed(source = "../../../lib/effect/pixelate.pbj", mimeType = "application/octet-stream")]private var pixelatePB:Class;
+		[Embed(source = "../../../lib/effect/pixelate.pbj", mimeType = "application/octet-stream")]private var pixelatePB:Class;*/
 		/**@private */
 		public var func:FuncMan;
 		private var filterList:Object;
@@ -54,7 +60,7 @@
 		private var timer:Timer;
 		private var vibTween:TimelineLite;
 		private var vibpre:Object;
-		private var _whiteScreen:Sprite;
+		private var _whiteScreen:Rect;
 		/**@private */
 		public function Effect() 
 		{
@@ -62,13 +68,17 @@
 			filterDescription = new Object();
 			motionDic = new Dictionary();
 			
-			filterList.zoomBlur = new Shader(new zoomBlurPB());
+			this.width = 256;
+			this.height = 192;
+			this.alpha = 0;
+			this.setStyle("borderVisible","false");
+			/*filterList.zoomBlur = new Shader(new zoomBlurPB());
 			filterList.zoomBlur.precisionHint = ShaderPrecision.FAST;//amount
 			filterList.zoomBlur.data.center.value = [128, 96];
 			filterList.sharpen = new Shader(new sharpenPB());
 			filterList.sharpen.precisionHint = ShaderPrecision.FAST;
 			filterList.pixelate = new Shader(new pixelatePB());
-			filterList.pixelate.precisionHint = ShaderPrecision.FAST;
+			filterList.pixelate.precisionHint = ShaderPrecision.FAST;*/
 			
 			filterDescription.zoomBlur = ["amount"];
 			filterDescription.sharpen = ["amount"];
@@ -90,10 +100,12 @@
 			timer.addEventListener(TimerEvent.TIMER, vib_timer);
 			timer.addEventListener(TimerEvent.TIMER_COMPLETE, vib_timer_complete);
 			
-			_whiteScreen = new Sprite();
-			_whiteScreen.graphics.beginFill(0xffffff);
+			_whiteScreen = new Rect();
+			_whiteScreen.width = 256;_whiteScreen.height = 192;
+			_whiteScreen.fill = new SolidColor(0xffffff);
+			/*_whiteScreen.graphics.beginFill(0xffffff);
 			_whiteScreen.graphics.drawRect(0, 0, 256, 192);
-			_whiteScreen.graphics.endFill();
+			_whiteScreen.graphics.endFill();*/
 			
 			func = new FuncMan();
 			//func.setFunc("applyFilters", { type:Script.ComplexParams,down:true,progress:false } );
@@ -388,19 +400,22 @@
 			return array;
 		}
 		/**@private */
-		public function flashScreen(target:DisplayObjectContainer, t:Number):void
+		public function flashScreen(target:Group, t:Number):void
 		{
-			target.addChild(_whiteScreen);
+			var s:SolidColor = new SolidColor(0xffffff);
+			this.backgroundFill = s;
+			this.alpha=1;
 			if(t<=0.5){
-				TweenLite.delayedCall(t, target.removeChild, [_whiteScreen]);
+				TweenLite.delayedCall(t, flashScreenContinue, []);
 			}else {
-				TweenLite.delayedCall(t, TweenLite.to, [_whiteScreen, 1, { alpha:0, onComplete:flashScreenContinue } ]);
+				TweenLite.delayedCall(t, TweenLite.to, [this, 1, { alpha:0, onComplete:flashScreenContinue } ]);
 			}
 		}
 		private function flashScreenContinue():void
 		{
-			_whiteScreen.alpha = 1;
-			_whiteScreen.stage.removeChild(_whiteScreen);
+			this.backgroundFill = null;
+			this.alpha = 0;
+			//_whiteScreen.stage.removeChild(_whiteScreen);
 		}
 	}
 	

@@ -16,7 +16,7 @@
 				
 				kernel.init();
 				kernel.initConfig();
-				addElementAt(kernel.upScreen,0);
+				
 			}
 			private function pushError(e:String):void
 			{
@@ -26,10 +26,11 @@
 		]]>
 	</fx:Script>
 	<fx:Declarations>
-		<nz:Kernel id="kernel"/>
+		
 	</fx:Declarations>
 	<s:layout>
 		<s:VerticalLayout gap="0"/>
 	</s:layout>
+	<nz:Kernel id="kernel"/>
 	<local:Control id="control"/>
 </s:Application>

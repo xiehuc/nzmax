@@ -21,7 +21,7 @@
 				
 				kernel.init();
 				kernel.initConfig();
-				addElementAt(kernel.upScreen,0);
+				
 				kernel.upScreen.scaleX = kernel.upScreen.scaleY = 1.25;
 				control.scaleX = control.scaleY = 1.25;
 				
@@ -37,7 +37,7 @@
 	</s:layout>
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-		<nz:Kernel id="kernel"/>
 	</fx:Declarations>
+	<nz:Kernel id="kernel"/>
 	<local:Control id="control"/>
 </s:Application>

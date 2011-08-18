@@ -12,7 +12,6 @@
 				
 				kernel.init();
 				kernel.initConfig();
-				addElementAt(kernel.upScreen,0);
 				
 			}
 			private function pushError(e:String):void
@@ -23,11 +22,12 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-		<nz:Kernel id="kernel"/>
+		
 	</fx:Declarations>
 	<s:layout>
 		<s:VerticalLayout gap="0"/>
 	</s:layout>
+	<nz:Kernel id="kernel"/>
 	<local:Control id="control"/>
 	
 </s:WindowedApplication>

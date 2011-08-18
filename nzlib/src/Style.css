@@ -10,6 +10,7 @@
 	color:#edac52;
 	fontWeight:bold;
 	textAlign:center;
+	skinClass:ClassReference("ui.skins.BoxTextSkin");
 }
 #pane_descript{
 	editable:false;

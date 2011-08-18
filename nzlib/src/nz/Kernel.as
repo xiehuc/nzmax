@@ -12,6 +12,7 @@ package nz
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	
+	import lib.testing;
 	import lib.type.writer;
 	
 	import mx.core.UIComponent;
@@ -60,6 +61,9 @@ package nz
 		
 		protected var display:Group;
 		protected var cover:Cover;
+		protected var over:UIComponent;
+		protected var zylogo:lib.testing;
+		protected var all:Group;
 		
 		[Bindable]
 		public var upScreen:Group;
@@ -102,7 +106,7 @@ package nz
 			mode = new Object();
 			mode.court = false;
 			
-			var all:Group = new Group();
+			all = new Group();
 			var bglayer:Group = new Group();
 			bg = new Background();
 			bglayer.addElement(bg);
@@ -115,18 +119,21 @@ package nz
 			visual_ca.addElement(bgexpand);
 			visual_ca.addElement(over_demo);
 			hpbar = new HPBar();
-			//var control
+
 			//var pluginlayer:Group = new Group();
 			upText = new TextPane();
-			var over:UIComponent = new UIComponent();
+			over = new UIComponent();
 			cover = new Cover();
+			ef = new Effect();
 			all.addElement(visual_ca);
 			all.addElement(hpbar);
 			all.addElement(upText);
 			all.addElement(over);
+			all.addElement(ef);
 			all.addElement(cover);
 			upScreen = new Group();
 			upScreen.addElement(all);
+			addElement(upScreen);
 			over_demo.visible = false;
 			upText.y = 144;
 			hpbar.visible=false;
@@ -147,7 +154,7 @@ package nz
 			mu = new Music();
 			map = new Map();
 			map.addEventListener(Script.SCRIPT_PAUSE, deal_event_request);
-			//ef = new Effect();
+			
 			//ef.addEventListener(Script.SCRIPT_START, deal_event_request);
 			
 			
@@ -303,7 +310,7 @@ package nz
 		}
 		private function global_ioerror_event(e:IOErrorEvent):void
 		{
-			pushError(e.text);
+			pushError(e.toString());
 		}
 		private function show_progress(e:BasisEvent):void 
 		{
@@ -479,31 +486,32 @@ package nz
 			switch(t) {
 				case "证言开始":
 					cuScript.stop();
-					/*zylogo = new lib.testing();
+					zylogo = new lib.testing();
 					over.addChild(zylogo);
-					var lts:test_start = new test_start();
+					var lts:lib.test_start = new lib.test_start();
 					over.addChild(lts);
-					TweenLite.delayedCall(2.5, continue_task);*/
+					TweenLite.delayedCall(2.5, continue_task);
 					break;
 				case "询问开始":
 					state["ask"] = true;
 					cuScript.stop();
 					hpbar.visible = true;
-					//control.gotoPage(FrameInstance.NULLFRAME);
+					control.pushPage(FrameInstance.NULLFRAME);
 					//var lsh:DisplayObject = pro["l"].headMotion(Position.LEFT);
 					//var jsh:DisplayObject = pro["p"].headMotion(Position.RIGHT);
 					//over.addChild(lsh);
 					//over.addChild(jsh);
-					//var lis:inquire_start = new inquire_start();
-					//over.addChild(lis);
+					
+					var lis:lib.inquire_start = new lib.inquire_start();
+					over.addChild(lis);
 					//addChild(upText);//把Uptext提到顶端
 					Mode.playButtonEnabled = true;
 					//TweenLite.delayedCall(2.5, Assets.removeTargets, [[jsh,lsh,lis]]);
-					//TweenLite.delayedCall(2.5, control.gotoPage, [FrameInstance.PLAYFRAME]);
+					TweenLite.delayedCall(2.5, control.popPage, []);
 					break;
 				case "证言结束":
-					//over.removeChild(zylogo);
-					//zylogo = null;
+					over.removeChild(zylogo);
+					zylogo = null;
 					break;
 				case "询问结束":
 					state["ask"] = false;
@@ -516,6 +524,10 @@ package nz
 					}
 					break;
 			}
+		}
+		private function continue_task():void
+		{
+			Mode.playButtonEnabled = true;
 		}
 		public function flyto(value:String):void {
 			if (cuRole.linkName == value) {
@@ -602,7 +614,8 @@ package nz
 		private function start_story(e:Event):void
 		{
 			script_start();
-			(cover.parent as Group).removeElement(cover);
+			all.removeElement(cover);
+			cover = null;
 		}
 		private function deal_event_request(e:Event):void
 		{
@@ -732,7 +745,7 @@ package nz
 					var cmd:Array = (e.data as String).split("|");
 					switch(cmd[0]) {
 						case "vib":ef.vibration(display.parent, Assets.nullReplace(cmd[1],2));break;
-						case "fsrn":ef.flashScreen(this.stage, Assets.nullReplace(cmd[1],0.5));break;
+						case "fsrn":ef.flashScreen(this, Assets.nullReplace(cmd[1],0.5));break;
 						case "p":upText.insidePause(Assets.nullReplace(cmd[1], 0.5)); break;
 						case "s":upText.speed = Assets.nullReplace(cmd[1], 15); break;
 						case "cls":upText.cleanText();break;

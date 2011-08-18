@@ -8,7 +8,8 @@
 		]]>
 	</fx:Script>
 	<fx:Style source="../Style.css"/>
-	<s:TextInput editable="false" id="pane_title" x="84" y="17" width="146" text="{data.name}"/>
+	<s:TextInput id="pane_title" x="84" y="17" width="146" height="22" editable="false"
+				 text="{data.name}"/>
 	<s:TextArea editable="false" id="pane_descript" x="84" y="39" width="146" height="44" text="{data.des}"/>
 	<s:Image x="20" width="64" height="64" source="{FileManager.getResolvePath(data.path)}"
 			 verticalCenter="0"/>

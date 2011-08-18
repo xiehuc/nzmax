@@ -8,8 +8,9 @@
 			import nz.Transport;
 			import nz.enum.FrameInstance;
 			
-			import ui.views.*;
+			import spark.transitions.ViewTransitionBase;
 			
+			import ui.views.*;
 			protected function main(event:FlexEvent):void
 			{
 				//tb.hideTabBar(false);
@@ -21,6 +22,8 @@
 				pageList[FrameInstance.ROLEFRAME] = ui.views.RoleView;
 				pageList[FrameInstance.OBJECTDETAILFRAME] = ui.views.ObjectDetailView;
 				pageList[FrameInstance.ROLEDETAILFRAME] = ui.views.RoleDetailView;
+				
+				var trans:ViewTransitionBase = new ViewTransitionBase();
 				/*pageList[FrameInstance.ROLEFRAME] = ;
 				 = [filePage, nullCover];
 				pageList[FrameInstance.CHOOSEFRAME] = [choosePage, nullCover];
@@ -30,7 +33,8 @@
 				pageList[FrameInstance.MOVEFRAME] = [movePage, talkCover];
 				pageList[FrameInstance.SAVERFRAME] = [saver, nullCover];
 				pageList[FrameInstance.NULLFRAME] = [blankPage, nullCover];*/
-				
+				vn1.defaultPopTransition = trans;
+				vn1.defaultPushTransition = trans;
 			}
 			override public function pushPage(page:String):void
 			{
@@ -51,6 +55,5 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
 	<s:ViewNavigator id="vn1" firstView="ui.views.FileView">
-		
 	</s:ViewNavigator>
 </ui:Core>
