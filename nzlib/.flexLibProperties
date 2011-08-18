@@ -17,6 +17,7 @@
     <classEntry path="ui.PaneItem"/>
     <classEntry path="ui.PaneItemRenderer"/>
     <classEntry path="nz.enum.Mode"/>
+    <classEntry path="ui.skins.GridPaneSkin"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

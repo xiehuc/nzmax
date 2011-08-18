@@ -2,6 +2,22 @@
 @namespace mx "library://ns.adobe.com/flex/halo";  
 
 
+#pane_title{
+	editable:false;
+	borderColor:#ffffff;
+	contentBackgroundColor:#292931;
+	contentBackgroundAlpha:0.95;
+	color:#edac52;
+	fontWeight:bold;
+	textAlign:center;
+}
+#pane_descript{
+	editable:false;
+	borderColor:#ffffff;
+	contentBackgroundColor:#9bc593;
+	contentBackgroundAlpha:0.95;
+	color:white;
+}
 #pane{
 	contentBackgroundColor:#CB9966;
 }

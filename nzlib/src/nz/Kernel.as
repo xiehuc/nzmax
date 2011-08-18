@@ -72,6 +72,7 @@ package nz
 		protected var upText:TextPane;
 		protected var cuRole:IRole;
 		protected var cuScript:Script;
+		protected var hpbar:HPBar;
 		
 		protected var control:IControl;
 		protected var fm:IFileManager;
@@ -113,7 +114,7 @@ package nz
 			visual_ca.addElement(display);
 			visual_ca.addElement(bgexpand);
 			visual_ca.addElement(over_demo);
-			var hpbar:HPBar = new HPBar();
+			hpbar = new HPBar();
 			//var control
 			//var pluginlayer:Group = new Group();
 			upText = new TextPane();
@@ -473,36 +474,36 @@ package nz
 			}
 			return false;
 		}
-		/*public function task(t:String):void
+		public function task(t:String):void
 		{
 			switch(t) {
 				case "证言开始":
 					cuScript.stop();
-					zylogo = new lib.testing();
+					/*zylogo = new lib.testing();
 					over.addChild(zylogo);
 					var lts:test_start = new test_start();
 					over.addChild(lts);
-					TweenLite.delayedCall(2.5, continue_task);
+					TweenLite.delayedCall(2.5, continue_task);*/
 					break;
 				case "询问开始":
 					state["ask"] = true;
 					cuScript.stop();
 					hpbar.visible = true;
-					control.gotoPage(FrameInstance.NULLFRAME);
-					var lsh:DisplayObject = pro["l"].headMotion(Position.LEFT);
-					var jsh:DisplayObject = pro["p"].headMotion(Position.RIGHT);
-					over.addChild(lsh);
-					over.addChild(jsh);
-					var lis:inquire_start = new inquire_start();
-					over.addChild(lis);
+					//control.gotoPage(FrameInstance.NULLFRAME);
+					//var lsh:DisplayObject = pro["l"].headMotion(Position.LEFT);
+					//var jsh:DisplayObject = pro["p"].headMotion(Position.RIGHT);
+					//over.addChild(lsh);
+					//over.addChild(jsh);
+					//var lis:inquire_start = new inquire_start();
+					//over.addChild(lis);
 					//addChild(upText);//把Uptext提到顶端
-					control.playButtonEnabled = true;
-					TweenLite.delayedCall(2.5, Assets.removeTargets, [[jsh,lsh,lis]]);
-					TweenLite.delayedCall(2.5, control.gotoPage, [FrameInstance.PLAYFRAME]);
+					Mode.playButtonEnabled = true;
+					//TweenLite.delayedCall(2.5, Assets.removeTargets, [[jsh,lsh,lis]]);
+					//TweenLite.delayedCall(2.5, control.gotoPage, [FrameInstance.PLAYFRAME]);
 					break;
 				case "证言结束":
-					over.removeChild(zylogo);
-					zylogo = null;
+					//over.removeChild(zylogo);
+					//zylogo = null;
 					break;
 				case "询问结束":
 					state["ask"] = false;
@@ -515,7 +516,7 @@ package nz
 					}
 					break;
 			}
-		}*/
+		}
 		public function flyto(value:String):void {
 			if (cuRole.linkName == value) {
 				pointRole(value);
@@ -617,10 +618,10 @@ package nz
 					if (cuScript.environment == "询问") {
 						//control.gotoPage(FrameInstance.INQUIREFRAME);
 						Mode.playButtonEnabled = false;
-						control.objectModeEnabled = true;
+						Mode.objectModeEnabled = true;
 					}else {
 						//control.gotoPage(FrameInstance.PLAYFRAME);
-						control.objectModeEnabled = false;
+						Mode.objectModeEnabled = false;
 					}
 					break;
 				case Script.FINISH:

@@ -43,6 +43,7 @@ package ui
 			
 			objectModeEnabled = false;
 			
+			
 			func = new FuncMan();
 			//func.setFunc("gotoPage", { type:Script.SingleParams} );
 			func.setFunc("chooseSet", { type:Script.ComplexParams, down:false, progress:false } );

@@ -19,6 +19,8 @@
 				pageList[FrameInstance.OBJECTFRAME] = ui.views.ObjectView;
 				pageList[FrameInstance.FILEFRAME] = ui.views.FileView;
 				pageList[FrameInstance.ROLEFRAME] = ui.views.RoleView;
+				pageList[FrameInstance.OBJECTDETAILFRAME] = ui.views.ObjectDetailView;
+				pageList[FrameInstance.ROLEDETAILFRAME] = ui.views.RoleDetailView;
 				/*pageList[FrameInstance.ROLEFRAME] = ;
 				 = [filePage, nullCover];
 				pageList[FrameInstance.CHOOSEFRAME] = [choosePage, nullCover];
@@ -28,7 +30,7 @@
 				pageList[FrameInstance.MOVEFRAME] = [movePage, talkCover];
 				pageList[FrameInstance.SAVERFRAME] = [saver, nullCover];
 				pageList[FrameInstance.NULLFRAME] = [blankPage, nullCover];*/
-				pushPage(FrameInstance.FILEFRAME);
+				
 			}
 			override public function pushPage(page:String):void
 			{
@@ -48,7 +50,6 @@
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
-
 	<s:ViewNavigator id="vn1" firstView="ui.views.FileView">
 		
 	</s:ViewNavigator>

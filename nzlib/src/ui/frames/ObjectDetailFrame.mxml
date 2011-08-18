@@ -1,11 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <s:Group  xmlns:fx="http://ns.adobe.com/mxml/2009"  xmlns:s="library://ns.adobe.com/flex/spark"
-	width="256" height="192" creationComplete="main(event)" currentState="{Mode.objectState}"
+	width="256" height="192" creationComplete="main(event)" xmlns:ui="ui.*" currentState="{Mode.objectState}"
 	>
-	<s:states>
-		<s:State name="normal"/>
-		<s:State name="object"/>
-	</s:states>
 	<fx:Script>
 		<![CDATA[
 			import com.greensock.TweenLite;
@@ -21,16 +17,12 @@
 			import nz.enum.FrameInstance;
 			import nz.enum.Mode;
 			
-			import spark.events.IndexChangeEvent;
 			import spark.events.ListEvent;
 			
 			protected function main(event:FlexEvent):void
 			{
 				pane.dataProvider = Transport.DisplayRoot["ObjectPane"];
-				if(pane.dataProvider.length>0)
-				pane_title.text = pane.dataProvider.getItemAt(0).name;
 			}
-			
 			protected function gpane_left_buttonDownHandler(event:FlexEvent):void
 			{
 				// TODO Auto-generated method stub
@@ -51,61 +43,54 @@
 				Transport.c.replacePage(FrameInstance.ROLEFRAME);
 			}
 			
-			protected function pane_itemRollOverHandler(event:ListEvent):void
-			{
-				// TODO Auto-generated method stub
-				pane_title.text = event.item.name;
-			}
-			
-			protected function pane_changeHandler(event:IndexChangeEvent):void
-			{
-				// TODO Auto-generated method stub
-				Transport.c.pushPage(FrameInstance.OBJECTDETAILFRAME);
-			}
 			
 		]]>
 	</fx:Script>
 	<fx:Style source="../../Style.css"/>
-	<s:Image id="bar_up_2_1" source="@Embed(source='../lib/skins.swf',symbol='_bar.up_2_1')"
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="object"/>
+	</s:states>
+	<s:Image source="@Embed(source='../lib/skins.swf',symbol='_bar.up_2_1')"
 			 visible="true" visible.object="false"
 			 />
 	<!---@private-->
-	<s:Image id="bar_up_2_2" source="@Embed(source='../lib/skins.swf',symbol='_bar.up_2_2')"
+	<s:Image source="@Embed(source='../lib/skins.swf',symbol='_bar.up_2_2')"
 			 visible="false" visible.object="true"
 			 />
 	<!---@private-->
-	<s:Image id="bar_down_2_1" y="160" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_2_1')"
+	<s:Image  y="160" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_2_1')"
 			 visible="true" visible.object="false"
 			 />
 	<!---@private-->
-	<s:Image id="bar_down_2_2" y="160" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_2_2')"
+	<s:Image  y="160" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_2_2')"
 			 visible="false" visible.object="true"
 			 />
 	<!---@private-->
 	<s:Button id="top_m_btn" x="89" label="指证" styleName="buttonLabelStyle topMiddleButtonStyle" 
 			  visible="false" visible.object="true" 
-			   />
+			  />
+	<ui:moreBg verticalCenter="0"/>
 	<!---@private-->
 	<s:Button id="top_r_btn" label="人物记录" styleName="buttonLabelStyle topRightButtonStyle" x="178" 
-			  click="top_r_btn_clickHandler(event)"
 			  visible="true" visible.object="false"
 			  />
 	<s:Button y="162.5" label="取消" styleName="buttonLabelStyle downLeftButtonStyle" click="Transport.c.popPage();"/>
 	<!---@private-->
 	<s:Button id="detail_btn" visible="false" x="178" y="162.5" label="详细" 
 			   styleName="buttonLabelStyle downRightButtonStyle" />
-	<s:TextInput id="pane_title" x="23" y="34" width="210" editable="false"/>
 	<!---@private-->
-	<s:List id="pane" width="200" height="100" borderVisible="false" horizontalCenter="0" skinClass="ui.skins.GridPaneSkin" horizontalScrollPolicy="off" verticalScrollPolicy="off"
-			itemRenderer="ui.PaneItemRenderer" verticalCenter="9" itemRollOver="pane_itemRollOverHandler(event)" change="pane_changeHandler(event)">
+	<s:List id="pane" width="256" height="100" borderVisible="false" contentBackgroundAlpha="0"
+			horizontalScrollPolicy="off" itemRenderer="ui.DetailItemRenderer" verticalCenter="0"
+			verticalScrollPolicy="off">
 		<s:layout>
-			<s:TileLayout id="panelay" horizontalGap="8" paddingLeft="8" paddingTop="6" paddingRight="8" paddingBottom="6" orientation="columns"
-						  requestedRowCount="2"
-						  verticalGap="8"/>
+			<s:HorizontalLayout id="panelay" gap="0"/>
 		</s:layout>
 	</s:List>
 	<!---@private-->
-	<s:Button id="gpane_left" x="15" y="60" rotationY="180" width="12" height="91" styleName="arrowButtonStyle" autoRepeat="true" buttonDown="gpane_left_buttonDownHandler(event)"/>
+	<s:Button id="gpane_left" x="15" width="12" height="70" autoRepeat="true" rotationY="180"
+			  styleName="arrowButtonStyle" verticalCenter="0"/>
 	<!---@private-->
-	<s:Button id="gpane_right" x="241" y="60" width="12" height="91" styleName="arrowButtonStyle" autoRepeat="true" buttonDown="gpane_right_buttonDownHandler(event)"/>
+	<s:Button id="gpane_right" x="241" width="12" height="70" autoRepeat="true"
+			  styleName="arrowButtonStyle" verticalCenter="0"/>
 </s:Group>

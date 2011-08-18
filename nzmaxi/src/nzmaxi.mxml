@@ -29,7 +29,7 @@
 		<nz:Kernel id="kernel"/>
 	</fx:Declarations>
 	<s:layout>
-		<s:VerticalLayout/>
+		<s:VerticalLayout gap="0"/>
 	</s:layout>
 	<local:Control id="control"/>
 </s:Application>

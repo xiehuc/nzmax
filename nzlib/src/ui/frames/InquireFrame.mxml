@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<s:Group  xmlns:fx="http://ns.adobe.com/mxml/2009"  xmlns:s="library://ns.adobe.com/flex/spark"
+	width="256" height="192"
+	>
+	<fx:Script>
+		<![CDATA[
+			import com.greensock.TweenLite;
+			
+			import nz.Transport;
+			import nz.enum.Assets;
+			import nz.enum.EventListBridge;
+			import nz.enum.FrameInstance;
+			import nz.enum.Mode;
+		]]>
+	</fx:Script>
+	<fx:Style source="../../Style.css"/>
+	<s:Group id="inquirePage" >
+		<!---@private-->
+		<s:Button id="nextButton" x="154" y="65" width="106" height="80" styleName="playButtonStyle"
+				   click="Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.PLAYBUTTON_CLICK);"/>
+		<!---@private-->
+		<s:Button id="prevButton" x="102" y="65" rotationY="180" width="106" height="80" styleName="playButtonStyle"
+				   click="Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.PREVBUTTON_CLICK);" />
+	</s:Group>
+</s:Group>

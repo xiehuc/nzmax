@@ -9,6 +9,8 @@
 		static public const PLAYFRAME:String = "PLAYFRAME";
 		static public const OBJECTFRAME:String = "OBJECTFRAME";
 		static public const ROLEFRAME:String = "ROLEFRAME";
+		static public const OBJECTDETAILFRAME:String = "OBJECTDETAILFRAME";
+		static public const ROLEDETAILFRAME:String = "ROLEDETAILFRAME";
 		static public const CHOOSEFRAME:String = "CHOOSEFRAME";
 		static public const P3DVIEW:String = "P3DVIEW";
 		static public const INQUIREFRAME:String = "INQUIREFRAME";
