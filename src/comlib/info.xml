@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<info>
+	<require>
+		<file path="predefine.xml" url="comlib/predefine.xml"/>
+		
+		<file path="aidestand.png" url="comlib/aidestand.png"/>
+		<file path="bang.mp3" url="comlib/bang.mp3"/>
+		
+		<file path="bg/法庭.png" url="comlib/bg/court.png"/>
+		<file path="bg/候审厅.png" url="comlib/bg/waitingroom.png"/>
+		<file path="bg/体育馆.png" url="comlib/bg/coliseum.png"/>
+		<file path="bg/成步堂事务所.png" url="comlib/bg/phoenixoffice.png"/>
+		
+		<file path="bgfront.png" url="comlib/bgfront.png"/>
+		
+		<file path="bgm/法庭序章.mp3" url="comlib/bgm/court.mp3"/>
+		
+		<file path="demologo.png" url="comlib/demologo.png"/>
+		<file path="judgeseat.png" url="comlib/judgeseat.png"/>
+		<file path="lefttable.png" url="comlib/lefttable.png"/>
+		
+		<file path="oi/报告.png" url="comlib/oi/report.png"/>
+		<file path="oi/律师徽章.png" url="comlib/oi/golden.png"/>
+		<file path="oi/照片.png" url="comlib/oi/photo.png"/>
+		
+		<file path="plugins/pointpic.swf" url="comlib/plugins/pointpic.swf"/>
+		
+		<file path="ri/宝月茜.png" url="comlib/ri/baoyueqian.png"/>
+		<file path="ri/牙琉.png" url="comlib/ri/yaliu.png"/>
+		
+		<file path="righttable.png" url="comlib/righttable.png"/>
+		<file path="testlogo.png" url="comlib/testlogo.png"/>
+		<file path="宝月茜.swf" url="comlib/roles/baoyueqian.swf"/>
+		<file path="裁判长.swf" url="comlib/roles/裁判长.swf"/>
+		<file path="成步堂.swf" url="comlib/roles/成步堂.swf"/>
+		<file path="法庭.swf" url="comlib/roles/法庭.swf"/>
+		<file path="空白.swf" url="comlib/roles/空白.swf"/>
+		<file path="系锯.swf" url="comlib/roles/系锯.swf"/>
+		<file path="亚内.swf" url="comlib/roles/亚内.swf"/>
+		<file path="御剑.swf" url="comlib/roles/御剑.swf"/>
+		<file path="真宵.swf" url="comlib/roles/真宵.swf"/>
+		<file path="宝月茜2.swf" url="comlib/roles/宝月茜2.swf"/>
+		<file path="牙琉.swf" url="comlib/roles/牙琉.swf"/>
+		
+	</require>
+	<import>comlib/predefine.xml</import>
+</info>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nz:BasicGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" xmlns:nz="nz.component.*"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" currentState="{Mode.objectState}"
+		 visible="false" visible.object="true" implements="nz.support.ISaveObject"
+		  creationComplete="main()"
+		 >
+	<fx:Script>
+		<![CDATA[
+			import nz.Transport;
+			import nz.enum.Mode;
+			import nz.manager.SAVEManager;
+			public var perhp:Number = 20;
+			[Bindable]
+			public var hp:Number = 1;
+			static public var nohp:XML;
+			protected function main():void
+			{
+				func.setFunc("reduce", { type:Script.NoParams } );
+				func.setFunc("increase", { type:Script.NoParams } );
+				//func.setFunc("showlight", { type:Script.NoParams } );
+				//func.setFunc("hidelight", { type:Script.NoParams } );
+				func.setFunc("perhp", { type:Script.Properties } );
+				func.setFunc("hp", { type:Script.Properties } );
+			}
+			
+			/**
+			 * 减少perhp这么多的血量.
+			 *  如果血量少于0了会触发NOHP事件
+			 * @see #NOHP
+			 */
+			public function reduce():void
+			{
+				if(hp-perhp>0){
+					hp -= perhp;
+				}else {
+					hp = 0;
+					Transport.send(nohp);
+				}
+			}
+			/**
+			 * 减少perhp这么多的血量.
+			 */
+			public function increase():void
+			{
+				if(hp + perhp <= 1){
+					hp += perhp
+				}else {
+					hp = 1;
+				}
+			}
+			/**@private */
+			public function saveData(link:String):void
+			{
+				SAVEManager.appendData(link, {hp:this.hp,perhp:this.perhp } );
+			}
+			/**@private */
+			public function loadData(link:String):void { };
+		]]>
+	</fx:Script>
+	<nz:states>
+		<s:State name="normal"/>
+		<s:State name="object"/>
+	</nz:states>
+	<nz:hp_bg/>
+	<nz:hp_cover x="1.5" y="1.5" scaleX="{hp}"/>
+</nz:BasicGroup>
