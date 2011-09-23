@@ -1,0 +1,20 @@
+<nz>
+	<define name="震惊四座">
+		<l emotion="normal"/>
+		<Text autoSound="false" alpha="0" />
+		<Text point="l" text="[snd|震惊四座][fsrn|1]" append="true" />
+		<Script delay="3"/>
+		<w emotion="normal"/>
+		<Text point="w" text="[snd|震惊四座][fsrn|1]" append="true" />
+		<Script delay="3"/>
+		<p emotion="normal"/>
+		<Text point="p" text="[snd|震惊四座][fsrn|1]" append="true" />
+		<Script delay="3"/>
+		<j emotion="surprised"/>
+		<Text point="j" text="[snd|震惊四座][fsrn|1]"/>
+		<Script delay="3"/>
+		<j emotion="normal"/>
+		<Text autoSound="true" alpha="1" />
+		<Text point="l"/>
+	</define>
+</nz>

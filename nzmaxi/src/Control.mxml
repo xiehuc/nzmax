@@ -7,6 +7,8 @@
 			
 			import nz.Transport;
 			import nz.enum.FrameInstance;
+			
+			import spark.components.SkinnableContainer;
 			private var stack:Vector.<int>;
 			
 			protected function main(event:FlexEvent):void
@@ -24,11 +26,12 @@
 				pushPage(FrameInstance.FILEFRAME);
 				
 			}
-			override public function pushPage(page:String):void
+			override public function pushPage(page:String):*
 			{
 				var i:int = pageList[page];
 				stack.push(i);
 				vs.selectedIndex = i;
+				return null;
 			}
 			override public function popPage():void
 			{

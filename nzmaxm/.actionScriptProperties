@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <actionScriptProperties analytics="false" mainApplicationPath="nzmaxm.mxml" projectUUID="e188e1f3-e754-4d22-a385-f5fd19425f42" version="10">
   <compiler additionalCompilerArguments="-locale en_US" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" removeUnusedRSL="true" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="true" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
-    <compilerSourcePath/>
+    <compilerSourcePath>
+      <compilerSourcePathEntry kind="1" linkType="1" path="D:/PROJECT/nz/src"/>
+    </compilerSourcePath>
     <libraryPath defaultLinkType="0">
       <libraryPathEntry kind="4" path="">
         <excludedEntries>
@@ -28,7 +30,7 @@
         </excludedEntries>
       </libraryPathEntry>
       <libraryPathEntry kind="1" linkType="1" path="libs"/>
-      <libraryPathEntry kind="3" linkType="1" path="/nzlib/bin/nzlib.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="1" linkType="1" path="D:/PROJECT/nz/lib"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
@@ -42,10 +44,10 @@
   <flashCatalyst validateFlashCatalystCompatibility="false"/>
   <buildTargets>
     <buildTarget buildTargetName="com.adobe.flexide.multiplatform.ios.platform" iosSettingsVersion="1" provisioningFile="D:/PROJECT/nz/nzmaxm/mobileprovision.mobileprovision" releasePackageType="ipa-ad-hoc">
-      <multiPlatformSettings enabled="true" includePlatformLibs="false" platformID="com.adobe.flexide.multiplatform.ios.platform" version="2"/>
       <airSettings airCertificatePath="D:/PROJECT/nz/nzmaxm/mycert.p12" airTimestamp="true" version="1">
         <airExcludes/>
       </airSettings>
+      <multiPlatformSettings enabled="true" includePlatformLibs="false" platformID="com.adobe.flexide.multiplatform.ios.platform" version="2"/>
       <actionScriptSettings version="1"/>
     </buildTarget>
     <buildTarget buildTargetName="com.qnx.flexide.multiplatform.qnx.platform" extraPackagingOptions="" signBarFile="false">

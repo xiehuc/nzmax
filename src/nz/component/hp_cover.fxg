@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Graphic version="2.0" viewHeight="100" viewWidth="100" ATE:version="1.0.0" flm:version="1.0.0" d:using="" pd:backgroundColor="10066329" xmlns="http://ns.adobe.com/fxg/2008" xmlns:ATE="http://ns.adobe.com/ate/2009" xmlns:d="http://ns.adobe.com/fxg/2008/dt" xmlns:flm="http://ns.adobe.com/flame/2008" xmlns:pd="http://ns.adobe.com/xfl/2008/pd">
+  <Library/>
+  <Group d:type="layer" d:userLabel="图层 1">
+    <Path data="M80 1 0 1 0 0 80 0 80 1">
+      <fill>
+        <SolidColor color="#40D840"/>
+      </fill>
+    </Path>
+    <Path data="M80 2 0 2 0 1 80 1 80 2">
+      <fill>
+        <SolidColor color="#80F880"/>
+      </fill>
+    </Path>
+    <Path data="M80 8 0 8 0 2 80 2 80 8">
+      <fill>
+        <SolidColor color="#00B800"/>
+      </fill>
+    </Path>
+    <Path data="M80 9 0 9 0 8 80 8 80 9">
+      <fill>
+        <SolidColor color="#009800"/>
+      </fill>
+    </Path>
+    <Path data="M0 9 80 9 80 10 0 10 0 9">
+      <fill>
+        <SolidColor color="#007000"/>
+      </fill>
+    </Path>
+  </Group>
+  <Private/>
+</Graphic>
