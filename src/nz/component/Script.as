@@ -144,6 +144,7 @@
 			func.setFunc("showChapter", { type:Script.SingleParams } );
 			func.setFunc("openNode", { type:Script.SingleParams } );
 			func.setFunc("hideNode", { down:false,  type:Script.SingleParams } );
+			func.setFunc("popStack",{down:false,type:Script.NoParams});
 			urlLoader.addEventListener(Event.COMPLETE, complete);
 			urlLoader.addEventListener(ProgressEvent.PROGRESS, dispatchProgress);
 		}
@@ -196,24 +197,31 @@
 		}
 		private function receivexml(cmd:XML):void
 		{
-			this.go("down");
+			var n:String = _cuXML.localName();
+			if(!downbreak &&( tagProcessor[n]==null || tagProcessor[n][1] == null))//如果手动跳转则放弃自动跳转
+				this.go("down");
+			trace(_cuXML.toXMLString());
 			xmlStack.push(_cuXML);
 			xmlStack.push(index);
 			xmlStack.push(length);
-			//this.addEventListener(Script.SCRIPT_END, popStack);
+			
+			cmd.appendChild(<Script popStack=""/>);
 			_cuXML = cmd.children()[0];
 			index = 0;
 			length = cmd.children().length();
-			//_cuXML = cmd.copy();
 			
 			isrunning = true;
 			progress();
-			
+		}
+		public function popStack():void
+		{
+			stop();
 			length = xmlStack.pop();
 			index = xmlStack.pop();
 			_cuXML = xmlStack.pop();
+			start();
+			trace(_cuXML.toXMLString());
 		}
-
 		public function receive(cmd:*):void
 		{
 			if (cmd is XML){
@@ -266,6 +274,7 @@
 					index = 0; length = _cuXML.children().length();
 					_cuXML = _cuXML.children()[0]; 
 					if(check) environmentCheck();
+					downbreak = true;
 				break;
 				case "down":
 					if (index + 1 < length) {
@@ -293,6 +302,7 @@
 				case "outdown":
 					if (_cuXML.parent().parent() == null) {
 						dispatchEvent(new Event(Script.SCRIPT_END));
+						//stop();
 					}else{
 						this.go("out");
 						this.go("down");
@@ -678,10 +688,8 @@
 						}
 					}
 					(tagProcessor[controller][0] as Function).apply(null,ar);
-					if(tagProcessor[controller][1]!=null){
-						go("in");
+					if(downbreak)//如果在内部执行了跳转.则放弃自动跳转
 						continue;
-					}
 				}else if(controller == "Script") {
 					dispatchEvent(new ScriptEvent(ScriptEvent.STEPCASE, false, false, controller, value, node));
 					continue;
@@ -696,11 +704,6 @@
 					this.go("down");
 			}
 		}
-		/**@private */
-		/*public function get state():String
-		{
-			return _state;
-		}*/
 		/**@private */
 		public function set oriData(x:XML):void
 		{

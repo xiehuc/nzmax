@@ -228,7 +228,9 @@ package nz
 			//addEventListener(HPBar.HIDE_LIGHT, deal_event_request);
 			
 			Script.registProcess("create",create,null,["*","type"]);
+			Script.registProcess("court",court_start,court_end,null);
 			Script.registProcess("import",define_import,null,["path"]);
+			Script.registProcess("define",blank);
 			//Script.registProcess("court",court_start,court_end,null);
 			//func.setFunc("create", { type:Script.ComplexParams, down:false } );
 			func.setFunc("remove", { type:Script.SingleParams } );
@@ -246,6 +248,20 @@ package nz
 			/*SAVEManager.addEventListener(SAVEManager.READ_SUCCESS, save_read);
 			SAVEManager.addEventListener(SAVEManager.READ_FAILED, save_read);
 			SAVEManager.addEventListener(SAVEManager.PREPARE_DATA, save_read);*/
+		}
+		public function blank():void
+		{
+			
+		}
+		public function court_start():void
+		{
+			cuScript.go("in");
+			task("court");
+			cuScript.start();
+		}
+		public function court_end():void
+		{
+			
 		}
 		public function afterinit():void
 		{
@@ -685,9 +701,6 @@ package nz
 				case Role.UNINTERCEPT_END_TRACE:
 					upText.removeEventListener(TextPane.END_TRACE, e.target.zoomEndSpeakEvent);
 					break;
-				case Role.SHOW:
-					trace(e.target);
-					break;
 				case Role.ROLE_ACTIVE:
 					display.parent.x = -pro[e.target.linkName].x;
 					if (e.target.visible == false) {
@@ -695,18 +708,16 @@ package nz
 						if (e.target.group == cuRole.group) {
 							cuRole.visible = false;
 						}else{
-							for each(var r:IRole in pro) {
-								if (r != null && r.visible == true && r.group == e.target.group && r.linkName != e.target.linkName ) {
+							for each(var r:* in pro) {
+								if (r is IRole && r.visible == true && r.group == e.target.group && r.linkName != e.target.linkName ) {
 									r.visible = false;
 									break;
 								}
 							}
 						}
 					}
-					trace(e.target);
 					cuRole = e.target as IRole;
 					upText.name = cuRole.name;
-					trace(cuRole);
 					Transport.CurrentRole = e.target;
 					break;
 				case Assets.REMOVE_TARGET:

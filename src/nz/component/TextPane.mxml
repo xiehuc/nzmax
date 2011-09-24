@@ -185,6 +185,7 @@
 			leftPushTab.x = 20;
 			rightPushTab.x = 256 - 20 - 48;
 			
+			//Script.registProcess("text",setText,[".","append"]);
 			func.setFunc("name", { type:Script.Properties } );
 			func.setFunc("realName", { type:Script.Properties} );
 			func.setFunc("point", { type:Script.SingleParams} );
