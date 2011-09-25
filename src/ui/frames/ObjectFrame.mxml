@@ -66,11 +66,14 @@
 			
 			protected function object_click(event:MouseEvent):void
 			{
+				trace("fine");
 				if(pane.selectedItem.linkName == answer){
 					Transport.send(currect);
 				}else{
 					Transport.send(error);
 				}
+				trace("final::");
+				trace(Transport.Pro["Script"].oriData);
 				Transport.c.popPage();
 			}
 			

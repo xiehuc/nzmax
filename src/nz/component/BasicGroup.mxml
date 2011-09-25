@@ -17,6 +17,12 @@
 			func.setFunc("alpha", { type:Script.Properties } );
 			func.setFunc("visible", { type:Script.BooleanProperties } );
 			func.setFunc("autoVi", { type:Script.BooleanProperties } );
+			func.setFunc("addEvent",{type:Script.ComplexParams});
+		}
+			
+		public function addEvent(child:XML,event:String):void
+		{
+			this[event] = child;
 		}
 		]]>
 	</fx:Script>

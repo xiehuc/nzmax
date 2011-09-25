@@ -49,28 +49,25 @@ package ui
 			
 			
 			func = new FuncMan();
-			//Script.Register("pushObjection",test,params:["answer"]);
-			//func.setFunc("gotoPage", { type:Script.SingleParams} );
 			Script.registProcess("objection",pushObjection,null,["target","answer","<init>","<error>","<currect>"]);
 			func.setFunc("chooseSet", { type:Script.ComplexParams, down:false, progress:false } );
+			func.setFunc("pushPage",{type:Script.SingleParams});
 			//func.setFunc("pushObjection", { type:Script.SingleParams, down:false, progress:false } );
 			func.setFunc("cleanPushObjection", { type:Script.NoParams } );
 		}
 		public function pushObjection(target:String,answer:String,init:XML,error:XML,currect:XML):void
 		{
-			Transport.send(init);
+			
+			if(target == "role"){
+				init.appendChild(<Control pushPage="ROLEFRAME"/>);
+			}else {
+				init.appendChild(<Control pushPage="OBJECTFRAME"/>);
+			}
+			Transport.send(init,true);
 			nz.enum.Mode.objectModeEnabled = true;
-			//var hp:HPBar = Transport.Pro["HP"] as HPBar;
-			//hp.visible = true;
-			//hp.showlight();
 			ObjectFrame.error = error;
 			ObjectFrame.answer = answer;
 			ObjectFrame.currect = currect;
-			if(target == "role"){
-				pushPage(FrameInstance.ROLEFRAME);
-			}else {
-				pushPage(FrameInstance.OBJECTFRAME);
-			}
 		}
 		public function test(params:Object):void
 		{

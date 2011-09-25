@@ -13,10 +13,11 @@
 			public var perhp:Number = 20;
 			[Bindable]
 			public var hp:Number = 1;
-			static public var nohp:XML;
+			//static public var nohp:XML;
+			public var nohp:XML;
 			protected function main():void
 			{
-				func.setFunc("reduce", { type:Script.NoParams } );
+				func.setFunc("reduce", { type:Script.SingleParams } );
 				func.setFunc("increase", { type:Script.NoParams } );
 				//func.setFunc("showlight", { type:Script.NoParams } );
 				//func.setFunc("hidelight", { type:Script.NoParams } );
@@ -29,10 +30,15 @@
 			 *  如果血量少于0了会触发NOHP事件
 			 * @see #NOHP
 			 */
-			public function reduce():void
+			public function reduce(value:*):void
 			{
-				if(hp-perhp>0){
-					hp -= perhp;
+				var num:Number;
+				if(value is String)
+					num = Number(value);
+				else
+					num = value;
+				if(hp-num>0){
+					hp -= num;
 				}else {
 					hp = 0;
 					Transport.send(nohp);

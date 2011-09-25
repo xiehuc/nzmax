@@ -47,8 +47,6 @@
 			protected function object_click(event:MouseEvent):void
 			{
 				Mode.objectModeEnabled = false;
-				Transport.c.popPage();
-				Transport.c.popPage();
 				var res:String
 				if(pane.selectedItem == null)
 					res = pane.dataProvider.getItemAt(0).linkName;
@@ -59,6 +57,10 @@
 				}else{
 					Transport.send(ObjectFrame.error);
 				}
+				trace("final::");
+				trace(Transport.Pro["Script"].oriData.toXMLString());
+				Transport.c.popPage();
+				Transport.c.popPage();
 				
 			}
 			

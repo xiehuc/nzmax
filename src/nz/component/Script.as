@@ -115,6 +115,7 @@
 		private var isrunning:Boolean;
 		public var downbreak:Boolean = false;
 		public var xmlStack:Array;//脚本处理栈
+		public var debug:Boolean;
 		/**@private */
 		public function Script() 
 		{
@@ -144,7 +145,8 @@
 			func.setFunc("showChapter", { type:Script.SingleParams } );
 			func.setFunc("openNode", { type:Script.SingleParams } );
 			func.setFunc("hideNode", { down:false,  type:Script.SingleParams } );
-			func.setFunc("popStack",{down:false,type:Script.NoParams});
+			func.setFunc("popStack",{down:false,type:Script.SingleParams});
+			func.setFunc("debug",{type:Script.BooleanProperties});
 			urlLoader.addEventListener(Event.COMPLETE, complete);
 			urlLoader.addEventListener(ProgressEvent.PROGRESS, dispatchProgress);
 		}
@@ -195,17 +197,22 @@
 				go("down");
 			}
 		}
-		private function receivexml(cmd:XML):void
+		private function receivexml(cmd:XML,_stop:Boolean=false):void
 		{
+			if(_cuXML != null){
 			var n:String = _cuXML.localName();
-			if(!downbreak &&( tagProcessor[n]==null || tagProcessor[n][1] == null))//如果手动跳转则放弃自动跳转
+			if(!downbreak &&( tagProcessor[n]==null || tagProcessor[n][1] == null)){//如果手动跳转则放弃自动跳转
 				this.go("down");
-			trace(_cuXML.toXMLString());
+				downbreak = true;
+			}
 			xmlStack.push(_cuXML);
 			xmlStack.push(index);
 			xmlStack.push(length);
-			
-			cmd.appendChild(<Script popStack=""/>);
+			}
+			if(_stop)
+				cmd.appendChild(<Script popStack="stop"/>);
+			else
+				cmd.appendChild(<Script popStack=""/>);
 			_cuXML = cmd.children()[0];
 			index = 0;
 			length = cmd.children().length();
@@ -213,19 +220,21 @@
 			isrunning = true;
 			progress();
 		}
-		public function popStack():void
+		public function popStack(_stop:String=null):void
 		{
 			stop();
+			if(xmlStack.length>0){
 			length = xmlStack.pop();
 			index = xmlStack.pop();
 			_cuXML = xmlStack.pop();
-			start();
-			trace(_cuXML.toXMLString());
+			if(_stop!="stop")
+				start();
+			}
 		}
-		public function receive(cmd:*):void
+		public function receive(cmd:*,_stop:Boolean = false):void
 		{
 			if (cmd is XML){
-				receivexml(cmd);
+				receivexml(cmd,_stop);
 				return;
 			}
 			var node:XML = new XML(cmd);
@@ -328,6 +337,7 @@
 		 */
 		public function finish():void
 		{
+			stop();
 			dispatchEvent(new Event(FINISH));
 		}
 		/**
@@ -651,10 +661,13 @@
 			var info:Object;
 			var progressIndex:int = 0;
 			var cmd:String;
+			var down:Boolean = true;
 			//错误检查
 			while (progressIndex < e.value.length()) {
 				cmd = e.value[progressIndex].name();
 				info = func.getFunc(cmd);
+				if(info.down == false)
+					down=false;
 				switch(info.type) {
 					case Script.SingleParams:
 						this[cmd](e.value[progressIndex].toString());
@@ -662,9 +675,15 @@
 					case Script.NoParams:
 						this[cmd]();
 					break;
+					case Script.BooleanProperties:
+						this[cmd] = e.value[progressIndex].toString()=="true";
+					break;
 				}
 				progressIndex++;
 			}
+			if(down)
+				this.go("down");
+			
 		}
 		private function progress():void
 		{

@@ -197,7 +197,7 @@
 			autoSide ? emo = "side_" + value: emo = value;
 			if (labelToIndex[emo] == undefined) {
 				if(loadFinish){
-					Transport.getEvent(EventListBridge.PUSH_ERROR)(this.linkName + "(Role) 没有" + emo + "的表情(emotion)\n请仔细检查");
+					Transport.pushError(this.linkName + "(Role) 没有" + emo + "的表情(emotion)\n请仔细检查");
 				}else {
 					_emotion = value;
 				}
@@ -209,7 +209,7 @@
 				mc.addEventListener(Event.FRAME_CONSTRUCTED, action_start);
 				active();
 				dispatchEvent(new Event(Script.SCRIPT_PAUSE, true));
-				Transport.Pro["upText"].show(false);
+				Transport.Pro["Text"].show(false);
 			}
 		}
 		/**@private*/

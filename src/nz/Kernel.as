@@ -67,7 +67,7 @@ package nz
 		
 		[Bindable]
 		public var upScreen:Group;
-		protected var pro:Object;
+		protected var pro:Object = new Object();
 		protected var state:State;
 		protected var mu:Music;
 		protected var map:Map;
@@ -95,7 +95,6 @@ package nz
 			Transport.eventList[EventListBridge.IO_ERROR_EVENT] = global_ioerror_event;
 			Transport.eventList[EventListBridge.LOAD_SCRIPT_EVENT] = loadStory;
 			Transport.eventList[EventListBridge.CONTROLBUTTON_EVENT] = deal_button_event_request;
-			//Transport.eventList[EventListBridge.PUSH_ERROR] = pushError;
 			//Transport.eventList[EventListBridge.CORRECTBUTTON_REQUEST] = deal_correctbutton_request;
 			FileManager.define_complete = this.define_complete;
 		}
@@ -179,7 +178,6 @@ package nz
 			
 			state = new State();
 			
-			pro = new Object();
 			pro["Bg"] = bg;
 			pro["Over"] = over_demo;
 			pro["Music"] = mu;
@@ -231,11 +229,8 @@ package nz
 			Script.registProcess("court",court_start,court_end,null);
 			Script.registProcess("import",define_import,null,["path"]);
 			Script.registProcess("define",blank);
-			//Script.registProcess("court",court_start,court_end,null);
-			//func.setFunc("create", { type:Script.ComplexParams, down:false } );
-			func.setFunc("remove", { type:Script.SingleParams } );
-			func.setFunc("removeType", { type:Script.SingleParams } );
-			func.setFunc("courtSet", {type:Script.ComplexParams,down:true,progress:false } );
+			Script.registProcess("remove",remove,null,["type","id"]);
+			Script.registProcess("run",run,null,["define"]);
 			func.setFunc("flyto", { type:Script.SingleParams} );
 			func.setFunc("task", { type:Script.SingleParams } );
 			func.setFunc("checklink", {down:false,progress:false, type:Script.SingleParams } );
@@ -256,33 +251,37 @@ package nz
 		public function court_start():void
 		{
 			cuScript.go("in");
-			task("court");
+			run("court");
 			cuScript.start();
 		}
 		public function court_end():void
 		{
 			
 		}
-		public function afterinit():void
+		public function afterinit():void//执行后续初始化工作
 		{
+			run("init");
 		}
-		public function link(obj:*):void
+		public function link(obj:*):void//连接Control
 		{
-			trace(obj is IControl);
 			if(obj is IControl){
 				control = obj;
 				Transport.c = control;
+				pro["Control"] = control;
 			}
 		}
 		public function define_import(path:String):void
 		{
-			
+			var l:URLLoader = new URLLoader(new URLRequest(FileManager.getResolvePath(path)));
+			l.addEventListener(Event.COMPLETE,define_complete);
 		}
 		public function regist(str:String,func:Function):void
 		{
 			switch(str){
 				case "error":
 					pushError = func;
+					Transport.eventList[EventListBridge.PUSH_ERROR] = pushError;
+					Transport.pushError = pushError;
 					break;
 				case "log":
 					log = func;
@@ -300,7 +299,6 @@ package nz
 		}
 		public function loadStory(infoPath:String):void
 		{
-			afterinit();
 			FileManager.setDirectory(infoPath.substring(0,infoPath.lastIndexOf("/")+1));
 			var l:URLLoader = new URLLoader();
 			l.load(new URLRequest(infoPath));
@@ -311,6 +309,7 @@ package nz
 			FileManager.setStoryInfo(new XML(e.currentTarget.data));
 			cuScript.loadScript(FileManager.getStoryPath());
 			cuScript.addEventListener(Event.COMPLETE,start_story );
+			afterinit();
 		}
 		private function define_complete(e:Event):void
 		{
@@ -319,7 +318,8 @@ package nz
 			define.appendChild(x.children());
 		}
 		private function config_complete(e:Event):void 
-		{//第二层载入:载入control,;
+		{
+			//第二层载入:载入control,;
 			config = new XML(e.currentTarget.data);
 			nz.support.GlobalKeyMap.init(config.keyMap[0]);
 		}
@@ -327,10 +327,9 @@ package nz
 		{
 			pro[link].active();
 		}
-		private function send_command(cmd:*):void
+		private function send_command(cmd:*,_stop:Boolean = false):void
 		{
-			//var run:Boolean = pro["Script"].isrunning;
-			pro["Script"].receive(cmd);
+			pro["Script"].receive(cmd,_stop);
 		}
 		private function global_ioerror_event(e:IOErrorEvent):void
 		{
@@ -339,16 +338,11 @@ package nz
 		private function show_progress(e:BasisEvent):void 
 		{
 		}
-		public function contentCreate(content:XMLList,type:String):void
-		{
-			
-		}
 		public function create(list:XMLList,type:String):void
 		{
 			var cl:Class;
 			var muliclass:Boolean = false;
 			var name:String;
-			//var list:XMLList = child.children();
 			
 			if (type != "") {
 				muliclass = false;
@@ -377,18 +371,8 @@ package nz
 			//错误检查
 			if (e.name == "Script")
 				return;
-			/*if (e.value.length() == 0) {
-				if (prostate[e.name] != null) {
-					prostate[e.name](true);
-					cuScript.go("in");
-					return;
-				}else {
-					pushError("没有 " + e.name + "的link\n请仔细检查");
-				}
-			}*/
 			while (progressIndex < e.value.length()) {
 				cmd = e.value[progressIndex].name();
-				//trace("::" + e.name+"|"+cmd);
 				info = pro[e.name].func.getFunc(cmd);
 				if (info.type == undefined) {
 					pushError(e.name+" 没有 "+cmd+" 属性或方法\n   请仔细检查.");
@@ -489,17 +473,6 @@ package nz
 			var b:Bitmap = new Bitmap(bd);
 			pro[r.linkName + "i_layout"].source = b;*/
 		}
-		private function newRole(link:String,name:String, path:String,group:String):void
-		{
-			var role:Role = new Role();
-			role.addEventListener(Event.COMPLETE, update_court_i);
-			role.name = name;
-			role.group = group;
-			role.linkName = link;
-			role.path = path;
-			pro[link] = role;
-			display.addElement(role);
-		}
 		private function roleOnCourt(link:String):Boolean
 		{
 			//对于flyto的辅助判断
@@ -507,6 +480,10 @@ package nz
 				return true;
 			}
 			return false;
+		}
+		public function run(define:String):void
+		{
+			task(define);
 		}
 		public function task(t:String):void
 		{
@@ -573,63 +550,24 @@ package nz
 			}
 		}
 		
-		public function courtSet(data:XML,blank:String):void
+		public function remove(id:String=null,type:String=null):void
 		{
-			if (blank == "null") {
-				mode.court = false;
-				remove("l;w;p;j;a;c;wf_layout;ab_layout;jb_layout;lf_layout;pf_layout");
-				remove("wi_layout;ai_layout;ji_layout;li_layout;pi_layout");
-				TweenLite.delayedCall(0.5, script_start);
-				return;
+			if(id != null && id != ""){
+				var list:Array = id.split(";");
+				for each(var link:String in list) {
+					var target:ICreatable = pro[link] as ICreatable;
+					target.remove();
+					if (target.autoAddDisplayRoot) pro[link].parent.removeElement(target);
+					pro[link] = null;
+				}
 			}
-			bg.path = "bg/法庭.png";
-			mode.court = true;
-			newRole("l", data.l.@name, data.l.@path,"lgroup");
-			newRole("w", data.w.@name, data.w.@path,"wgroup");
-			newRole("p", data.p.@name, data.p.@path,"pgroup");
-			pro["p"].autoSide = true;
-			newRole("j", data.j.@name, data.j.@path,"jgroup");
-			newRole("a", data.a.@name, data.a.@path,"agroup");
-			newRole("c", "法庭", "法庭.swf","cgroup");
-			pro["a"].autoSide = true;
-			pro["l"].x = 0;
-			pro["w"].x = 256*2;
-			pro["p"].x = 256*4;
-			pro["j"].x = 256 * 6;
-			pro["a"].x = 256 * 8;
-			pro["c"].x = 256 * 10;
-			var wf:Layout = new Layout(); wf.path = "bgfront.png"; wf.displayParent = "BgExpand"; wf.x = 256 * 2;
-			var ab:Layout = new Layout(); ab.path = "aidestand.png"; ab.displayParent = "Background"; ab.x = 256 * 8;
-			var jb:Layout = new Layout(); jb.path = "judgeseat.png"; jb.displayParent = "Background"; jb.x = 256 * 6;
-			var lf:Layout = new Layout(); lf.path = "lefttable.png"; lf.displayParent = "BgExpand"; lf.x = 0;
-			var pf:Layout = new Layout(); pf.path = "righttable.png"; pf.displayParent = "BgExpand"; pf.x = 256 * 4;
-			pro["wf_layout"] = wf; pro["ab_layout"] = ab; pro["jb_layout"] = jb; pro["lf_layout"] = lf; pro["pf_layout"] = pf;
-			var wi:Layout = new Layout(); wi.x = 256 * 10; wi.displayParent = "BgExpand";
-			var ai:Layout = new Layout(); ai.x = 256 * 10; ai.displayParent = "BgExpand";
-			var ji:Layout = new Layout(); ji.x = 256 * 10; ji.displayParent = "BgExpand";
-			var li:Layout = new Layout(); li.x = 256 * 10; li.displayParent = "BgExpand";
-			var pi:Layout = new Layout(); pi.x = 256 * 10; pi.displayParent = "BgExpand";
-			pro["wi_layout"] = wi; pro["ai_layout"] = ai; pro["ji_layout"] = ji; pro["li_layout"] = li; pro["pi_layout"] = pi;
-			//决计不能用GUILoader,出错
-			pro["l"].active();
-			TweenLite.delayedCall(1, script_start);
-		}
-		public function remove(childs:String):void
-		{
-			var list:Array = childs.split(";");
-			for each(var link:String in list) {
-				var target:ICreatable = pro[link] as ICreatable;
-				target.remove();
-				if (target.autoAddDisplayRoot) pro[link].parent.removeChild(target);
-				pro[link] = null;
-			}
-		}
-		public function removeType(type:String):void
-		{
-			for (var item:String in pro) {
-				if (pro[item] is ICreatable) {
-					if (pro[item].type == type) {
-						remove(item);
+			if(type != null && type != ""){
+				for (var item:String in pro) {
+					if (pro[item] is ICreatable && pro[item].type == type) {
+						var tg:ICreatable = pro[item] as ICreatable;
+						tg.remove();
+						if(tg.autoAddDisplayRoot) pro[item].parent.removeElement(tg);
+						pro[item] = null;
 					}
 				}
 			}
@@ -641,9 +579,11 @@ package nz
 		}
 		private function start_story(e:Event):void
 		{
+			e.currentTarget.removeEventListener(Event.COMPLETE,start_story);
 			script_start();
 			all.removeElement(cover);
 			cover = null;
+			
 		}
 		private function deal_event_request(e:Event):void
 		{
@@ -669,6 +609,7 @@ package nz
 					/*FileManager.writeFinish();
 					FileManager.rescan();
 					dispatchEvent(new Event(SAVEManager.RETURNTOTITLE));*/
+					cuScript.stop();
 					break;
 				case TextPane.START_TRACE:
 					cuScript.stop();
@@ -726,10 +667,6 @@ package nz
 					t.gotoAndStop(1);
 					t.parent.removeChild(t);
 					break;
-				/*case HPBar.NOHP:
-					cuScript.insert(cuScript.getScriptBySign("DEFAULT_NOHP"));
-					cuScript.go("in");
-					break;*/
 				case SAVEManager.RETURNTOTITLE:
 					//bg.unload();
 					mu.stop();
@@ -791,8 +728,9 @@ package nz
 					}else {
 						Mode.playButtonEnabled = false;
 						if (cuScript.oriData.name().localName == "upText" || cuScript.oriData.name().localName == "Text") {
-							if (cuScript.oriData.@text != undefined || cuScript.oriData.@appendText != undefined)
+							if (cuScript.oriData.@text != undefined || cuScript.oriData.@appendText != undefined){
 								cuScript.go("down");
+							}
 						}
 						cuScript.start();
 					}

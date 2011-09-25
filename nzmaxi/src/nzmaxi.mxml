@@ -4,6 +4,7 @@
 			   xmlns:mx="library://ns.adobe.com/flex/mx" width="256" height="384" xmlns:nz="nz.*" xmlns:local="*">
 	<fx:Script>
 		<![CDATA[
+			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			
 			protected function main(event:FlexEvent):void
@@ -11,16 +12,20 @@
 				// TODO Auto-generated method stub
 				kernel.preinit();
 				kernel.regist("error",pushError);
-				kernel.regist("log",pushError);
+				kernel.regist("log",log);
 				kernel.link(control);
 				
 				kernel.init();
 				kernel.initConfig();
 				
 			}
-			private function pushError(e:String):void
+			private function log(e:String):void
 			{
 				
+			}
+			private function pushError(e:String):void
+			{
+				mx.controls.Alert.show(e,"错误");
 			}
 			
 		]]>

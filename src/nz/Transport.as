@@ -14,6 +14,7 @@
 	public class Transport
 	{
 		static public var send:Function;
+		static public var pushError:Function;
 		static public var Pro:Object;
 		static public var c:IControl;
 		static public var DisplayRoot:Object = new Object();
