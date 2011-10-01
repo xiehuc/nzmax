@@ -24,11 +24,12 @@
 				pushPage(FrameInstance.FILEFRAME);
 				
 			}
-			override public function pushPage(page:String):void
+			override public function pushPage(page:String):*
 			{
 				var i:int = pageList[page];
 				stack.push(i);
 				vs.selectedIndex = i;
+				return i;
 			}
 			override public function popPage():void
 			{

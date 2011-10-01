@@ -17,6 +17,7 @@ package ui
 	import ui.frames.BackFrame;
 	import ui.frames.ObjectFrame;
 	import ui.frames.PlayFrame;
+	import ui.frames.SelectorFrame;
 
 	public class Core extends Group implements IControl
 	{
@@ -27,7 +28,6 @@ package ui
 		public var func:FuncMan//储存function设定;
 		protected var pageList:Object;
 		private var _objectmode:Boolean;
-		private var pushObjectionModeEnabled:Boolean;
 		private var pluginList:Object;
 		/**@private */
 		public var currentFrame:String;
@@ -50,10 +50,22 @@ package ui
 			
 			func = new FuncMan();
 			Script.registProcess("objection",pushObjection,null,["target","answer","<init>","<error>","<currect>"]);
+			Script.registProcess("selector",selector,null,["*"]);
 			func.setFunc("chooseSet", { type:Script.ComplexParams, down:false, progress:false } );
 			func.setFunc("pushPage",{type:Script.SingleParams});
-			//func.setFunc("pushObjection", { type:Script.SingleParams, down:false, progress:false } );
-			func.setFunc("cleanPushObjection", { type:Script.NoParams } );
+		}
+		public function selector(child:XMLList):void
+		{
+			Transport.send('<Script stop="true"/>');
+			var dp:ArrayCollection = new ArrayCollection();
+			for each(var x:XML in child){
+				if(x.localName()=="item"){
+					dp.addItem({label:x.@name,data:x});
+				}
+			}
+			SelectorFrame.dp = dp;
+			
+			pushPage(FrameInstance.CHOOSEFRAME);
 		}
 		public function pushObjection(target:String,answer:String,init:XML,error:XML,currect:XML):void
 		{
@@ -71,10 +83,6 @@ package ui
 		}
 		public function test(params:Object):void
 		{
-			/*if(params.answer){
-				Script.progress(params.error);
-				Hp.reduce();
-			}*/
 		}
 		public function pushPage(page:String):*
 		{

@@ -189,6 +189,7 @@
 			func.setFunc("name", { type:Script.Properties } );
 			func.setFunc("realName", { type:Script.Properties} );
 			func.setFunc("point", { type:Script.SingleParams} );
+			func.setFunc("typewriter", { type:Script.Properties, down:false } );
 			func.setFunc("text", { type:Script.Properties, down:false } );
 			func.setFunc("appendText", { type:Script.SingleParams,down:false} );
 			func.setFunc("directText", { type:Script.Properties , progress:false } );
@@ -318,6 +319,12 @@
 			Transport.send("<Script stop=''/>");
 			writeTextDirectely(value);
 			dispatchEvent(new Event(TextPane.END_TRACE));
+		}
+			
+		public function set typewriter(value:String):void
+		{
+			this.name="";
+			this.text="[green]"+value+"[/green]";
 		}
 		/**
 		 * 用于设置文本输出速度.

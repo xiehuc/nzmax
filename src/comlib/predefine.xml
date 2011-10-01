@@ -6,25 +6,26 @@
 		</HP>
 	</define>
 	<define name="震惊四座">
-		<Text autoSound="false" alpha="0" />
+		<Text autoSound="false"/>
+		<Text alpha="0"/>
 		<w emotion="normal"/>
 		<Script delay="1"/>
-		 <Text alpha="0" point="w" text="[snd|震惊四座][fsrn|0.1]" append="true" />
+		 <Text point="w" text="[snd|震惊四座][fsrn|0.1]" append="true" />
 		 <Script delay="1"/>
 		 <p emotion="normal"/>
-		 <Text alpha="0" point="p" text="[snd|震惊四座][fsrn|0.1]" append="true" />
+		 <Text point="p" text="[snd|震惊四座][fsrn|0.1]" append="true" />
 		 <Script delay="1"/>
 		 <j emotion="surprised"/>
-		 <Text alpha="0" point="j" text="[snd|震惊四座][fsrn|0.1]" append="true" />
+		 <Text point="j" text="[snd|震惊四座][fsrn|0.1]" append="true" />
 		 <Script delay="1"/>
 		 <a emotion="normal"/>
-		 <Text alpha="0" point="a" text="[snd|震惊四座][fsrn|0.1]" append="true" />
+		 <Text point="a" text="[snd|震惊四座][fsrn|0.1]" append="true" />
 		 <Script delay="1"/>
 		 <l emotion="normal"/>
-		 <Text alpha="0" point="l" text="[snd|震惊四座][fsrn|0.1]" append="true"/>
+		 <Text point="l" text="[snd|震惊四座][fsrn|0.1]" append="true"/>
 		 <Script delay="1"/>
-		<Text autoSound="true" alpha="1" />
-		<Text point="l"/>
+		<Text autoSound="true"/>
+		<Text alpha="1"/>
 	</define>
 	<define name="court">
 		<Bg path="bg/法庭.png"/>

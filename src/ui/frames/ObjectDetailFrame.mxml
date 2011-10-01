@@ -57,8 +57,6 @@
 				}else{
 					Transport.send(ObjectFrame.error);
 				}
-				trace("final::");
-				trace(Transport.Pro["Script"].oriData.toXMLString());
 				Transport.c.popPage();
 				Transport.c.popPage();
 				
