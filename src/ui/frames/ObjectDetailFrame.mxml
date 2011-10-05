@@ -62,12 +62,26 @@
 				
 			}
 			
+			protected function inquire_click(event:MouseEvent):void
+			{
+				Transport.c.popPage();
+				Transport.c.popPage();
+				Mode.objectState = Mode.OBJECT_NORMAL;
+				var res:String
+				if(pane.selectedItem == null)
+					res = pane.dataProvider.getItemAt(0).linkName;
+				else
+					res = pane.selectedItem.linkName;
+				Transport.getEvent(EventListBridge.CORRECTBUTTON_REQUEST)(res);
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Style source="../../Style.css"/>
 	<s:states>
 		<s:State name="normal"/>
 		<s:State name="object"/>
+		<s:State name="inquire"/>
 	</s:states>
 	<s:Image source="@Embed(source='../image/skins.swf',symbol='_bar.up_2_1')"
 			 visible="true" visible.object="false"
@@ -86,12 +100,13 @@
 			 />
 	<!---@private-->
 	<s:Button id="top_m_btn" x="89" label="指证" styleName="buttonLabelStyle topMiddleButtonStyle" 
-			  visible="false" visible.object="true" click="object_click(event)"
+			   excludeFrom="normal" click.object="object_click(event)"
+			   click.inquire="inquire_click(event)"
 			  />
 	<ui:moreBg verticalCenter="0"/>
 	<!---@private-->
 	<s:Button id="top_r_btn" label="人物记录" styleName="buttonLabelStyle topRightButtonStyle" x="178" 
-			  visible="true" visible.object="false"
+			   excludeFrom="object" click="top_r_btn_clickHandler(event)"
 			  />
 	<s:Button y="162.5" label="取消" styleName="buttonLabelStyle downLeftButtonStyle" 
 			  click="Transport.c.popPage();"/>

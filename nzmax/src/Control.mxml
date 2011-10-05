@@ -20,6 +20,8 @@
 				pageList[FrameInstance.ROLEFRAME] = 3;
 				pageList[FrameInstance.OBJECTDETAILFRAME] = 4;
 				pageList[FrameInstance.ROLEDETAILFRAME] = 5;
+				pageList[FrameInstance.CHOOSEFRAME] = 6;
+				pageList[FrameInstance.INQUIREFRAME] = 7;
 				
 				pushPage(FrameInstance.FILEFRAME);
 				
@@ -64,6 +66,12 @@
 		</s:NavigatorContent>
 		<s:NavigatorContent>
 			<frames:RoleDetailFrame/>
+		</s:NavigatorContent>
+		<s:NavigatorContent>
+			<frames:SelectorFrame/>
+		</s:NavigatorContent>
+		<s:NavigatorContent>
+			<frames:InquireFrame/>
 		</s:NavigatorContent>
 	</mx:ViewStack>
 </ui:Core>

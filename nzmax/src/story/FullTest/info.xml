@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<info>
+	<version>
+		<main version="0.7"/>
+		<control version="0.7"/>
+	</version>
+	<require>
+		<file path="info.xml" url="info.xml"/>
+		<file path="Script.xml" url="Script.xml"/>
+		<file path="test.xml" url="test.xml"/>
+	</require>
+	<name>FullTest</name>
+	<folder>fulltest</folder>
+	<logo>testlogo.png</logo>
+	<finish>false</finish>
+	<author>CodeX</author>
+	<translator>CodeX</translator>
+	<playTime>05:00</playTime>
+	<introduce>测试</introduce>
+	<script>
+		test.xml
+	</script>
+</info>

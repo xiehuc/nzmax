@@ -11,6 +11,7 @@
 			import nz.enum.EventListBridge;
 			import nz.enum.FrameInstance;
 			import nz.enum.Mode;
+			
 		]]>
 	</fx:Script>
 	<fx:Style source="../../Style.css"/>
@@ -20,10 +21,11 @@
 	<!---@private-->
 	<s:Button id="prevButton" x="102" y="65" rotationY="180" width="106" height="80" styleName="playButtonStyle"
 			   click="Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.PREVBUTTON_CLICK);" />
-	<s:Image source="@Embed(source='../lib/skins.swf',symbol='_bar.up_3')"/>
-	<s:Image y="172" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_0')"/>
+	<s:Image source="@Embed(source='../image/skins.swf',symbol='_bar.up_3')"/>
+	<s:Image y="172" source="@Embed(source='../image/skins.swf',symbol='_bar.down_0')"/>
 	<s:Button label="威慑" styleName="buttonLabelStyle topLeftButtonStyle" 
 			  click="Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.DETERBUTTON_CLICK);"  />
 	<s:Button x="178" label="出示" styleName="buttonLabelStyle topRightButtonStyle" 
-			   click="Transport.c.pushPage(FrameInstance.OBJECTFRAME);Transport.Pro['HP'].showlight();"  />
+			   click="Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.OBJECTBUTTON_CLICK);"
+			   />
 </s:Group>

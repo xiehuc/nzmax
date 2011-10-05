@@ -53,6 +53,7 @@ package ui
 			Script.registProcess("selector",selector,null,["*"]);
 			func.setFunc("chooseSet", { type:Script.ComplexParams, down:false, progress:false } );
 			func.setFunc("pushPage",{type:Script.SingleParams});
+			func.setFunc("popPage",{type:Script.NoParams});
 		}
 		public function selector(child:XMLList):void
 		{

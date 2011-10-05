@@ -16,6 +16,7 @@
 		static public const PLAYBUTTON_CLICK:String = "playbutton_click";
 		static public const PREVBUTTON_CLICK:String = "prevbutton_click";
 		static public const DETERBUTTON_CLICK:String = "deterbutton_click";
+		static public const OBJECTBUTTON_CLICK:String = "objectbutton_click";
 
 		static public const TWEEN_COMPLETE:String = "tween_complete";
 		static public const SYNC_ARROW:String = "sync_arrow";

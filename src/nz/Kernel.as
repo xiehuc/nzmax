@@ -18,6 +18,7 @@ package nz
 	import mx.core.UIComponent;
 	
 	import nz.component.Background;
+	import nz.component.BasicGroup;
 	import nz.component.Cover;
 	import nz.component.Effect;
 	import nz.component.EffectTarget;
@@ -55,12 +56,12 @@ package nz
 		//public const globalhost:String = "http://localhost/nzmaxi/";
 		private const field:String = "Kernel";
 		protected var define:XML;
-		protected var func:FuncMan;
 		protected var mode:Object;
 		protected var config:XML;
 		
 		protected var display:Group;
 		protected var cover:Cover;
+		protected var func:FuncMan;
 		protected var over:UIComponent;
 		protected var zylogo:lib.testing;
 		protected var all:Group;
@@ -83,10 +84,10 @@ package nz
 		
 		protected var pushError:Function;
 		protected var log:Function;
+		public var wrong:XML;//指正失败的事件
 		
 		public function Kernel()
 		{
-			
 		}
 		public function preinit():void
 		{
@@ -95,7 +96,7 @@ package nz
 			Transport.eventList[EventListBridge.IO_ERROR_EVENT] = global_ioerror_event;
 			Transport.eventList[EventListBridge.LOAD_SCRIPT_EVENT] = loadStory;
 			Transport.eventList[EventListBridge.CONTROLBUTTON_EVENT] = deal_button_event_request;
-			//Transport.eventList[EventListBridge.CORRECTBUTTON_REQUEST] = deal_correctbutton_request;
+			Transport.eventList[EventListBridge.CORRECTBUTTON_REQUEST] = deal_correctbutton_request;
 			FileManager.define_complete = this.define_complete;
 		}
 		public function init():void
@@ -222,20 +223,22 @@ package nz
 			//addEventListener(SAVEManager.RESTART, save_read);
 			//addEventListener(SAVEManager.INIT, save_read);
 			
-			//addEventListener(HPBar.NOHP, deal_event_request);
 			//addEventListener(HPBar.HIDE_LIGHT, deal_event_request);
 			
 			Script.registProcess("create",create,null,["*","type"]);
 			Script.registProcess("court",court_start,court_end,null);
 			Script.registProcess("import",define_import,null,["path"]);
 			Script.registProcess("define",blank);
-			Script.registProcess("remove",remove,null,["type","id"]);
+			Script.registProcess("remove",remove,null,["id","type"]);
 			Script.registProcess("run",run,null,["define"]);
+			Script.registProcess("inquire",inquire_start,inquire_end,null);
+			Script.registProcess("deter",deter_start,deter_end,null);
 			func.setFunc("flyto", { type:Script.SingleParams} );
 			func.setFunc("task", { type:Script.SingleParams } );
 			func.setFunc("checklink", {down:false,progress:false, type:Script.SingleParams } );
 			func.setFunc("plugin", { type:Script.ComplexParams, progress:false } );
 			func.setFunc("pluginUnload", { type:Script.SingleParams } );
+			func.setFunc("addEvent",{type:Script.ComplexParams});
 			func.setFunc("xmlns", { type:Script.IgnoreProperties } );
 			
 			SAVEManager.ready();
@@ -244,9 +247,27 @@ package nz
 			SAVEManager.addEventListener(SAVEManager.READ_FAILED, save_read);
 			SAVEManager.addEventListener(SAVEManager.PREPARE_DATA, save_read);*/
 		}
+		public function addEvent(child:XML,event:String):void
+		{
+			this[event] = child;
+			if(event=="wrong")
+				wrong.appendChild(<Control popPage=""/>);
+		}
 		public function blank():void
 		{
 			
+		}
+		public function inquire_start():void
+		{
+			cuScript.go("in");
+			Mode.mainState = Mode.STATE_INQUIRE;
+			control.pushPage(FrameInstance.INQUIREFRAME);
+			
+		}
+		public function inquire_end():void
+		{
+			Mode.mainState = Mode.STATE_NORMAL;
+			control.popPage();
 		}
 		public function court_start():void
 		{
@@ -497,7 +518,6 @@ package nz
 					TweenLite.delayedCall(2.5, continue_task);
 					break;
 				case "询问开始":
-					state["ask"] = true;
 					cuScript.stop();
 					hpbar.visible = true;
 					control.pushPage(FrameInstance.NULLFRAME);
@@ -594,16 +614,6 @@ package nz
 				case Script.SCRIPT_PAUSE:
 					cuScript.stop();
 					Mode.playButtonEnabled = false;
-					break;
-				case Script.ENVIRONMENT_CHANGE:
-					if (cuScript.environment == "询问") {
-						//control.gotoPage(FrameInstance.INQUIREFRAME);
-						Mode.playButtonEnabled = false;
-						Mode.objectModeEnabled = true;
-					}else {
-						//control.gotoPage(FrameInstance.PLAYFRAME);
-						Mode.objectModeEnabled = false;
-					}
 					break;
 				case Script.FINISH:
 					/*FileManager.writeFinish();
@@ -743,12 +753,49 @@ package nz
 					cuScript.start();
 					break;
 				case Assets.DETERBUTTON_CLICK:
-					if(cuScript.hasChild("deter") && upText.wait_arr_vi){
+					if(cuScript.hasChild("deter")){
 						cuScript.enter("deter");
-						pro["l"].voice("等下");
+						cuScript.start();
 					}
 					break;
+				case Assets.OBJECTBUTTON_CLICK:
+					control.pushPage(FrameInstance.OBJECTFRAME);
+					Mode.objectState = Mode.OBJECT_INQUIRE;
+					break;
 			}
+		}
+		private function deal_correctbutton_request(link:String):void
+		{
+			cuScript.stop();
+			mu.delayVolumn();
+			pro["l"].voice("异议");
+			var successObject:Boolean = false;
+			control.pushPage(FrameInstance.PLAYFRAME);
+			if (cuScript.hasChild("object")) {
+				for each(var item:XML in cuScript.oriData.object) {
+					if (item.@answer == link) {
+						cuScript.receivexml(item,false,false);
+						successObject = true;
+						break;
+					}
+				}
+				if (!successObject) {
+					cuScript.receivexml(wrong,false,false);
+				}
+			}else {
+				cuScript.receivexml(wrong,false,false);
+			}
+		}
+		public function deter_start():void
+		{
+			control.pushPage(FrameInstance.PLAYFRAME);
+			pro["l"].voice("等下");
+			cuScript.go("in");
+		}
+		public function deter_end():void
+		{
+			control.popPage();
+			//跳转由Script负责
 		}
 	}
 }

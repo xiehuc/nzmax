@@ -5,6 +5,7 @@
 	<s:states>
 		<s:State name="normal"/>
 		<s:State name="object"/>
+		<s:State name="inquire"/>
 	</s:states>
 	<fx:Script>
 		<![CDATA[
@@ -66,47 +67,51 @@
 			
 			protected function object_click(event:MouseEvent):void
 			{
-				trace("fine");
 				if(pane.selectedItem.linkName == answer){
 					Transport.send(currect);
 				}else{
 					Transport.send(error);
 				}
-				trace("final::");
-				trace(Transport.Pro["Script"].oriData);
 				Transport.c.popPage();
+			}
+			
+			protected function quit_inquire_mode(event:MouseEvent):void
+			{
+				Transport.c.popPage();
+				Mode.objectState = Mode.OBJECT_NORMAL;
 			}
 			
 		]]>
 	</fx:Script>
 	<fx:Style source="../../Style.css"/>
 	<s:Image id="bar_up_2_1" source="@Embed(source='../image/skins.swf',symbol='_bar.up_2_1')"
-			 visible="true" visible.object="false"
+			  includeIn="normal"
 			 />
 	<!---@private-->
 	<s:Image id="bar_up_2_2" source="@Embed(source='../image/skins.swf',symbol='_bar.up_2_2')"
-			 visible="false" visible.object="true"
+			  excludeFrom="normal"
 			 />
 	<!---@private-->
 	<s:Image id="bar_down_2_1" y="160" source="@Embed(source='../image/skins.swf',symbol='_bar.down_2_1')"
-			 visible="true" visible.object="false"
+			  includeIn="normal"
 			 />
 	<!---@private-->
 	<s:Image id="bar_down_2_2" y="160" source="@Embed(source='../image/skins.swf',symbol='_bar.down_2_2')"
-			 visible="false" visible.object="true"
+			  excludeFrom="normal"
 			 />
 	<!---@private-->
 	<s:Button id="top_m_btn" x="89" label="指证" styleName="buttonLabelStyle topMiddleButtonStyle" 
-			  visible="false" visible.object="true" click="object_click(event)"
+			  excludeFrom="normal" click.object="object_click(event)" 
+			  click.inquire="Transport.getEvent(EventListBridge.CORRECTBUTTON_REQUEST)(pane.selectedItem.linkName);"
 			   />
 	<!---@private-->
 	<s:Button id="top_r_btn" label="人物记录" styleName="buttonLabelStyle topRightButtonStyle" x="178" 
 			  click="top_r_btn_clickHandler(event)"
-			  visible="true" visible.object="false"
+			   excludeFrom="object"
 			  />
 	<s:Button y="162.5" label="取消" styleName="buttonLabelStyle downLeftButtonStyle" 
-			  click="Transport.c.popPage();"
-			  visible="true" visible.object="false"
+			  click="Transport.c.popPage();" click.inquire="quit_inquire_mode(event)"
+			  excludeFrom="object"
 			  />
 	<!---@private-->
 	<s:Button id="detail_btn" visible="false" x="178" y="162.5" label="详细" 

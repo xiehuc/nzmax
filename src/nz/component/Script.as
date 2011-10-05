@@ -197,7 +197,7 @@
 				go("down");
 			}
 		}
-		private function receivexml(cmd:XML,_stop:Boolean=false):void
+		public function receivexml(cmd:XML,_stop:Boolean=false,_running:Boolean=true):void
 		{
 			if(_cuXML != null){
 			var n:String = _cuXML.localName();
@@ -217,7 +217,7 @@
 			index = 0;
 			length = cmd.children().length();
 			
-			isrunning = true;
+			isrunning = _running;
 			progress();
 		}
 		public function popStack(_stop:String=null):void
@@ -291,12 +291,13 @@
 						index++;
 					}else {
 						var n:String = _cuXML.parent().name().localName;
-						if (n == "deter" || n == "object" || n == "exist" || n == "nonexist"|| n== "point" || n=="cb") {
+						var f:Array = tagProcessor[n]; 
+						if(f != null&&f[1]!=null)
+							f[1].apply(null,null);
+						if (n == "deter" || n == "object" || n == "exist" || n == "nonexist"|| n== "point" || n=="cb") {//cb==choosebutton
+							//dispatchEvent(new Event("SCRIPT_OUT"));
 							this.jump("out;out;down");
 						}else {
-							/*var f:Array = tagProcessor[_cuXML.parent().localName]; 
-							if(f != null&&f[1]!=null)
-								f[0].apply(null,null);*/
 							this.go("outdown");
 						}
 					}
@@ -403,11 +404,10 @@
 		{
 			//enter 与 go("in") 的区别是 enter可以有选择.go(in)就只是第一项.
 			path.push(index);
-			path.push(0);
-			_cuXML = _cuXML[value][0].children()[0];
-			length = _cuXML.children().length();
-			index = 0;
+			_cuXML = _cuXML[value][0];
 			length = _cuXML.parent().children().length();
+			index = _cuXML.childIndex();
+			
 			environmentCheck();
 		}
 		/**

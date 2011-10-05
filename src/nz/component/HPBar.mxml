@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <nz:BasicGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" xmlns:nz="nz.component.*"
-		 xmlns:mx="library://ns.adobe.com/flex/mx" currentState="{Mode.objectState}"
-		 visible="false" visible.object="true" implements="nz.support.ISaveObject"
-		  creationComplete="main()"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" currentState="{Mode.mainState}"
+		 visible="false" visible.inquire="true" implements="nz.support.ISaveObject"
+		  creationComplete="start()"
 		 >
 	<fx:Script>
 		<![CDATA[
@@ -15,7 +15,7 @@
 			public var hp:Number = 1;
 			//static public var nohp:XML;
 			public var nohp:XML;
-			protected function main():void
+			protected function start():void
 			{
 				func.setFunc("reduce", { type:Script.SingleParams } );
 				func.setFunc("increase", { type:Script.NoParams } );
@@ -67,6 +67,7 @@
 	<nz:states>
 		<s:State name="normal"/>
 		<s:State name="object"/>
+		<s:State name="inquire"/>
 	</nz:states>
 	<nz:hp_bg/>
 	<nz:hp_cover x="1.5" y="1.5" scaleX="{hp}"/>
