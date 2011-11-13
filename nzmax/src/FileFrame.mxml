@@ -27,6 +27,7 @@
 				var lst:Array = dir.getDirectoryListing();
 				for each(var f:File in lst){
 					var s:FileStream = new FileStream();
+					if(!f.resolvePath("info.xml").exists)continue;
 					s.open(f.resolvePath("info.xml"),FileMode.READ);
 					var xml:XML = new XML(s.readUTFBytes(s.bytesAvailable));
 					dp.addItem({label:xml.name.toString(),finish:xml.finish.toString(),xmlData:xml,dir:f.name});	

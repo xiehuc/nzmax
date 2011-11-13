@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<role>
+	<name>Ema</name>
+	<sex>female</sex>
+	<version>0.9</version>
+	<emo name="cheerful">
+		<normal>ema-cheerful(a).gif</normal>
+		<speak>ema-cheerful(b).gif</speak>
+	</emo>
+	<emo name="confident">
+		<normal>ema-confident(a).gif</normal>
+		<speak>ema-confident(b).gif</speak>
+	</emo>
+	<emo name="disappoint">
+		<normal>ema-disappoint(a).gif</normal>
+		<speak>ema-disappoint(b).gif</speak>
+	</emo>
+	<emo name="mad">
+		<normal>ema-mad(a).gif</normal>
+		<speak>ema-mad(b).gif</speak>
+	</emo>
+	<emo name="normal">
+		<normal>ema-normal(a).gif</normal>
+		<speak>ema-normal(b).gif</speak>
+		<side>ema-side-normal(a).gif</side>
+		<sdspk>ema-side-normal(b).gif</sdspk>
+	</emo>
+	<emo name="mad">
+		<normal>ema-mad(a).gif</normal>
+		<speak>ema-mad(b).gif</speak>
+	</emo>
+	<emo name="notes">
+		<action>ema-notes(a).gif</action>
+		<normal>ema-notes(b).gif</normal>
+		<speak>ema-notes(c).gif</speak>
+	</emo>
+	<emo name="nudge">
+		<action>ema-nudge.gif</action>
+	</emo>
+	<emo name="pumped">
+		<normal>ema-pumped(a).gif</normal>
+		<speak>ema-pumped(b).gif</speak>
+		<side>ema-side-normal(a).gif</side>
+		<sdspk>ema-side-normal(b).gif</sdspk>
+	</emo>
+	<emo name="sad">
+		<normal>ema-sad(a).gif</normal>
+		<speak>ema-sad(b).gif</speak>
+	</emo>
+	<emo name="serious">
+		<normal>ema-serious(a).gif</normal>
+		<speak>ema-serious(b).gif</speak>
+	</emo>
+	<emo name="forward">
+		<side>ema-side-forward(a).gif</side>
+		<sdspk>ema-side-forward(b).gif</sdspk>
+	</emo>
+	<emo name="thinking">
+		<normal>ema-thinking(a).gif</normal>
+		<speak>ema-thinking(b).gif</speak>
+		<side>ema-side-thinking(a).gif</side>
+		<sdspk>ema-side-thinking(b).gif</sdspk>
+	</emo>
+	<emo name="surprised">
+		<normal>ema-surprised(a).gif</normal>
+		<speak>ema-surprised(b).gif</speak>
+	</emo>
+</role>

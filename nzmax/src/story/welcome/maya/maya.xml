@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<role>
+    <name>真宵</name>
+    <engname>maya</engname>
+    <sex>female</sex>
+    <version>0.9</version>
+    <emo name="normal">
+        <normal>maya-normal(a).gif.swf</normal>
+        <speak >maya-normal(b).gif.swf</speak>
+        <side>maya-bench(a).gif.swf</side>
+        <sdspk>maya-bench(b).gif.swf</sdspk>
+    </emo>
+	<emo name="hum">
+		<side>maya-bench-hum(a).gif.swf</side>
+		<sdspk>maya-bench-hum(b).gif.swf</sdspk>
+	</emo>
+    <emo name="profile">
+        <side>maya-bench-profile(a).gif.swf</side>
+        <sdspk>maya-bench-profile(b).gif.swf</sdspk>
+    </emo>
+    <emo name="strict">
+        <side>maya-bench-strict(a).gif.swf</side>
+        <sdspk>maya-bench-strict(b).gif.swf</sdspk>
+    </emo>
+    <emo name="ugh">
+        <side>maya-bench-ugh(a).gif.swf</side>
+        <sdspk>maya-bench-ugh(b).gif.swf</sdspk>
+    </emo>
+    <emo name="cheerful">
+        <normal>maya-cheerful(a).gif.swf</normal>
+        <speak>maya-cheerful(b).gif.swf</speak>
+    </emo>
+    <emo name="confident">
+        <normal>maya-confident(a).gif.swf</normal>
+        <speak>maya-confident(b).gif.swf</speak>
+    </emo>
+    <emo name="cry">
+        <normal>maya-crying(a).gif.swf</normal>
+        <speak>maya-crying(b).gif.swf</speak>
+    </emo>
+    <emo name="disheart">
+        <normal>maya-disheartened(a).gif.swf</normal>
+        <speak>maya-disheartened(b).gif.swf</speak>
+    </emo>
+    <emo name="mad">
+        <normal>maya-mad(a).gif.swf</normal>
+        <speak>maya-mad(b).gif.swf</speak>
+    </emo>
+    <emo name="nod">
+        <action>maya-nod</action>
+    </emo>
+    <emo name="pump">
+        <normal>maya-pumped(a).gif.swf</normal>
+		<speak>maya-pumped(b).gif.swf</speak>
+    </emo>
+    <emo name="sad">
+        <normal>maya-sad(a).gif.swf</normal>
+        <speak>maya-sad(b).gif.swf</speak>
+    </emo>
+    <emo name="shock">
+		<action>maya-shock.gif.swf</action>
+	</emo>
+	<emo name="sniffle">
+		<action>maya-sniffle.gif.swf</action>
+	</emo>
+	<emo name="surprise">
+		<normal>maya-surprised(a).gif.swf</normal>
+		<speak>maya-surprised(b).gif.swf</speak>
+	</emo>
+	<emo name="think">
+		<normal>maya-thinking(a).gif.swf</normal>
+		<speak>maya-thinking(b).gif.swf</speak>
+	</emo>
+	<emo name="worry">
+		<normal>maya-worried(a).gif.swf</normal>
+		<speak>maya-worried(b).gif.swf</speak>
+	</emo>
+</role>

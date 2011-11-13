@@ -262,7 +262,6 @@ package nz
 			cuScript.go("in");
 			Mode.mainState = Mode.STATE_INQUIRE;
 			control.pushPage(FrameInstance.INQUIREFRAME);
-			
 		}
 		public function inquire_end():void
 		{

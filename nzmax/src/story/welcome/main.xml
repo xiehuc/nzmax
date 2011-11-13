@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<nz>
+<Bg path="bg/成步堂事务所.png"/>
+<create>
+	<i type="RoleX" name="真宵" path="真宵"/>
+</create>
+<Music load="bgm/court.mp3"/>
+<Text point="i" text="嗯嗯[br][emo|cheerful]大家新年好."/>
+<Text point="i" text="我是真宵.我现在郑重的宣布.我们[red]成步堂律师事务所[/red]."/>
+<Text point="i" text="重新开张拉."/>
+<Text point="i" text="[emo|worry]老实说.现在又多了个名字:[br][red]Nzmaxi[/red]"/>
+<Text point="i" text="不过.我还是觉得,成步堂律师事务所来得亲切些.要不要考虑再改回去呢?"/>
+<Text point="i" text="[emo|confident]不过.我知道.无论名字好不好.你一定会来的喔."/>
+<Text point="i" text="再说一次哦:[br][red]http://nzmaxi.sinaapp.com[/red].[emo|confident]不要忘了来哦"/>
+<Script stop=""/>
+</nz>
