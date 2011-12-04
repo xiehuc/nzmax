@@ -36,7 +36,7 @@
 				vn1.defaultPopTransition = trans;
 				vn1.defaultPushTransition = trans;
 			}
-			override public function pushPage(page:String):void
+			override public function pushPage(page:String):*
 			{
 				vn1.pushView(pageList[page]);
 			}

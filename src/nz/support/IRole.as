@@ -11,5 +11,6 @@ package nz.support
 		function get visible():Boolean;
 		function set emotion(emo:String):void;
 		function get emotion():String;
+		function voice(name:String):void
 	}
 }

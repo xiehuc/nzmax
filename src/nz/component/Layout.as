@@ -13,8 +13,6 @@
 	import mx.controls.SWFLoader;
 	import mx.core.FlexSprite;
 	import mx.core.UIComponent;
-	import mx.flash.ContainerMovieClip;
-	import mx.flash.UIMovieClip;
 	
 	import nz.manager.FileManager;
 	import nz.manager.FuncMan;

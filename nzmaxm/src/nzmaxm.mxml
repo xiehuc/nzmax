@@ -38,7 +38,6 @@
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
-	<s:SWFLoader source="aaa.swf"/>
 	<nz:Kernel id="kernel"/>
 	<local:Control id="control"/>
 </s:Application>

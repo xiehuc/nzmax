@@ -1,4 +1,5 @@
-import sys,os
+#encoding=utf-8
+import sys,os,shutil
 import re
 from xml.dom.minidom import parseString
 from xml.etree.ElementTree import Element,SubElement,ElementTree,dump
@@ -8,7 +9,7 @@ if(len(sys.argv)==1):
     print("""
 useage:
     python roleconv.py folder
-"""
+""")
 def indent(elem, level=0):
     i = "\r\n" + level*"  "
     if len(elem):
@@ -32,27 +33,32 @@ root=Element("role")
 SubElement(root,"name").text="name"
 SubElement(root,"sex").text="male"
 SubElement(root,"version").text="0.9"
+voice=SubElement(root,"voice")
 
 if not path.exists(output):
     os.mkdir(output)
 #prepare for role.xml
 
 for item in (os.listdir(sys.argv[1])):
-    name=item.split('.')[0]
-    #os.system(gif2swf+" -z -o"+output+'\\'+name+".swf"+' '+sys.argv[1]+'\\'+item)
-    emo=(re.split('[-.)(]',item))
-    el=(root.find("emo[@name='"+emo[1]+"']"))
-    if el==None:
-        el=SubElement(root,'emo',{'name':emo[1]})
-    if(emo[2]=='a'):
-        tag='normal'
-    elif emo[2]=='b':
-        tag='speak'
-    else:
-        tag='action'
-    SubElement(el,tag).text=name+".swf"
+    [name,extension]=item.split('.');
+    if(extension == 'mp3'):
+        SubElement(voice,'snd',{'name':name}).text=name
+        shutil.copy2(sys.argv[1]+'\\'+item,output+'\\'+item)
+    elif extension == 'gif':
+        #os.system(gif2swf+" -z -o"+output+'\\'+name+".swf"+' '+sys.argv[1]+'\\'+item)
+        emo=(re.split('[-.)(]',item))
+        el=(root.find("emo[@name='"+emo[1]+"']"))
+        if el==None:
+            el=SubElement(root,'emo',{'name':emo[1]})
+        if(emo[2]=='a'):
+            tag='normal'
+        elif emo[2]=='b':
+            tag='speak'
+        else:
+            tag='action'
+        SubElement(el,tag).text=name+".swf"
 indent(root)
-ElementTree(root).write(xml)
+ElementTree(root).write(xml,'gb2312')
 
 
 

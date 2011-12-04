@@ -2,17 +2,24 @@ package nz.component
 {
 	
 	import flash.display.Loader;
+	import flash.display.LoaderInfo;
 	import flash.display.MovieClip;
 	import flash.events.Event;
+	import flash.media.Sound;
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
+	
+	import lib.Igiari;
+	import lib.Kurae;
+	import lib.Matta;
 	
 	import mx.controls.SWFLoader;
 	import mx.core.FlexSprite;
 	
 	import nz.LoaderOptimizer;
 	import nz.Transport;
+	import nz.enum.VoiceType;
 	import nz.manager.FileManager;
 	import nz.support.IRole;
 
@@ -38,6 +45,9 @@ package nz.component
 		private var curemo:XML;
 		private var dir:String;
 		private var mc:Object;
+		private var normal:Loader;
+		private var speaking:Loader;
+		private var action:Loader;
 		public var isspeaking:Boolean;
 		public var autoSide:Boolean = false;
 		protected var loadFinish:Boolean = false;
@@ -52,7 +62,12 @@ package nz.component
 			container = new FlexSprite();
 			this.source = container;
 			overll = new Loader();
+			normal = new Loader();
+			action = new Loader();
+			speaking = new Loader();
 			overll.contentLoaderInfo.addEventListener(Event.COMPLETE,overll_complete);
+			normal.contentLoaderInfo.addEventListener(Event.COMPLETE,overll_complete);
+			action.contentLoaderInfo.addEventListener(Event.COMPLETE,emotion_loader_complete);
 			
 			this.mouseEnabled = this.mouseChildren = false;
 			isspeaking = false;
@@ -93,27 +108,21 @@ package nz.component
 			var path:String;
 			if (autoSide) {
 				if (curemo.sdact != undefined) {
-					path = curemo.sdact[0].toString();
+					action.load(new URLRequest(curemo.sdact[0].toString()));
 					act = true;
-				}else if (isspeaking)
-					path = curemo.sdspk[0].toString();
-				else
-					path = curemo.side[0].toString();
+				}else{
+					overll.load(new URLRequest(dir+curemo.side[0].toString()));
+					speaking.load(new URLRequest(dir+curemo.sdspk[0].toString()));
+				}
 			}else {
 				if (curemo.action != undefined) {
-					path = curemo.action[0].toString();
+					action.load(new URLRequest(curemo.action[0].toString()));
 					act = true;
-				}else if (isspeaking)
-					//mc.gotoAndStop(int(curemo.speak[0].toString()));
-					//i = 1;
-					path = curemo.speak[0].toString();
-				else
-					//mc.gotoAndStop(int(curemo.normal[0].toString()));
-					path = curemo.normal[0].toString();
+				}else{
+					overll.load(new URLRequest(dir+curemo.normal[0].toString()));
+					speaking.load(new URLRequest(dir+curemo.speak[0].toString()));
+				}
 			}
-			overll = new Loader();
-			overll.load(new URLRequest(dir+path));
-			overll.contentLoaderInfo.addEventListener(Event.COMPLETE,overll_complete);
 		}
 		public function get emotion():String
 		{
@@ -128,13 +137,27 @@ package nz.component
 		public function speak(s:Boolean):void
 		{
 			isspeaking = s;
-			emotion = _emotion;
+			if(s)
+				replace_emotion(speaking);
+			else
+				replace_emotion(normal);
+		}
+		private function replace_emotion(l:Loader):void
+		{
+			if(container.numChildren>0)
+				container.removeChildAt(0);
+			container.addChild(l);
 		}
 		private function overll_complete(e:Event):void
 		{
-			if(container.numChildren>0)
-			container.removeChildAt(0);
-			container.addChild(overll);
+			var l:Loader = normal;
+			normal = overll;
+			overll = l;
+			replace_emotion(normal);
+		}
+		private function emotion_loader_complete(e:Event):void
+		{
+			replace_emotion((e.currentTarget as LoaderInfo).loader);
 		}
 		protected function xml_complete(e:Event):void
 		{
@@ -142,6 +165,28 @@ package nz.component
 			if (sex == null) sex = info.sex.toString();
 			if (name == "") name = info.name.toString();
 			//LoaderOptimizer.dispatchLoad(this, dir+info.path.toString());
+		}
+		public function voice(name:String):void
+		{
+			var snd:Sound = new Sound();
+			snd.load(new URLRequest(info.voice.snd.(@name=name).toString()));
+			snd.addEventListener(Event.COMPLETE,start_play);
+			nz.enum.VoiceType
+			switch(name){
+				case VoiceType.OBJECTION:
+					Transport.DisplayRoot.Over.addChild(new lib.Igiari());
+					break;
+				case VoiceType.WAIT:
+					Transport.DisplayRoot.Over.addChild(new lib.Matta());
+					break;
+				case VoiceType.TAKE:
+					Transport.DisplayRoot.Over.addChild(new lib.Kurae());
+					break;
+			}
+		}
+		private function start_play(e:Event):void
+		{
+			(e.currentTarget as Sound).play();
 		}
 		public function get sex():String
 		{
