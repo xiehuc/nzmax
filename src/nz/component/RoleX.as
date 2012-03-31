@@ -1,6 +1,7 @@
 package nz.component 
 {
 	
+	import flash.display.DisplayObject;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.display.MovieClip;
@@ -9,6 +10,7 @@ package nz.component
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
+	import flash.utils.ByteArray;
 	
 	import lib.Igiari;
 	import lib.Kurae;
@@ -21,7 +23,13 @@ package nz.component
 	import nz.Transport;
 	import nz.enum.VoiceType;
 	import nz.manager.FileManager;
+	import nz.support.ICache;
 	import nz.support.IRole;
+	import nz.support.SeqCache;
+	import nz.support.SwfCache;
+	
+	import org.bytearray.gif.events.GIFPlayerEvent;
+	import org.bytearray.gif.player.GIFPlayer;
 
 	/**
 	 * ...
@@ -30,6 +38,7 @@ package nz.component
 	public class RoleX extends Layout implements IRole
 	{
 		private var _group:String = "auto";
+		public static var SeqFormatEnable:Boolean = true;
 		public function set group(value:String):void { 
 			_group = value; 
 		}
@@ -40,16 +49,17 @@ package nz.component
 		private var _sex:String = null;
 		private var _name:String = null;
 		private var _emotion:String = null;
-		private var overll:Loader;
-		private var container:FlexSprite;
+
 		private var curemo:XML;
 		private var dir:String;
 		private var mc:Object;
-		private var normal:Loader;
-		private var speaking:Loader;
-		private var action:Loader;
-		public var isspeaking:Boolean;
+		private var overll:URLLoader;
+		private var normal:String;
+		private var speaking:String;
+		private var action:URLLoader;
+		private var _isspeaking:Boolean;
 		public var autoSide:Boolean = false;
+		private var cache:ICache;
 		protected var loadFinish:Boolean = false;
 		public function RoleX() 
 		{
@@ -59,15 +69,14 @@ package nz.component
 			type = "RoleX";
 			regit = true;
 			name="";
-			container = new FlexSprite();
-			this.source = container;
-			overll = new Loader();
-			normal = new Loader();
-			action = new Loader();
-			speaking = new Loader();
-			overll.contentLoaderInfo.addEventListener(Event.COMPLETE,overll_complete);
-			normal.contentLoaderInfo.addEventListener(Event.COMPLETE,overll_complete);
-			action.contentLoaderInfo.addEventListener(Event.COMPLETE,emotion_loader_complete);
+			if(SeqFormatEnable){
+				cache = new SeqCache();
+			}else{
+				cache = new SwfCache();
+			}
+			this.source = cache;
+			overll = new URLLoader();
+			action = new URLLoader();
 			
 			this.mouseEnabled = this.mouseChildren = false;
 			isspeaking = false;
@@ -85,6 +94,10 @@ package nz.component
 			func.setFunc("zoom", { type:Script.NoParams } );
 			func.setFunc("group", { type:Script.Properties } );
 		}
+		public function set isspeaking(value:Boolean):void
+		{_isspeaking = value;}
+		public function get isspeaking():Boolean
+		{return _isspeaking;}
 		override public function set path(value:String):void
 		{
 			_path = value;
@@ -94,11 +107,37 @@ package nz.component
 			var p:String = FileManager.getResolvePath(value);
 			infol.load(new URLRequest(FileManager.getResolvePath(value)));
 		}
+		public function cacheEmotion(emo:String):void
+		{
+			if (emo == null)
+			return;
+			if (info.emo.(@name == emo) == undefined){
+				//throw -1;
+				return;
+			}
+			var curemo:XML = info.emo.(@name == emo)[0];
+			var path:String;
+			if (autoSide) {
+				if (curemo.sdact != undefined) {
+					cache.addCache(curemo.sdact[0].toString());
+				}else{
+					cache.addCache(dir+curemo.sdspk[0].toString());
+					cache.addCache(dir+curemo.side[0].toString());
+				}
+			}else {
+				if (curemo.action != undefined) {
+					cache.addCache(curemo.action[0].toString());
+				}else{
+					cache.addCache(dir+curemo.speak[0].toString());
+					cache.addRequest(dir+curemo.normal[0].toString());
+				}
+			}
+		}		
 		public function set emotion(value:String):void
 		{
 			var act:Boolean = false;
 			if (value == null)
-			return;
+				return;
 			if (info.emo.(@name == value) == undefined){
 				throw -1;
 				return;
@@ -108,19 +147,23 @@ package nz.component
 			var path:String;
 			if (autoSide) {
 				if (curemo.sdact != undefined) {
-					action.load(new URLRequest(curemo.sdact[0].toString()));
+					cache.addRequest(curemo.sdact[0].toString());
 					act = true;
 				}else{
-					overll.load(new URLRequest(dir+curemo.side[0].toString()));
-					speaking.load(new URLRequest(dir+curemo.sdspk[0].toString()));
+					normal = dir+curemo.side[0].toString();
+					speaking = dir+curemo.sdspk[0].toString();
+					cache.addCache(speaking);
+					cache.addRequest(dir+curemo.side[0].toString());
 				}
 			}else {
 				if (curemo.action != undefined) {
-					action.load(new URLRequest(curemo.action[0].toString()));
+					cache.addRequest(curemo.action[0].toString());
 					act = true;
 				}else{
-					overll.load(new URLRequest(dir+curemo.normal[0].toString()));
-					speaking.load(new URLRequest(dir+curemo.speak[0].toString()));
+					normal = dir+curemo.normal[0].toString();
+					speaking = dir+curemo.speak[0].toString();
+					cache.addCache(speaking);
+					cache.addRequest(dir+curemo.normal[0].toString());
 				}
 			}
 		}
@@ -131,33 +174,16 @@ package nz.component
 		public function active():void
 		{
 			dispatchEvent(new Event(Role.ROLE_ACTIVE, true, false));
-			
 			Transport.CurrentRole = this;
 		}
 		public function speak(s:Boolean):void
 		{
 			isspeaking = s;
-			if(s)
-				replace_emotion(speaking);
-			else
-				replace_emotion(normal);
-		}
-		private function replace_emotion(l:Loader):void
-		{
-			if(container.numChildren>0)
-				container.removeChildAt(0);
-			container.addChild(l);
-		}
-		private function overll_complete(e:Event):void
-		{
-			var l:Loader = normal;
-			normal = overll;
-			overll = l;
-			replace_emotion(normal);
-		}
-		private function emotion_loader_complete(e:Event):void
-		{
-			replace_emotion((e.currentTarget as LoaderInfo).loader);
+			if(s){
+				if(speaking!=null)
+				cache.addRequest(speaking);
+			}else
+				cache.addRequest(normal);
 		}
 		protected function xml_complete(e:Event):void
 		{
@@ -211,15 +237,4 @@ package nz.component
 			(_emotion == null) ? this.emotion = "normal" :this.emotion = _emotion;
 		}
 	}
-}
-import flash.display.MovieClip;
-
-class Emo
-{
-	public var normal:MovieClip;
-	public var speak:MovieClip;
-	public var action:MovieClip;
-	public var side:MovieClip;
-	public var sdspk:MovieClip;
-	public var sdact:MovieClip;
 }

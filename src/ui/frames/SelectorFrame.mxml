@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="256" height="192"
+		  creationComplete="init()"
+		 >
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			import nz.Transport;
+			[Bindable]
+			static public var dp:ArrayCollection;
+			public function init():void
+			{
+				
+			}
+			
+			protected function list1_clickHandler(event:MouseEvent):void
+			{
+				nz.Transport.send(selector.selectedItem.data);
+				Transport.c.popPage();
+				
+			}
+			
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="center"/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<s:List id="selector" width="80%" height="100%" dataProvider="{dp}" click="list1_clickHandler(event)">
+		
+	</s:List>
+</s:Group>

@@ -668,7 +668,7 @@ package nz
 					}
 					cuRole = e.target as IRole;
 					upText.name = cuRole.name;
-					Transport.CurrentRole = e.target;
+					Transport.CurrentRole = cuRole;
 					break;
 				case Assets.REMOVE_TARGET:
 					e.target.removeEventListener(Assets.REMOVE_TARGET, deal_event_request);

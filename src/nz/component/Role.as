@@ -109,7 +109,7 @@
 		/**@private */
 		private var _linkName:String;
 		/**@private */
-		public var isspeaking:Boolean;
+		public var _isspeaking:Boolean;
 		private var _speedline:MovieClip;
 		private var zoomImage:Sprite;
 		private var zoomClass:Class;
@@ -140,6 +140,12 @@
 			func.setFunc("zoom", { type:Script.NoParams } );
 			func.setFunc("group", { type:Script.Properties } );
 		}
+		public function cacheEmotion(emo:String):void
+		{}
+		public function set isspeaking(value:Boolean):void
+		{_isspeaking = value;}
+		public function get isspeaking():Boolean
+		{return _isspeaking;}
 		/**@private */
 		override public function creationComplete():void
 		{

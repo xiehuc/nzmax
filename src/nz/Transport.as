@@ -5,6 +5,7 @@
 	import nz.enum.Mode;
 	import nz.support.IControl;
 	import nz.support.IFileManager;
+	import nz.support.IRole;
 
 	//import spark.components.Group;
 	/**
@@ -20,7 +21,7 @@
 		static public var DisplayRoot:Object = new Object();
 		static public var CreateTypeList:Object = new Object();
 		static public var KeyMap:Object;
-		static public var CurrentRole:Object;
+		static public var CurrentRole:IRole;
 		static public var eventList:Object;
 		static public var upTextShowDict:Dictionary = new Dictionary();
 		static public function getEvent(str:String):Function

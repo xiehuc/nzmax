@@ -1,0 +1,111 @@
+@namespace s "library://ns.adobe.com/flex/spark";  
+@namespace mx "library://ns.adobe.com/flex/halo";  
+
+
+#pane_title{
+	editable:false;
+	borderColor:#ffffff;
+	contentBackgroundColor:#292931;
+	contentBackgroundAlpha:0.95;
+	color:#edac52;
+	fontWeight:bold;
+	textAlign:center;
+	skinClass:ClassReference("ui.skins.BoxTextSkin");
+}
+#pane_descript{
+	editable:false;
+	borderColor:#ffffff;
+	contentBackgroundColor:#9bc593;
+	contentBackgroundAlpha:0.95;
+	color:white;
+	skinClass:ClassReference("ui.skins.BoxTextSkin");
+}
+#pane{
+	contentBackgroundColor:#CB9966;
+}
+.buttonLabelStyle {
+	fontFamily:微软雅黑;
+	fontSize:12;
+	color:#ffffff;
+	textRollOverColor:#ffffff;
+	textSelectedColor:#ffffff;
+}
+.reportLabelCSS {
+	fontFamily:宋体;
+	fontSize:12;
+	color:#ffffff;
+}
+.talkButtonStyle{
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.cb_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.cb_over');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.cb_down');
+	fontFamily:微软雅黑;
+	fontSize:13;
+	color:#6c3c34;
+	textRollOverColor:#6c3c34;
+	textSelectedColor:#6c3c34;
+}
+.defaultButtonStyle{
+	skinClass:ClassReference('ui.skins.PlayButton');
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.p_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.p_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.p_down');
+	disabledSkin:Embed(source='../lib/skins.swf',symbol='skins.p_disabled');
+	fontFamily:微软雅黑;
+	fontSize:11;
+	color:#ffffff;
+	textRollOverColor:#ffffff;
+	textSelectedColor:#ffffff;
+}
+
+.playButtonStyle{
+	skinClass:ClassReference('ui.skins.PlayButton');
+	/*upSkin:Embed(source='assets/skins.swf',symbol='skins.p_up');
+	overSkin:Embed(source='assets/skins.swf',symbol='skins.p_up');
+	downSkin:Embed(source='assets/skins.swf',symbol='skins.p_down');
+	disabledSkin:Embed(source='assets/skins.swf',symbol='skins.p_up'); 
+	disabledIcon:Embed(source='../lib/blank.png');*/
+}
+.arrowButtonStyle{
+	skinClass:ClassReference('ui.skins.RightArrowButton');
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.ra_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.ra_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.ra_down');
+	disabledSkin:Embed(source='../lib/skins.swf',symbol='skins.ra_up');
+	disabledIcon:Embed(source='../lib/blank.png');
+}
+.topLeftButtonStyle{
+	skinClass:ClassReference('ui.skins.TopLeftButton');
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.l_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.l_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.l_down');
+}
+.topRightButtonStyle{
+	skinClass:ClassReference('ui.skins.TopRightButton');
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.r_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.r_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.r_down');
+}
+.topMiddleButtonStyle{
+	skinClass:ClassReference('ui.skins.TopMiddleButton');
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.correct_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.correct_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.correct_down');
+}
+.downLeftButtonStyle{
+	skinClass:ClassReference('ui.skins.DownLeftButton');
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.can_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.can_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.can_down');
+}
+.downRightButtonStyle{
+	skinClass:ClassReference('ui.skins.DownRightButton');
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.detail_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.detail_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.detail_down');
+}
+.downLeftSmallButtonStyle{
+	upSkin:Embed(source='../lib/skins.swf',symbol='skins.smcan_up');
+	overSkin:Embed(source='../lib/skins.swf',symbol='skins.smcan_up');
+	downSkin:Embed(source='../lib/skins.swf',symbol='skins.smcan_down');
+}

@@ -12,7 +12,6 @@
 				
 				kernel.init();
 				kernel.initConfig();
-				
 			}
 			private function pushError(e:String):void
 			{

@@ -12,10 +12,12 @@
 	 <tr><th>可存档:</th><td>是</td></tr>
 	 </table>
 -->
-<nz:BasicGroup xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:nz="nz.component.*"
-    xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx" 
-	 mouseChildren="false" mouseEnabled="false" implements="nz.support.ISaveObject" creationComplete="main()"
-	>
+<nz:BasicGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:nz="nz.component.*"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   width="256" height="48" creationComplete="main()" implements="nz.support.ISaveObject"
+			   mouseChildren="false" mouseEnabled="false">
 	<fx:Script>
 		<![CDATA[
 			import com.greensock.TimelineLite;
@@ -36,12 +38,12 @@
 			
 			import mx.core.FlexSprite;
 			
-			import nz.manager.FileManager;
-			import nz.manager.SAVEManager;
 			import nz.Transport;
 			import nz.enum.BasisEvent;
 			import nz.enum.EventListBridge;
 			import nz.enum.State;
+			import nz.manager.FileManager;
+			import nz.manager.SAVEManager;
 			
 			import spark.components.Group;
 			import spark.components.Image;
@@ -101,8 +103,9 @@
 		 * <p>如果设置为 true,那么清除文字.之后继续输出</p>
 		 * <p>如果设置为 false,那么产生一个动画.移动文字到上一行.之后继续输出</p>
 		 * 具体的可以参见附带的示例剧本
+		 * 请不要使用autoclean
 		 */
-		public var autoclean:Boolean = false;
+		public var autoclean:Boolean = true;
 		/**
 		 * 控制长文本超出后是否等待.
 		 * <p>如果设置为 true,将会启动playButton.</p>
@@ -195,7 +198,7 @@
 			func.setFunc("directText", { type:Script.Properties , progress:false } );
 			func.setFunc("writeTextDirectely", { type:Script.SingleParams } );
 			func.setFunc("append", { type:Script.BooleanProperties } );
-			func.setFunc("autoclean", { type:Script.BooleanProperties } );
+			//func.setFunc("autoclean", { type:Script.BooleanProperties } );
 			func.setFunc("autowait", { type:Script.BooleanProperties } );
 			func.setFunc("autoSound", { type:Script.BooleanProperties } );
 			func.setFunc("speed", { type:Script.Properties } );
@@ -358,8 +361,8 @@
 		{
 			leftPushPath = path;
 			if (Transport.Pro[path] != null) {
-				var data:BitmapData = Transport.Pro[path].imageCopy();
-				pushImage(leftPushTab,data);
+				(leftPushTab.getChildAt(0) as Image).source = FileManager.getResolvePath(Transport.Pro[path].path);
+				pushImage(leftPushTab);
 			}else {
 				(leftPushTab.getChildAt(0) as Image).source = FileManager.getResolvePath(path);
 				pushImage(leftPushTab);
@@ -373,8 +376,8 @@
 		{
 			rightPushPath = path;
 			if (Transport.Pro[path] != null) {
-				var data:BitmapData = Transport.Pro[path].imageCopy();
-				pushImage(rightPushTab,data);
+				(rightPushTab.getChildAt(0) as Image).source = FileManager.getResolvePath(Transport.Pro[path].path);
+				pushImage(rightPushTab);
 			}else {
 				(rightPushTab.getChildAt(0) as Image).source = FileManager.getResolvePath(path);
 				pushImage(rightPushTab);
@@ -445,6 +448,15 @@
 			_text = value;
 			_text = _text.replace(regleft,"<");
 			_text = _text.replace(regright, ">");
+			var st:int=0;
+			var ed:int;
+			while(1){
+				 st =_text.indexOf("<emo|",st);
+				 if(st==-1) break;
+				 st+=5;
+				 ed = _text.indexOf(">",st);
+				 Transport.CurrentRole.cacheEmotion(_text.slice(st,ed));
+			}
 			textField.y = 0;
 			textField.height = 48;
 			timer.start();
@@ -455,7 +467,7 @@
 		{
 			if (index < _text.length) {
 				prase_one_word();
-				if (textField.isTruncated) {
+				if (textField.textDisplay.isTruncated) {
 					if (autoclean) index-=2;//配合deal_pause的cleanText
 					if(autowait){
 						state = State.EMERGENCY;
@@ -598,51 +610,12 @@
 	</fx:Script>
 	<fx:Style source="../../main.css"/>
 	<s:Group id="upArea" y="-19.50">
-		<s:Graphic>
-			<s:Rect x="2" y="1.95" width="46" height="16"
-					radiusX="0.05" radiusY="0.05" bottomRightRadiusX="3" bottomRightRadiusY="3">
-				<s:stroke>
-					<s:SolidColorStroke color="#000073" alpha="0.73" />
-				</s:stroke>
-				<s:fill>
-					<s:SolidColor color="#5e649c" alpha="0.65"/>
-				</s:fill>
-			</s:Rect>
-			<s:Rect x="1" y="1" width="46.1" height="16" radiusX="1.05" radiusY="1.05">
-				<s:stroke>
-					<s:SolidColorStroke color="#393939" />
-				</s:stroke>
-			</s:Rect>
-			<s:Rect width="48" height="18" radiusX="2" radiusY="2">
-				<s:stroke>
-					<s:SolidColorStroke color="#848484" />
-				</s:stroke>
-			</s:Rect>
-		</s:Graphic>
-		<s:Label id="nameField" width="48" height="18"/>
+		<s:TextInput id="nameField" width="48" height="18" skinClass="ui.skins.NameFieldSkin"/>
 	</s:Group>
-	
 	<s:Group>
-		<s:Graphic>
-			<s:Rect radiusX="5" radiusY="5" width="256" height="48">
-				<s:stroke>
-					<s:SolidColorStroke color="white" />
-				</s:stroke>
-				<s:fill>
-					<s:SolidColor color="black" alpha="0.65"/>
-				</s:fill>
-			</s:Rect>
-		</s:Graphic>
-		<s:RichText id="textField" maxDisplayedLines="-1" lineBreak="toFit" width="256" height="48">
+		<s:TextArea id="textField" lineBreak="toFit" width="256" height="48" skinClass="ui.skins.DialogSkin">
 			<!--s:mask>{tmask}</s:mask-->
-		</s:RichText>
-		<!--s:Graphic id="tmask">
-		<s:Rect width="{textField.width-30}" height="30" x="15" y="11">
-			<s:fill>
-				<s:SolidColor color="white"/>
-			</s:fill>
-		</s:Rect>
-		</s:Graphic-->
+		</s:TextArea>
 		<s:Graphic id="arr" x="240" y="36.2" width="8.1" height="9.35">
 			<s:Path data="M 51.38 29.65 L 0.03 59.30 0.03 0.00 Z ">
 				<s:fill>
