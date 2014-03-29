@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Simple example to demonstrate the Application container. -->
+
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" minWidth="360" minHeight="320" applicationComplete="main()">
+	<mx:Script>
+		<![CDATA[
+		import flash.display.DisplayObjectContainer;
+		import flash.display.FrameLabel;
+		import flash.display.Loader;
+		import flash.display.MovieClip;
+		import flash.display.Sprite;
+		import flash.events.Event;
+		import flash.events.MouseEvent;
+		import flash.net.URLRequest;
+		import mx.collections.ArrayCollection;
+		import mx.containers.Canvas;
+		import mx.controls.SWFLoader;
+		import mx.controls.tabBarClasses.Tab;
+		import mx.core.UIComponent;
+		import mx.events.ListEvent;
+
+        protected const STATE_APPEND:String = "append";
+        protected const STATE_UPDATE:String = "update";
+
+
+		private var role:MovieClip;
+		private var currentName:String;
+		private var emodata:ArrayCollection;
+		private var list:Array;
+		private var state:String;
+		
+		private function main():void
+		{
+			list = new Array();
+            if(this.stage.loaderInfo.parameters.url != null){
+                path.text = this.stage.loaderInfo.parameters.url;
+                address_input();
+            }
+		}
+
+		private function newTab():void
+		{
+            var s:SWFLoader = new SWFLoader();
+            s.addEventListener(Event.COMPLETE,loader_complete);
+            s.mouseEnabled = s.mouseChildren = false;
+            var c:Canvas = new Canvas();
+            c.name = "空白";
+            c.addChild(s);
+			tabs.addChild(c);
+			state = STATE_APPEND;
+			list.push( {loader:s} );
+		}
+		/*private function newTab():void
+		{
+			var s:Loader = new Loader();
+			s.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_complete);
+			var u:UIComponent = new UIComponent();
+			u.addChild(s);
+			var c:Canvas = new Canvas();
+			c.mouseEnabled = c.mouseChildren = false;
+			c.addChild(u);
+			tabs.addChild(c);
+			state = STATE_APPEND;
+			openEvent();
+			list.push( {loader:s } );
+		}*/
+        protected function address_input():void
+        {
+            if (tabs.numChildren == 0) {
+                newTab();
+                openEvent();
+			}else {
+				state = STATE_UPDATE;
+				openEvent();
+			}
+
+        }
+		protected function closeTab():void
+		{
+			
+		}
+		private function loader_complete(e:Event):void
+		{
+			var i:int = (state == STATE_UPDATE)? tabs.selectedIndex:list.length - 1;
+			list[i].role = e.currentTarget.content as MovieClip;
+			list[i].emodata = new ArrayCollection();
+			list[i].emolistIndex = 0;
+			list[i].speakSelected = false;
+			list[i].speakEnabled = false;
+            list[i].url = path.text;
+			role = list[i].role;
+			role.gotoAndStop("normal");
+			emodata = list[i].emodata;
+			tabs.selectedIndex = i;
+			for each(var frame:FrameLabel in role.currentLabels) {
+				if(frame.name.indexOf("_speaking")==-1){
+					emodata.addItem( { label:frame.name, name:frame.name, data:frame.frame } );
+				}else {
+					var emoname:String = frame.name.slice(0, frame.name.length - 9);
+					for each(var inside:Object in emodata) {
+						if (inside.name == emoname) {
+							inside.speaking = true;
+						}
+					}
+				}
+			}
+			for (var j:int = 0; j < emodata.length;j++) {
+				if (emodata.getItemAt(j).name == "normal") {
+					emolist.selectedIndex = j;
+					break;
+				}
+			}
+			emolist.dataProvider = emodata;
+		}
+		private function tabs_change(e:Event):void
+		{
+			var i:int = tabs.selectedIndex;
+            path.text = list[i].url;
+			emodata = list[i].emodata;
+			emolist.dataProvider = emodata;
+			emolist.selectedIndex = list[i].emolistIndex;
+			emospeak.selected = list[i].speakSelected;
+			role = list[i].role;
+		}
+		private function emochange(e:ListEvent):void
+		{
+			var obj:Object = emodata.getItemAt(emolist.selectedIndex);
+			list[tabs.selectedIndex].emolistIndex = emolist.selectedIndex;
+			role.gotoAndStop(obj.data);
+			if (obj.speaking == true) {
+				emospeak.enabled = true;
+				emospeak.selected = false;
+				currentName = obj.name;
+			}else {
+				emospeak.selected = false;
+				emospeak.enabled = false;
+			}
+			list[tabs.selectedIndex].speakEnabled = emospeak.enabled;
+		}
+		private function emospeakclick(e:MouseEvent):void
+		{
+			list[tabs.selectedIndex].speakSelected = emospeak.selected;
+			if (emospeak.selected) {
+				role.gotoAndStop(currentName + "_speaking");
+			}else {
+				role.gotoAndStop(currentName);
+			}
+		}
+		private function openEvent():void
+		{
+			currentName = "normal";
+			emospeak.selected = false;
+			//file.browse([new FileFilter("角色文件(*.swf)", "*.swf")]);
+			var i:int = (state == STATE_APPEND)?list.length - 1:tabs.selectedIndex;
+			(list[i].loader as SWFLoader).load(path.text);
+			//(list[i].loader.parent.parent as Canvas).label = file.name;
+		}
+		private function browse_click():void
+		{
+			if (tabs.numChildren == 0) {
+				newTab();
+			}else {
+				state = STATE_UPDATE;
+				openEvent();
+			}
+		}
+		]]>
+	</mx:Script>
+    <mx:ApplicationControlBar dock="true">
+			<mx:VBox>
+				<mx:HBox>
+					<mx:Button label="+" width="22" click="newTab();" />
+					<mx:TextInput id="path" width="100%"    enter="address_input()" />
+
+					<!--mx:Button label="-" width="22" click="closeTab();" /-->
+					<mx:Button label="browse" click="browse_click()" visible="false" includeInLayout="false" />
+					<mx:ComboBox id="emolist" change="emochange(event)" />
+					<mx:CheckBox id="emospeak" label="speaking" click="emospeakclick(event)" />
+				</mx:HBox>
+			</mx:VBox>
+    </mx:ApplicationControlBar> 
+	<mx:HBox width="100%" height="100%">
+		<mx:TabNavigator id="tabs" width="100%" height="100%" change="tabs_change(event)">
+		</mx:TabNavigator>
+	</mx:HBox>
+	
+</mx:Application>

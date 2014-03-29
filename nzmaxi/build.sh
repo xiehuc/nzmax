@@ -1,2 +1,2 @@
 #!/bin/sh
-mxmlc -load-config+=build.xml src/nzmaxi.mxml
+mxmlc -load-config+=build.xml nzmaxi.mxml
