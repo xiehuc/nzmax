@@ -1,0 +1,10 @@
+<?xml version="1.0"?> 
+<flex-config>
+	<compiler>
+		<incremental>true</incremental>
+		<include-libraries>
+			<library>../bin/libnz.swc</library>
+		</include-libraries>
+	</compiler>
+	<output>../bin/nzmaxi.swf</output>
+</flex-config>

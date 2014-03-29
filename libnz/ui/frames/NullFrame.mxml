@@ -3,6 +3,6 @@
 	width="256" height="192"
 	>
 	<fx:Style source="../../Style.css"/>
-	<s:Image source="@Embed(source='../lib/skins.swf',symbol='_bar.up_0')"/>
-	<s:Image y="172" source="@Embed(source='../lib/skins.swf',symbol='_bar.down_0')"/>
+	<s:Image source="@Embed(source='../../../lib/skins.swf',symbol='_bar.up_0')"/>
+	<s:Image y="172" source="@Embed(source='../../../lib/skins.swf',symbol='_bar.down_0')"/>
 </s:Group>
