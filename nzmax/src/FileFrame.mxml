@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <s:Group  xmlns:fx="http://ns.adobe.com/mxml/2009"  xmlns:s="library://ns.adobe.com/flex/spark"
-	width="256" height="192" creationComplete="main(event)"
+	width="256" height="192" creationComplete="init();"
 	>
 	<fx:Script>
 		<![CDATA[
@@ -13,17 +13,19 @@
 			import nz.enum.Assets;
 			import nz.enum.EventListBridge;
 			import nz.enum.FrameInstance;
+			import nz.manager.FileManager;
 			
 			import spark.events.IndexChangeEvent;
 			
 			[Bindable]
 			private var dp:ArrayCollection;
 			
-			protected function main(event:FlexEvent):void
+			public function init():void
 			{
 				dp = new ArrayCollection();
-				
-				var dir:File = File.applicationDirectory.resolvePath("story");
+
+				//var dir:File = File.applicationDirectory.resolvePath(FileManager.STORY_DIR);
+				var dir:File = new File(FileManager.STORY_DIR);
 				var lst:Array = dir.getDirectoryListing();
 				for each(var f:File in lst){
 					var s:FileStream = new FileStream();
@@ -36,7 +38,7 @@
 			
 			protected function startStory(event:IndexChangeEvent):void
 			{
-				Transport.eventList[EventListBridge.LOAD_SCRIPT_EVENT]("story/"+list.selectedItem.dir+"/info.xml");
+				Transport.eventList[EventListBridge.LOAD_SCRIPT_EVENT](FileManager.STORY_DIR+list.selectedItem.dir+"/info.xml");
 				Transport.c.pushPage(FrameInstance.PLAYFRAME);
 			}
 			

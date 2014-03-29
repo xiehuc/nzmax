@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" width="256" height="384" showStatusBar="false"
-					   xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="main()" xmlns:nz="nz.*" xmlns:local="*">
+					   xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="main()"  xmlns:nz="nz.*" xmlns:local="*">
 	<fx:Script>
 		<![CDATA[
+			import nz.DefaultIniter;
+			import nz.manager.FileManager;
 			private function main():void
 			{
 				kernel.preinit();
@@ -10,7 +12,7 @@
 				kernel.regist("log",pushError);
 				kernel.link(control);
 				
-				kernel.init();
+				kernel.init(new AirIniter());
 				kernel.initConfig();
 			}
 			private function pushError(e:String):void
@@ -28,5 +30,4 @@
 	</s:layout>
 	<nz:Kernel id="kernel"/>
 	<local:Control id="control"/>
-	
 </s:WindowedApplication>

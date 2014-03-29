@@ -6,6 +6,7 @@
 		<![CDATA[
 			import mx.events.FlexEvent;
 			
+			import nz.DefaultIniter;
 			import nz.manager.FileManager;
 			protected var fm:FileManage;
 			protected var log:FileStream;
@@ -19,7 +20,7 @@
 				kernel.regist("log",pushError);
 				kernel.link(control);
 				
-				kernel.init();
+				kernel.init(new DefaultIniter());
 				kernel.initConfig();
 				
 				kernel.upScreen.scaleX = kernel.upScreen.scaleY = 1.25;

@@ -1,7 +1,11 @@
 ﻿<config>
 	<version>
-		<main version="0.75">nzmaxi.swf</main>
+		<main version="0.75">nzmax.swf</main>
 	</version>
+	<path>
+		<comlib>D:\PROJECT\nz\resource\comlib\</comlib>
+		<story>D:\PROJECT\nz\resource\story\</story>
+	</path>
 	<textFormat>
 		<!--family>Arial, Helvetica, _sans</family-->
 		<size>12</size>

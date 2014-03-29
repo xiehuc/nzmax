@@ -197,6 +197,9 @@
 				go("down");
 			}
 		}
+		/**执行一段xml
+		 * 一般是通过Transport.send函数来调用
+		 */
 		public function receivexml(cmd:XML,_stop:Boolean=false,_running:Boolean=true):void
 		{
 			if(_cuXML != null){

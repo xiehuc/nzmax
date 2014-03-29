@@ -13,6 +13,9 @@ package nz.manager
 	 */
 	public class FileManager
 	{
+		static public var STORY_DIR:String="";
+		static public var COMLIB_DIR:String="";
+		///需要配置
 		[Bindable]
 		static public var ScriptDirectory:String;
 		static public var SaveDirectory:String;
@@ -23,11 +26,12 @@ package nz.manager
 		
 		static private var filelist:XML;
 		static private var commonFileList:XML;
-		static public function initComlib(host:String = ""):void
+		static public function initComlib(dir:String = ""):void
 		{
 			var u:URLLoader = new URLLoader();
+			COMLIB_DIR=dir;
 			u.addEventListener(Event.COMPLETE,com_info_complete);
-			u.load(new URLRequest(host+"comlib/info.xml"));
+			u.load(new URLRequest(dir+"info.xml"));
 		}
 		/**
 		 * 需要首先调用setDirectory.然后用载入info.xml然后调用setStoryInfo;
@@ -60,7 +64,7 @@ package nz.manager
 				if(commonFileList.file.(@path == path) == undefined){
 					//Alert.show("IO错误,找不到路径:\n"+path);
 				}
-				return host+commonFileList.file.(@path == path).@url;
+				return COMLIB_DIR+commonFileList.file.(@path == path).@url;
 			}
 			return ScriptDirectory + fl.file.(@path == path).@url;
 		}
@@ -102,7 +106,7 @@ package nz.manager
 			var xml:XML = new XML(e.currentTarget.data);
 			commonFileList = xml.require[0];
 			for each(var x:XML in xml.child("import")) {
-				var define:URLLoader = new URLLoader(new URLRequest(x.toString()));
+				var define:URLLoader = new URLLoader(new URLRequest(COMLIB_DIR+x.toString()));
 				define.addEventListener(Event.COMPLETE, define_complete);
 			}
 		}

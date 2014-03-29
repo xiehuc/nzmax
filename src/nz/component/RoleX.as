@@ -54,8 +54,8 @@ package nz.component
 		private var dir:String;
 		private var mc:Object;
 		private var overll:URLLoader;
-		private var normal:String;
-		private var speaking:String;
+		private var normal:String = "";
+		private var speaking:String = "";
 		private var action:URLLoader;
 		private var _isspeaking:Boolean;
 		public var autoSide:Boolean = false;
@@ -139,7 +139,7 @@ package nz.component
 			if (value == null)
 				return;
 			if (info.emo.(@name == value) == undefined){
-				throw -1;
+				//throw -1;
 				return;
 			}
 			curemo = info.emo.(@name == value)[0];
@@ -190,6 +190,7 @@ package nz.component
 			info = new XML(infol.data);
 			if (sex == null) sex = info.sex.toString();
 			if (name == "") name = info.name.toString();
+			(_emotion == null) ? this.emotion = "normal" :this.emotion = _emotion;
 			//LoaderOptimizer.dispatchLoad(this, dir+info.path.toString());
 		}
 		public function voice(name:String):void
@@ -233,7 +234,6 @@ package nz.component
 		override protected function loader_complete(e:Event):void
 		{
 			loadFinish = true;
-			
 			(_emotion == null) ? this.emotion = "normal" :this.emotion = _emotion;
 		}
 	}

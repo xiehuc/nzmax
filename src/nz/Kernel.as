@@ -45,6 +45,7 @@ package nz
 	import nz.support.ICreatable;
 	import nz.support.IFileManager;
 	import nz.support.IRole;
+	import nz.support.Initer;
 	
 	import spark.components.Button;
 	import spark.components.Group;
@@ -86,6 +87,8 @@ package nz
 		protected var log:Function;
 		public var wrong:XML;//指正失败的事件
 		
+		private var initer:Initer;
+		
 		public function Kernel()
 		{
 		}
@@ -99,8 +102,9 @@ package nz
 			Transport.eventList[EventListBridge.CORRECTBUTTON_REQUEST] = deal_correctbutton_request;
 			FileManager.define_complete = this.define_complete;
 		}
-		public function init():void
+		public function init(initer:Initer):void
 		{
+			this.initer = initer;
 			define = <nz></nz>;
 			func = new FuncMan();
 			mode = new Object();
@@ -242,7 +246,7 @@ package nz
 			func.setFunc("xmlns", { type:Script.IgnoreProperties } );
 			
 			SAVEManager.ready();
-			FileManager.initComlib();
+			//FileManager.initComlib();
 			/*SAVEManager.addEventListener(SAVEManager.READ_SUCCESS, save_read);
 			SAVEManager.addEventListener(SAVEManager.READ_FAILED, save_read);
 			SAVEManager.addEventListener(SAVEManager.PREPARE_DATA, save_read);*/
@@ -341,7 +345,8 @@ package nz
 		{
 			//第二层载入:载入control,;
 			config = new XML(e.currentTarget.data);
-			nz.support.GlobalKeyMap.init(config.keyMap[0]);
+			initer.initWithConfig(config);
+			
 		}
 		private function pointRole(link:String):void
 		{
@@ -770,7 +775,7 @@ package nz
 			pro["l"].voice("异议");
 			var successObject:Boolean = false;
 			control.pushPage(FrameInstance.PLAYFRAME);
-			if (cuScript.hasChild("object")) {
+			if (cuScript.hasChild("prove")) {
 				for each(var item:XML in cuScript.oriData.object) {
 					if (item.@answer == link) {
 						cuScript.receivexml(item,false,false);

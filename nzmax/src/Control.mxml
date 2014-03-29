@@ -7,11 +7,12 @@
 			
 			import nz.Transport;
 			import nz.enum.FrameInstance;
+			import nz.manager.FileManager;
 			private var stack:Vector.<int>;
 			
 			protected function main(event:FlexEvent):void
 			{
-				// TODO Auto-generated method stub
+				//nz.manager.FileManager.flushStoryList=ff.main;
 				stack = new Vector.<int>();
 				
 				pageList[FrameInstance.PLAYFRAME] = 0;
@@ -56,7 +57,7 @@
 			<frames:ObjectFrame/>
 		</s:NavigatorContent>
 		<s:NavigatorContent>
-			<local:FileFrame/>
+			<local:FileFrame />
 		</s:NavigatorContent>
 		<s:NavigatorContent>
 			<frames:RoleFrame/>

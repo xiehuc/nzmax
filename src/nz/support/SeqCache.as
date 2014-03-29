@@ -22,8 +22,8 @@ package nz.support
 		{
 			capacity = 5;
 			sets = new Vector.<Set>();
-			l = new URLLoader();
-			lc = new URLLoader();
+			l = new URLLoader(null);
+			lc = new URLLoader(null);
 			l.dataFormat = lc.dataFormat =  "binary";
 			l.addEventListener(Event.COMPLETE,complete);
 			lc.addEventListener(Event.COMPLETE,cache_complete);
