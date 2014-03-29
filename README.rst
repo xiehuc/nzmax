@@ -1,0 +1,50 @@
+===============
+nzmax project
+===============
+
+逆转裁判游戏同人引擎，
+本游戏引擎基于flex+air技术构建，具有跨平台，界面美观的特点
+
+nizhuan game engine,
+build on flex and air, cross platform, beautiful ui
+
+structure
+===========
+
++  libnz: the common core for nzmax*
++  nzmaxi: the internet version, can play in a web browser online_
++  nzmax:  the desktop version, open with adobe air and enjoy full functional
++  nzmaxm: the mobile version, can play with ios and android
++  nztools: a tool to view role.swf 's emotions
+
+.. _online: http://nzmaxi.sinaapp.com/
+
+build
+=======
+
+install sdk
+-------------
+
+1.  install apache flex sdk and adobe air sdk
+2.  set FLEX_HOME and PLAYERGLOBAL_HOME=%FLEX_HOME%\frameworks\libs\player (windows) 
+	or PLAYERGLOBAL_HOME=${FLEX_HOME}\frameworks\libs\player (linux) environment
+3.  download globalplayer.swc and put it to ${PLAYERGLOBAL_HOME}/11.1
+
+
+build with Flash Develop
+--------------------------
+
+`Flash Develop`__ is a free tool under windows to develop with flash.
+
+1.  open libnz, and use ``compc -load-config+=build.xml`` to build libnz.swc
+2.  open one of *nzmaxi* *nzmax* *nzmaxm* folder, open *.as3proj with flash develop
+	and compile
+
+.. __ http://www.flashdevelop.org/
+
+build with command line
+-------------------------
+
+in linux and mac osx, you can also build without any ide tools.
+
+1.  run ./build.sh under root of source
