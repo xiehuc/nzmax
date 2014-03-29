@@ -1,7 +1,7 @@
 :user_configuration
 
 :: Path to Flex SDK
-set FLEX_SDK="D:\SOFTWARE\Adobe\Adobe Flash Builder 4.5\sdks\4.5.1"
+set FLEX_SDK="D:\DEVELOPMENT\apache-flex\flex-sdk-4.12"
 
 
 :validation

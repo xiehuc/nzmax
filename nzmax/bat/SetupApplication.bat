@@ -16,20 +16,20 @@ set SIGNING_OPTIONS=-storetype pkcs12 -keystore %CERT_FILE% -storepass %CERT_PAS
 set APP_XML=application.xml
 
 :: Files to package
-set APP_DIR=bin
+set APP_DIR=../bin
 set FILE_OR_DIR=-C %APP_DIR% .
 
 :: Your application ID (must match <id> of Application descriptor)
 set APP_ID=nzmax
 
 :: Output
-set AIR_PATH=air
+set AIR_PATH=../bin
 set AIR_NAME=nzmax
 
 
 :validation
 find /C "<id>%APP_ID%</id>" "%APP_XML%" > NUL
-if errorlevel 1 goto badid
+:: if errorlevel 1 goto badid
 goto end
 
 :badid

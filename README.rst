@@ -30,17 +30,20 @@ install sdk
 	or PLAYERGLOBAL_HOME=${FLEX_HOME}\frameworks\libs\player (linux) environment
 3.  download globalplayer.swc and put it to ${PLAYERGLOBAL_HOME}/11.1
 
-
 build with Flash Develop
 --------------------------
 
 `Flash Develop`__ is a free tool under windows to develop with flash.
 
 1.  open libnz, and use ``compc -load-config+=build.xml`` to build libnz.swc
-2.  open one of *nzmaxi* *nzmax* *nzmaxm* folder, open *.as3proj with flash develop
+2.  open each of *nzmaxi* *nzmax* *nzmaxm* folder, open *.as3proj with flash develop
 	and compile
+3.  open nzmax/bat, run CreateCertificate.bat to make a cert file
+4.  open nzmax, run PackageApp.bat to make a archived air file
 
 .. __ http://www.flashdevelop.org/
+
+limit: do not support package nzmaxm
 
 build with command line
 -------------------------
