@@ -8,6 +8,8 @@ nzmax project
 nizhuan game engine,
 build on flex and air, cross platform, beautiful ui
 
+.. image:: http://nzmaxi.sinaapp.com/screenshot.png
+
 structure
 ===========
 
@@ -26,8 +28,8 @@ install sdk
 -------------
 
 1.  install apache flex sdk and adobe air sdk
-2.  set FLEX_HOME and PLAYERGLOBAL_HOME=%FLEX_HOME%\frameworks\libs\player (windows) 
-	or PLAYERGLOBAL_HOME=${FLEX_HOME}\frameworks\libs\player (linux) environment
+2.  set FLEX\_HOME and PLAYERGLOBAL\_HOME=%FLEX_HOME%\\frameworks\\libs\\player (windows) 
+	or PLAYERGLOBAL\_HOME=${FLEX_HOME}/frameworks/libs/player (linux) environment
 3.  download globalplayer.swc and put it to ${PLAYERGLOBAL_HOME}/11.1
 
 build with Flash Develop
@@ -41,7 +43,7 @@ build with Flash Develop
 3.  open nzmax/bat, run CreateCertificate.bat to make a cert file
 4.  open nzmax, run PackageApp.bat to make a archived air file
 
-.. __ http://www.flashdevelop.org/
+__ http://www.flashdevelop.org/
 
 limit: do not support package nzmaxm
 
