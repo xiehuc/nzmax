@@ -1,0 +1,43 @@
+<info>
+  <version>
+	  <main version="0.7"/>
+	  <control version="0.7"/>
+  </version>
+  <require>
+	  <file path="info.xml" url="info.xml"/>
+	  <file path="map.xml" url="map.xml"/>
+	  <file path="script.xml" url="script.xml"/>
+	  <file path="宝月巴.swf" url="baoyueba.swf"/>
+	  <file path="老人.swf" url="oldman.swf"/>
+	  <file path="里美.swf" url="limei.swf"/>
+	  <file path="神乃木.swf" url="shennaimu.swf"/>
+	  <file path="五十岚.swf" url="wushinan.swf"/>
+	  <file path="姬神.swf" url="jishen.swf"/>
+	  <file path="bg/别墅.png" url="bg/bieshu.png"/>
+	  <file path="bg/大枣树.jpg" url="bg/dazaoshu.jpg"/>
+	  <file path="bg/地道.jpg" url="bg/didao.jpg"/>
+	  <file path="bg/金沙岭.jpg" url="bg/jinshaling.jpg"/>
+	  <file path="bg/酒吧.jpg" url="bg/jiuba.jpg"/>
+	  <file path="bg/疗养院.png" url="bg/liaoyangyuan.png"/>
+	  <file path="bg/柳树.jpg" url="bg/liushu.jpg"/>
+	  <file path="bg/马骝山.jpg" url="bg/maliushan.jpg"/>
+	  <file path="bg/山顶.jpg" url="bg/shanding.jpg"/>
+	  <file path="bg/山下村.jpg" url="bg/shanxiachun.jpg"/>
+	  <file path="bg/实验室.jpg" url="bg/shiyanshi.jpg"/>
+	  <file path="bg/研究所.jpg" url="bg/yanjiusuo.jpg"/>
+	  <file path="bg/院门口.jpg" url="bg/yuanmenkou.jpg"/>
+	  <file path="bg/事务所.png" url="bg/shiwusuo.png"/>
+	  <file path="oi/联系列表.png" url="oi/list.png"/>
+	  <file path="oi/手机.png" url="oi/phone.png"/>
+	  <file path="ri/宝月茜2.png" url="ri/baoyueqian2.png"/>
+  </require>
+  <name>阳光刺目的午后</name>
+  <folder>阳光刺目的午后</folder>
+  <logo>demologo.png</logo>
+  <author>言桄</author>
+  <translator>codex</translator>
+  <playTime>05:00</playTime>
+  <introduce>我们几个要好的同学就结伴去马骝山脚下玩,那是一个阳光刺眼的午后,不过大家都玩得很高兴,可是回来得时候却发现少了戴茉。......</introduce>
+  <script>script.xml</script>
+  <finish>false</finish>
+</info>

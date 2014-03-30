@@ -28,8 +28,9 @@ install sdk
 -------------
 
 1.  install apache flex sdk and adobe air sdk
-2.  set FLEX\_HOME and PLAYERGLOBAL\_HOME=%FLEX_HOME%\\frameworks\\libs\\player (windows) 
-	or PLAYERGLOBAL\_HOME=${FLEX_HOME}/frameworks/libs/player (linux) environment
+2.  set FLEX\_HOME and PLAYERGLOBAL\_HOME=%FLEX_HOME%\\frameworks\\libs\\player
+    (windows) or PLAYERGLOBAL\_HOME=${FLEX_HOME}/frameworks/libs/player (linux)
+    environment
 3.  download globalplayer.swc and put it to ${PLAYERGLOBAL_HOME}/11.1
 
 build with Flash Develop
@@ -38,8 +39,8 @@ build with Flash Develop
 `Flash Develop`__ is a free tool under windows to develop with flash.
 
 1.  open libnz, and use ``compc -load-config+=build.xml`` to build libnz.swc
-2.  open each of *nzmaxi* *nzmax* *nzmaxm* folder, open *.as3proj with flash develop
-	and compile
+2.  open each of *nzmaxi* *nzmax* *nzmaxm* folder, open \*.as3proj with flash
+    develop and compile
 3.  open nzmax/bat, run CreateCertificate.bat to make a cert file
 4.  open nzmax, run PackageApp.bat to make a archived air file
 

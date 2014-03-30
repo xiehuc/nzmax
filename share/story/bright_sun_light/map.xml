@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<nz>
+	<map>
+		<place label="事务所" background="bg/事务所.png">
+			<place label="研究所" background="bg/实验室.jpg" />
+			<place label="酒吧" enable="false" background="bg/酒吧.jpg"/>
+			<place label="沧州" enable="false" background="bg/院门口.jpg"/>
+			<place label="疗养院" enable="false" background="bg/疗养院.png"/>
+			<place label="山下村" enable="false" background="bg/山下村.png">
+				<place label="马骝山" enable="false" background="bg/马骝山.jpg">
+					<place label="柳树汊" enable="false" background="bg/柳树.jpg"/>
+					<place label="地道" enable="false" background="bg/地道.jpg"/>
+					<place label="山顶" enable="false" background="bg/山顶.jpg"/>
+				</place>
+			</place>
+			<place label="别墅" enable="false" background="bg/别墅.png"/>
+		</place>
+	</map>
+</nz>
