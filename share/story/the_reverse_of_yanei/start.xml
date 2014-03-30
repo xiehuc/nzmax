@@ -1,0 +1,252 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<nz>
+
+<court>
+<a name="真宵" path="真宵.swf"/>
+<l name="成步堂" path="成步堂.swf"/>
+<w name="糸锯" path="系锯.swf"/>
+<p name="亚内" path="亚内.swf"/>
+
+<create>
+	<yaliu_ri type="RoleItem" name="牙王充雾人" path="ri/牙琉.png" des="谜一样的人物,本案被告"/>
+	<huizhang_oi type="ObjectItem" name="律师徽章" path="oi/律师徽章.png" des="律师徽章,是个好东西"/>
+</create>
+
+<Text text="X月X日 X时 地方裁判所第5法庭" />
+
+<Music load="bgm/法庭.mp3"/>
+<c emotion="noizy"/>
+<j emotion="hammer"/>
+<Main task="震惊四座"/>
+<Main flyto="j"/><Text point="j" text="现在我宣布，这次审判正式开庭。"/>
+<Main flyto="l"/><Text point="l" text="辩护方准备完毕"/>
+<Main flyto="p"/><Text point="p" text="检控方准备完毕"/>
+
+<j emotion="thinks"/>
+
+<Music pause=""/>
+<Main flyto="j"/><Text text="嗯，如果是你们两个站在这个法庭上的话。"/>
+<Text text="依照我往常的经验来看……"/>
+<j emotion="normal"/>
+<Text text="直接就下判决似乎显得更加有效率一点。"/>
+<p voice="异议"/>
+<Main flyto="p"/><Text text="[snd|shock.mp3][vib|2]请好好斟酌一下啊审判长，这可不是开玩笑的事情"/>
+<a emotion="ugh"/>
+<Main flyto="a"/><Text text="直接被无视了啊，亚内检事。"/>
+<Music resume=""/>
+<Main flyto="j"/><Text text="那么，现在我宣布这次审判的结果[br]被告的判决如下——"/>
+<Music stop=""/>
+<l voice="异议"/>
+<Main task="震惊四座"/>
+<l emotion="sheepish"/>
+<Text alpha="1" text="那个……"/>
+<j emotion="surprised"/>
+<Main flyto="j"/><Text text="怎么了，看你这表情就知道不会有什么好事"/>
+<Main flyto="l"/><Text text="我说那个……至少把被告人叫上来吧，[emo|document]那个叫什么鸭王的"/>
+<p voice="异议"/>
+<Text point="p" text="反对！[snd|shock.mp3][vib|2]被告人的名字叫做牙琉雾人"/>
+<Text text="请辩护方起码记住被告人的名字！"/>
+<l emotion="sweating"/>
+<Text point="l" autoSound="false" realName="" text="........."/>
+<a emotion="ugh"/>
+<Text point="a" realName="" text="........."/>
+<j emotion="surprised"/>
+<Text point="j" realName="" text="........."/>
+<c emotion="quiet"/><Text point="c" realName="" text="........."/>
+<p emotion="sweats"/>
+<Main flyto="p"/><Text autoSound="true" text="喂，你们怎么都不说话了"/>
+<j emotion="surprised"/>
+<Main flyto="j"/><Text text="刚……[snd|shock.mp3][vib|2]刚才，这个法庭目睹了历史性的一刻！"/>
+<Text text="亚内检事，完成了他3年里第一次成功的异议！"/>
+<p emotion="sweats"/>
+<Main flyto="p"/><Text text="什……[snd|shock.mp3][vib|2]什么乱七八糟的"/>
+<j emotion="normal"/>
+<Main flyto="j"/><Text text="让我们全体起立，恭喜亚内检事！"/>
+<c emotion="cheer"/>
+<Main flyto="p" /><Text realName="" text="[cb]………………………………"/>
+<Text realName="" text="成步堂你不是万年吐槽男吗？帮我应付一下这个场面吧"/>
+<l emotion="sweating"/>
+<Text  point="l" realName="" text="这种场面叫我怎么应付啊！还有我为什么成了万年吐槽男？！"/>
+<Text  point="p" realName="" text="算我求求你了好不好，我快要这样汗着汗着汗死了"/>
+<Main flyto="a" /><Text realName="" text="[emo|strict]算啦亚内检事每次都这么可怜成步堂君你就帮帮他吧！"/>
+<Main flyto="l" /><Text text="好吧"/>
+<l voice="等下"/>
+<Music load="bgm/异议.mp3"/>
+<l active=""/>
+<l emotion="handsondesk_action"/>
+<Text text="[cw]大家请先安静一下"/>
+<Text text="刚才审判长说的那句话，[emo|pointing]有个非常致命的矛盾！"/>
+<Main flyto="j"/><Text text="……[emo|surprised]矛盾？"/>
+<Main flyto="l"/>
+<l emotion="nodding"/>
+<Text text="嗯。虽然亚内检事一表人才聪明绝顶……"/>
+<p emotion="normal"/>
+<Text point="p" text="喂。"/>
+<Text point="l" text="……[emo|thinking]被称作“新人粉碎机”，连续4作都被新人粉碎……"/>
+<a emotion="normal"/>
+<Main flyto="a"/><Text text="[emo|hum]真好啊~我也好想进逆转4啊！"/>
+<Text point="p" text="喂喂。"/>
+<l emotion="handsondesk_action"/>
+<Text text="但是！这次异议是亚内检事三年来第一次异议这种事情"/>
+<l zoom=""/>
+<Text text="是绝对不可能的."/>
+<Music stop=""/>
+<Main flyto="j"/><Text text="哦~你是说亚内检事在这三年里还有过其他成功的异议？"/>
+<l emotion="headshake"/>
+<Text text="我不是这个意思。"/>
+
+<objection target="role" answer="yaliu_ri">
+	<init>
+		<Text point="l" text="[emo|handsondesk]请大家看看这里" />
+	</init>
+	<error>
+		<Text point="j" text="你觉得呢?好像没什么关系吧"/>
+		<Text point="l" text="[emo|sheepish]好像哪些地方有问题"/>
+		<HP reduce="0.2"/>
+	</error>
+	<currect>
+		<l voice="接招"/>
+		<Text point="l" text="就是这个!"/>
+	</currect>
+</objection>
+
+<Music load="bgm/述说真相.mp3"/>
+<l emotion="pointing"/>
+<Text text="亚内检事，请你再仔细看一下档案里的被告名字"/>
+<p voice="异议"/>
+<Main flyto="p"/><Text text="请辩护方不要强词夺理，被告人的名字写的清清楚楚！"/>
+<l voice="异议"/>
+<Main flyto="l"/><Text text="不。请检控方再仔细看一下字间的间距"/>
+<Text text="[emo|document]你不觉得这个“琉”字是用一个“王”和一个“充”字拼起来的？"/>
+<p emotion="damage"/>
+<p emotion="normal"/>
+<Text point="p" text="什么？王[p|0.3]——充[p|0.3][snd|key.mp3]？[emo|sweats]牙王充雾人？"/>
+<Text text="充雾人？什么乱七八糟的？"/>
+<l emotion="thinking"/>
+<Main flyto="l"/><Text text="充雾人是一种职业啊，你难道没听说过？"/>
+<Text point="p" text="[emo|normal]根本没有这种职业好不！"/>
+<j emotion="normal"/>
+<Text point="j" text="是啊，充雾人什么的，怎么可能存在呢？[p|0.5]" append="true"/>
+<a emotion="normal"/>
+<Main flyto="a"/><Text text="我听说过啊，很有名的哦。"/>
+<c emotion="noize"/>
+<Main flyto="c"/><Text text="我也知道这个东西啊[p|0.5][cls]是啊，谁不知道充雾人呢？[p|0.5][cls]对啊，世界上怎么可能有人连“充雾人”都不知道的人呢？[p|0.5]" append="true" />
+<j active=""/>
+<j emotion="thinks"/>
+<Main flyto="j"/><Text text="咳咳，我，我当然听说过了，那个什么“雾虫人”的"/>
+<Main flyto="p" /><Text realName="" text="[emo|sweats][cb]（审判长你是一分钟前刚刚听说的吧！）[cw]"/>
+<Music stop=""/>
+<Main flyto="p"/><Text text="[emo|normal]但……但是！"/>
+<Text text="就算充雾人是一种职业，那个“牙王”也不可能是被告人的名字吧！"/>
+<l voice="异议"/>
+<Music load="bgm/追求.mp3"/>
+<Music pause=""/>
+<Main flyto="l"/><l emotion="sheepish"/><Text text="啊，那个只是打错了而已，应该写成【鸭王】"/>
+<p voice="异议"/>
+<Main flyto="p"/><Text text="请辩护方不要再胡搅乱缠！[vib|1]怎么可能有人把动物放到自己的名字里去呢！"/>
+<l voice="异议"/>
+<Main flyto="l"/><l emotion="pointing"/><Text text="完全有可能！"/>
+<Text text="[emo|normal]比如说，我的原名叫成步堂龙一"/>
+<Text text="[emo|pointing]但是我就不能把“刺猬头”作为我的名字吗？"/>
+<Main flyto="j"/><Text text="反对有效，认可刺猬头作为辩护方的新名字"/>
+<Main flyto="p" /><Text realName="" text="[cb]（我看审判长你的名字叫木鱼头比较好一点）[cw]"/>
+<Main flyto="l"/>
+<l emotion="handsondesk_action"/>
+<Text text="总之！被告人的名字根本就不是什么“牙琉雾人”"/>
+<Text text="[emo|document]而是像档案记录里的一样，是个名叫“鸭王”的充雾人"/>
+<l emotion="handsondesk_action"/>
+<Text text="所以！亚内检事三年以来成功的异议，事实上是"/>
+<l zoom=""/>
+<Music pause=""/>
+<Text text="一次也没有！"/>
+<Text autoSound="false"/>
+             <j emotion="surprised"/>
+             <Text alpha="0" point="j" text="" append="true" />
+             <Script delay="1.5"/>
+             <w emotion="normal"/>
+             <Text alpha="0" point="w" text="" append="true" />
+             <Script delay="1.5"/>
+             <a emotion="normal"/>
+             <Text alpha="0" point="a" text="" append="true" />
+             <Script delay="1.5"/>
+             <p emotion="sweats"/>
+             <Text alpha="0" point="p" text="" append="true" />
+             <Script delay="1.5"/>
+             <Text autoSound="true"/>
+<Music load="bgm/法庭.mp3"/>
+<Main flyto="j"/><show_ef applyToTarget="visual"/><Text alpha="1" text="[emo|normal]看起来，很遗憾，我们不得不收回前面的祝贺了呢"/>
+<Main flyto="p" /><Text realName="" text="……………………"/>
+<Main flyto="j"/><Text text="希望能在下一次审判中尽快看到亚内检事真正成功的异议。"/>
+<Main flyto="p" /><Text realName="" text="[cb][vib|1]（今天汗的太多了，人有点晕了）[vib|1][cw]"/>
+<Main flyto="j"/><Text text="那个，鸭内，啊不，亚内检事，你还好吗？"/>
+<Text alpha="0" point="p" realName="" text="[snd|key.mp3][emo|normal][fsrn|0.1][vib|1][p|0.5][vib|1][p|1][vib|1][p|1.5][snd|fall.mp3]" append="true" />
+<p alpha="0"/>
+<Script delay="1"/>
+<l emotion="sweating"/>
+<Text alpha="1" point="l" autoSound="false" realName="" text="........."/>
+<a emotion="ugh"/>
+<Text point="a" realName="" text="........."/>
+<j emotion="surprised"/>
+<Text point="j" realName="" text="........."/>
+<Main flyto="c"/>
+<c emotion="quiet"/><Text  text="................."/>
+
+<Main flyto="j"/><show_ef applyToTarget="visual"/><Text text="那么，由于检控方的缺席，我们终于可以重新下判决了"/>
+<Effect applyTweens="">
+<frame>
+<Music volumn="1"/>
+</frame>
+<frame last="1">
+<Music volumn="0"/>
+</frame>
+</Effect>
+<l voice="等下"/>
+<Text autoSound="false"/>
+             <j emotion="surprised"/>
+             <Text alpha="0" point="j" text="[snd|震惊四座][fsrn|0.1]" append="true" />
+             <Script delay="1"/>
+             <w emotion="normal"/>
+             <Text alpha="0" point="w" text="[snd|震惊四座][fsrn|0.1]" append="true" />
+             <Script delay="1"/>
+             <Text alpha="0" point="p" text="[snd|震惊四座][fsrn|0.1]" append="true" />
+             <Script delay="1"/>
+             <a emotion="ugh"/>
+             <Text alpha="0" point="a" text="[snd|震惊四座][fsrn|0.1]" append="true" />
+             <Script delay="1"/>
+             <l emotion="sheepish"/>
+             <Text alpha="0" point="l" text="[snd|震惊四座][fsrn|0.1]" append="true"/>
+             <Script delay="1"/>
+             <Text autoSound="true"/>
+<Main flyto="l"/><Text alpha="1" text="那个，真的不用再审判一下了吗？"/>
+<Main flyto="j"/><Text text="我判无罪你还磨蹭什么。"/>
+<Text text="[emo|serious]要是判他有罪，逆转5不就没戏了吗？"/>
+<Main flyto="l"/><Text realName="" text="......[emo|sweating][cb]（怪不得今天那么拽[br]原来有卡普空撑腰啊）[cw]"/>
+<Effect applyTweens="">
+<frame>
+<Music volumn="0"/>
+</frame>
+<frame last="1">
+<Music volumn="1"/>
+</frame>
+</Effect>
+<Main flyto="j"/><Text text="那么，现在正式对被告人牙琉……[br]啊不，鸭王充雾人下判决"/>
+<j voice="无罪"/>
+<Main flyto="j"/><Text text="那么，本案就此闭庭！"/>
+<Music pause=""/>
+<w voice="等下"/>
+<Main task="震惊四座"/>
+<Main flyto="j"/><Text alpha="1" text="那个，刚才是谁喊的“等一下”？"/>
+<Main flyto="l"/><Text text="不是我。"/>
+<Main flyto="a"/><Text text="不是我。"/>
+<Main flyto="p"/><Text realName="" text="..........."/>
+<w visible="true"/>
+<Text point="w" text="[emo|mad]是自己喊的说！自己站在这里已经站了半个小时了的说！"/>
+<Text point="l" text="[emo|normal]哦，辛苦了"/>
+<Main flyto="a"/><Text text="[emo|normal]哦，辛苦了"/>
+<Main flyto="j"/><Text text="[emo|normal]哦，辛苦了，你可以……退下了"/>
+<Main flyto="p"/><Text realName="" text="..........."/>
+<Text point="w" text="[emo|thinking]呜呜，结果我为什么站到这个证言台上来也没搞清楚"/>
+<Text text="[emo|disheartened]果然最没有存在感的是我吗？"/>
+<Script finish=""/>
+</court>
+</nz>

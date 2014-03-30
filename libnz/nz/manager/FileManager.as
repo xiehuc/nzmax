@@ -19,22 +19,23 @@ package nz.manager
 		static public var ScriptInfo:XML;
 		static public var define_complete:Function;
 		static private var directory:String;
-		static private var host:String;
+		static private var comlib:String;
 		
 		static private var filelist:XML;
 		static private var commonFileList:XML;
 		static public function initComlib(host:String = ""):void
 		{
+			if(host == null) host = "";
+			comlib = host+"comlib/";
 			var u:URLLoader = new URLLoader();
 			u.addEventListener(Event.COMPLETE,com_info_complete);
-			u.load(new URLRequest(host+"comlib/info.xml"));
+			u.load(new URLRequest(comlib+"info.xml"));
 		}
 		/**
 		 * 需要首先调用setDirectory.然后用载入info.xml然后调用setStoryInfo;
 		 */
-		static public function setDirectory(dir:String,globalhost:String = ""):void
+		static public function setDirectory(dir:String):void
 		{
-			host = globalhost;
 			directory = dir;
 		}
 		static public function setStoryInfo(info:XML):void
@@ -49,7 +50,7 @@ package nz.manager
 			return ScriptInfo.script[0].toString();
 		}
 		static public function getResolvePath(path:String,dic:XML = null):String
-		{
+	{
 			var fl:XML;
 			if(dic == null){
 				fl = filelist;
@@ -60,7 +61,7 @@ package nz.manager
 				if(commonFileList.file.(@path == path) == undefined){
 					//Alert.show("IO错误,找不到路径:\n"+path);
 				}
-				return host+commonFileList.file.(@path == path).@url;
+				return comlib+commonFileList.file.(@path == path).@url;
 			}
 			return ScriptDirectory + fl.file.(@path == path).@url;
 		}
@@ -102,14 +103,11 @@ package nz.manager
 			var xml:XML = new XML(e.currentTarget.data);
 			commonFileList = xml.require[0];
 			for each(var x:XML in xml.child("import")) {
-				var define:URLLoader = new URLLoader(new URLRequest(x.toString()));
+				var define:URLLoader = new URLLoader(new URLRequest(
+					comlib + commonFileList.file.(@path == x.toString()).@url
+				));
 				define.addEventListener(Event.COMPLETE, define_complete);
 			}
 		}
-		public function FileManager() 
-		{
-			
-		}
-		
 	}
 }

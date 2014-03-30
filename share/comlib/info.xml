@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<info>
+	<require>
+		<file path="predefine.xml" url="predefine.xml"/>
+		
+		<file path="aidestand.png" url="aidestand.png"/>
+		<file path="bang.mp3" url="bang.mp3"/>
+		
+		<file path="bg/法庭.png" url="bg/court.png"/>
+		<file path="bg/候审厅.png" url="bg/waitingroom.png"/>
+		<file path="bg/体育馆.png" url="bg/coliseum.png"/>
+		<file path="bg/成步堂事务所.png" url="bg/phoenixoffice.png"/>
+		
+		<file path="bgfront.png" url="bgfront.png"/>
+		
+		<file path="bgm/法庭序章.mp3" url="bgm/court.mp3"/>
+		
+		<file path="demologo.png" url="demologo.png"/>
+		<file path="judgeseat.png" url="judgeseat.png"/>
+		<file path="lefttable.png" url="lefttable.png"/>
+		
+		<file path="oi/报告.png" url="oi/report.png"/>
+		<file path="oi/律师徽章.png" url="oi/golden.png"/>
+		<file path="oi/照片.png" url="oi/photo.png"/>
+		
+		<file path="plugins/pointpic.swf" url="plugins/pointpic.swf"/>
+		
+		<file path="ri/宝月茜.png" url="ri/baoyueqian.png"/>
+		<file path="ri/牙琉.png" url="ri/yaliu.png"/>
+		
+		<file path="righttable.png" url="righttable.png"/>
+		<file path="testlogo.png" url="testlogo.png"/>
+		<file path="宝月茜.swf" url="roles/baoyueqian.swf"/>
+		<file path="裁判长.swf" url="roles/judge.swf"/>
+		<file path="成步堂.swf" url="roles/chengbutang.swf"/>
+		<file path="法庭.swf" url="roles/court.swf"/>
+		<file path="空白.swf" url="roles/blank.swf"/>
+		<file path="系锯.swf" url="roles/xiju.swf"/>
+		<file path="亚内.swf" url="roles/yanei.swf"/>
+		<file path="御剑.swf" url="roles/yujian.swf"/>
+		<file path="真宵.swf" url="roles/zhenxiao.swf"/>
+		<file path="宝月茜2.swf" url="roles/baoyueqian2.swf"/>
+		<file path="牙琉.swf" url="roles/yaliu.swf"/>
+		
+		<file path="宝月茜" url="roles/ema/ema.xml"/>
+		
+	</require>
+	<import>predefine.xml</import>
+</info>

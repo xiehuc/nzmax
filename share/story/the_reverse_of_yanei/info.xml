@@ -1,0 +1,24 @@
+<info>
+	<require>
+		<file path="bang.mp3" url="bang.mp3"/>
+		<file path="fall.mp3" url="fall.mp3"/>
+		<file path="Key.mp3" url="Key.mp3"/>
+		<file path="shock.mp3" url="shock.mp3"/>
+		<file path="start.xml" url="start.xml"/>
+		
+		<file path="bgm/法庭.mp3" url="bgm/court.mp3"/>
+		<file path="bgm/述说真相.mp3" url="bgm/tellingtruth.mp3"/>
+		<file path="bgm/异议.mp3" url="bgm/objection.mp3"/>
+		<file path="bgm/追求.mp3" url="bgm/approch.mp3"/>
+		
+	</require>
+  <name>亚内的逆转</name>
+  <folder>亚内的逆转</folder>
+  <logo>demologo.png</logo>
+  <author>天使tsubasa</author>
+  <translator>CodeNameX</translator>
+  <playTime>05:00</playTime>
+  <introduce>简单的一个例子</introduce>
+  <script>start.xml</script>
+  <finish>false</finish>
+</info>

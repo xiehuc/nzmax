@@ -1,0 +1,293 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<nz>
+
+<Script sign="restart_ss"/>
+<create>
+	<r type="Role" path="宝月茜.swf" name="宝月茜"/>
+	<huizhang_oi type="ObjectItem" path="oi/律师徽章.png" name="律师徽章" des="略"/>
+	<baoyue_ri type="RoleItem" path="ri/宝月茜.png" name="宝月茜" des="这次测试介绍解说"/>
+</create>
+<Bg path="bg/候审厅.png"/>
+<Text point="r" text="欢迎进入测试"/>
+
+
+<selector>
+	<item name="Role的测试" >
+		<create>
+			<j type="Role" path="裁判长.swf" name="裁判长"/>
+			<jb_layout type="Layout" path="judgeseat.png" displayParent="Background"/>
+		</create>
+		<r visible="false"/>
+		<Text point="j" text="人物的话还是我比较有代表性"/>
+		<Text realName="" text="[cg]测试1:基本emotion写换[cw]"/>
+		<j emotion="surprised"/>
+		<Text point="j" text="这个是surprised表情"/>
+		<j emotion="shakes"/>
+		<Text text="刚才的是shakes动作表情"/>
+		<Text realName="" text="[cg]测试2:voice测试[cw]"/>
+		<Text point="j" text="以下是无罪voice"/>
+		<j voice="无罪"/>
+		<Text text="然后是运行时角色重载"/>
+		<j path="成步堂.swf" name="成步堂" />
+		<Text point="j" text="以下是异议voice"/>
+		<j voice="异议"/>
+		<Text point="j" text="以下是等下voice"/>
+		<j voice="等下"/>
+		<Text text="以下是接招voice"/>
+		<j voice="接招"/>
+		<Text text="测试完毕"/>
+		<remove type="Role"/>
+	</item>
+	<item name="Text的测试">
+		<Text point="r" text="[cg]直接输出字幕测试:directText[cw]"/>
+		<Text directText="[co]这个字幕是直接输出的[cw]"/>
+		<Text text="追加字幕测试:ａｐｐｅｎｄ　ａｎｄ　ａｐｐｅｎｄＴｅｘｔ"/>
+		<Text text="这个是第一段话[br]"/>
+		<Script delay="1"/>
+		<Text appendText="这个是无append的效果" />
+		<Text text="这个是第一段话[br]" append="true" />
+		<Script delay="1"/>
+		<Text appendText="这个是append:true的效果"/>
+		<Text directText="[cg]文本输出速度测试:speed[cw]"/>
+		<Text speed="30" text="这个是速度为30的效果"/>
+		<Text speed="10"/>
+		<Text directText="[cg]长文本输出测试:autowait and autoclean[cw]"/>
+		<Text autowait="true" autoclean="true" text="autoclean:true , autowait:true,测试测试...测试测试...测试测试...测试测试...测试测试..."/>
+		<Text autowait="false" autoclean="true" text="autoclean:true , autowait:false ,测试测试...测试测试...测试测试...测试测试...测试测试..."/>
+		<Text autowait="true" autoclean="false" text="autoclean:false , autowait:true ,测试测试...测试测试...测试测试...测试测试...测试测试..."/>
+		<Text autowait="false" autoclean="false" text="autoclean:false , autowait:false ,测试测试...测试测试...测试测试...测试测试...测试测试..."/>
+		<Text directText="[cg]图片推出测试:leftPush and rightPush[cw]"/>
+		<Text leftPush="oi/律师徽章.png"/>
+		<Text text="左推"/>
+		<Text rightPush="huizhang_oi"/>
+		<Text text="右推"/>
+		<Text cleanPush="" />
+		<Text directText="[cg]文本间控制测试[cw]"/>
+		<Text text="暂停[p|1]测试"/>
+		<Text text="屏幕抖动[vib|2]测试"/>
+		<Text text="屏幕闪烁[fsrn|1]测试"/>
+		<Text text="文本间表情[emo|cheerful]切换测试"/>
+		<Text text="文本清除[cls]测试"/>
+		<Text text="文本间声音[snd|ding]输出测试"/>
+		<Text text="文本间声音[snd|bang.mp3]外链输出测试"/>
+		<Text text="测试完毕"/>
+	</item>
+	<item name="对话测试">
+		<create type="Role">
+			<me name="成步堂" path="空白.swf" group="none"/>
+			<zheng name="真宵" path="真宵.swf" group="auto" visible="false" />
+		</create>
+		<Text point="r" text="这个是为了测试多人物时的自动辅助功能的"/>
+		<Text text="具体的是负责自动显示/隐藏人物的"/>
+		<Text point="zheng" text="是啊,是啊.是通过group来实现的."/>
+		<Text text="把有冲突的人物的group设置为同一个值.那么这些人之中只会显示一个"/>
+		<Text point="me" text="而且默认的group值为auto"/>
+		<Text text="真宵和宝月茜的group都是auto.但是我的是none.所以我的显示与否不会影响到她们了"/>
+		<Text text="测试完毕"/>
+		<remove type="Role"/>
+	</item>
+	<item name="Control测试">
+	<create>
+		<map_oi type="ObjectItem" path="oi/照片.png" name="法庭背景图片" des="无" detail="photo">
+			<content>bg/候审厅.png</content>
+		</map_oi>
+		<report_oi type="ObjectItem" path="oi/报告.png" name="报告" des="无" detail="report">
+			<content>
+HHHHHHHHHHH
+HHHHHHHHHHH
+			</content>
+		</report_oi>
+	</create>
+	<Text directText="[green]按键映射测试.可以随时点击键盘.映射关系和一般的模拟器一样.可以再工具中更改,Enter键保存[/green]"/>
+	<Text directText="[green]证物,人物 物品测试[/green]"/>
+	<Text point="r" text="请点击【法庭记录】或者是【S】键浏览法庭记录[br]报告和法庭背景图片有详细内容"/>
+	<Text text="然后是添加(升级)证物特效.你可以随时(包括创建)开启这个特效"/>
+	<report_oi notice="true"/>
+	<Text text="然后是超多物品管理.简单看看就是了."/>
+	<create type="ObjectItem">
+		<zhanwei1 name="占位" des="占位" path="oi/报告.png"/>
+		<zhanwei2 name="占位" des="占位" path="oi/报告.png"/>
+		<zhanwei3 name="占位" des="占位" path="oi/报告.png"/>
+		<zhanwei4 name="占位" des="占位" path="oi/报告.png"/>
+		<zhanwei5 name="占位" des="占位" path="oi/报告.png"/>
+		<zhanwei6 name="占位" des="占位" path="oi/报告.png"/>
+		<zhanwei7 name="占位" des="占位" path="oi/报告.png"/>
+		<zhanwei8 name="占位" des="占位" path="oi/报告.png"/>
+		<zhanwei9 name="占位" des="占位" path="oi/报告.png"/>
+		<zhanwei10 name="占位" des="占位" path="oi/报告.png"/>
+		<zhanwei11 name="占位" des="占位" path="oi/报告.png"/>
+		<zhanwei12 name="占位" des="占位" path="oi/报告.png"/>
+		<zhanwei13 name="占位" des="占位" path="oi/报告.png"/>
+		<zhanwei14 name="占位" des="占位" path="oi/报告.png"/>
+	</create>
+	<Text text="人物的就没有弄了.现在点击法庭记录查看"/>
+	<Text text="[cg]插件功能测试,此功能扩展很强大.最终形态未完成[cw]"/>
+	<Text text="插件:PointPicPlugin.点击左边的区域就是了.区域很大.放心点击"/>
+	<Main pluginLink="ppic_pl" pluginLoad="plugins/PointPic.swf"/>
+	<Text text="点击右边的试一试也不错"/>
+	<Script sign="DEFAULT_POINTPIC">
+		<Text text="失败.请再次点击"/>
+		<Script gotoSign="reclick_ss"/>
+	</Script>
+	<Script sign="reclick_ss"/>
+	<ppic_pl init="bg/候审厅.png">
+		<content position="0;0;128;192">
+			<Text text="成功.继续执行"/>
+			<Script search="click_event_continue_ss"/>
+		</content>
+	</ppic_pl>
+	<Script label="click_event_continue_ss"/>
+	<Main pluginUnload="ppic_pl"/>
+	<Main remove="map_oi;report_oi;zhanwei1;zhanwei2;zhanwei3;zhanwei4;zhanwei5;zhanwei6;zhanwei7;zhanwei8;zhanwei9;zhanwei10;zhanwei11;zhanwei12;zhanwei13;zhanwei14"/>
+	</item>
+	
+	
+	<item name=" 法庭测试 ">
+		<r visible="false"/>
+		<court>
+			<l name="成步堂" path="成步堂.swf"/>
+			<w name="系锯" path="系锯.swf"/>
+			<p name="亚内" path="亚内.swf"/>
+			<j name="裁判长" path="裁判长.swf"/>
+			<a name="真宵" path="真宵.swf"/>
+			<!--Text point="l" text="好了开始吧"/>
+			<Text directText="[green]测试1:镜头跳转[/green]"/>
+			<Main flyto="p"/><Text text="占位占位占位占位..."/>
+			<Main flyto="w"/><Text text="占位占位占位占位..."/>
+			<Main flyto="l"/><Text text="占位占位占位占位...."/>
+			<Text directText="[green]测试2:法庭对决[/green]"/>
+			<HP addEvent="nohp">
+				<Text point="j" text="你这么快已经没有HP了啊"/>
+				<Text text="没关系的.充满HP.再继续测试吧"/>
+				<HP hp="100"/>
+			</HP>
+			<Text text="先来一段简单的"/>
+			<Text point="w"/>
+			
+			<Main task="证言开始"/>
+			<Text point="w" directText="[orange]~关于证言~[/orange]"/>
+			<Script go="in">
+				<Text point="w" text="第1句话..."/>
+				<Text point="w" text="第2句话..."/>
+				<Text point="w" text="第3句话..."/>
+			</Script>
+			<Main task="证言结束"/-->
+			<Main addEvent="wrong">
+				<Main flyto="l"/> <Text text="法官,这件证物明显与被告的证词有矛盾" /> 
+				<Main flyto="j"/> <Text text="啥,在哪呢.我咋没看出来呢.[br]你想想再说吧." /> 
+				<HP reduce="0.2" /> 
+			</Main>
+			<Text point="l" text="下面是询问了."/>
+
+			
+			<Main task="询问开始"/>
+			<Script sign="ask1_restart_ss"/>
+			<inquire>
+				<Text point="w" text="第1句话...">
+					<deter>
+						<Main flyto="l"/><Text text="假设我说了很多话"/>
+						<Text text="假设我说了很多话"/>
+						<Text text="假设我说了很多话"/>
+					</deter>
+				</Text>
+				<Text point="w" text="第2句话...">
+					<deter>
+						<Main flyto="l"/><Text text="假设我说了很多话"/>
+					</deter>
+					<prove answer="huizhang_oi">
+						<Text point="j" text="正确.继续执行"/>
+					</prove>
+				</Text>
+				<Text point="w" text="第3句话...,出示证物徽章">
+					<deter>
+						<Main flyto="l"/><Text text="假设我说了很多话"/>
+					</deter>
+				</Text>
+			</inquire>
+			<Script gotoSign="ask1_restart_ss"/>
+			<Script label="ask1_finish_ss"/>
+			<Main task="询问结束"/>
+			
+			<Text point="l" text="怎么样.有点感觉了吧"/>
+			<Text text="然后是比较复杂的了"/>
+			
+			<Main task="证言开始"/>
+			<Script go="in">
+				<Text point="w" text="第1句话..."/>
+				<Text point="w" text="第2句话..."/>
+				<Text point="w" text="第3句话..."/>
+			</Script>
+			<Main task="证言结束"/>
+			
+			<Text point="l" text="该询问了.准备好了吗"/>
+			
+			<Main task="询问开始"/>
+			<Script sign="ask2_restart_ss"/>
+			<Script go="in" environment="询问">
+				<Text point="w" text="第1句话...">
+					<deter>
+						<Main flyto="l"/><Text text="假设我说了很多话"/>
+					</deter>
+				</Text>
+				<Text point="w" text="第2句话...">
+					<deter>
+						<Main flyto="l"/><Text text="假设我说了很多话"/>
+					</deter>
+				</Text>
+				<Text point="w" text="第3句话...,第一次不要动.第二次时候用威慑">
+					<deter>
+						<Main flyto="l"/><Text text="隐藏的第4句话开启了"/>
+						<Script openNode="ask2_hide_ss"/>
+					</deter>
+				</Text>
+				<Script hideNode="ask2_hide_ss" environment="询问">
+					<Text point="w" text="第4句话...,出示证物徽章">
+						<deter>
+							<Main flyto="l"/><Text text="假设我说了很多话"/>
+						</deter>
+						<prove link="huizhang_oi">
+							<Text point="j" text="正确.继续执行"/>
+							<Script search="ask2_finish_ss"/>
+						</prove>
+					</Text>
+				</Script>
+			</Script>
+			<Script gotoSign="ask2_restart_ss"/>
+			<Script label="ask2_finish_ss"/>
+			<Main task="询问结束"/>
+		</court>
+		
+		<Text point="l" text="好了.演示结束"/>
+		<Main courtSet="null"/>
+		<Bg load="bg/候审厅.png"/>
+	</item>
+</selector>
+<Script gotoSign="restart_ss"/>
+
+<!--Script label="effect_test_ss">
+	<Effect applyFilters="background">
+		<grey/>
+	</Effect>
+	<Text text="静态测试(filter:grey,target:background)"/>
+	<Effect cleanFilters="background"/>
+	<Effect applyFilters="all">
+		<zoomBlur amount="0.1"/>
+	</Effect>
+	<Text text="静态测试(filter:zoomBlur,target:all"/>
+	<Effect cleanFilters="all"/>
+	<Effect applyMotion="visual">
+		<frame>
+			<pixelate dimension="15"/>
+		</frame>
+		<frame last="2">
+			<pixelate dimension="1"/>
+		</frame>
+	</Effect>
+	<Effect cleanAllFilters=""/>
+	<Text text="动态测试(filter:pixelate,invert,taget:visual)"/>
+	<hide_ef applyToTarget="r"/>
+	<show_ef applyToTarget="r"/>
+	<Text text="动态补间测试(tween)"/>
+	<Script gotoSign="restart_ss"/>
+</Script-->
+</nz>

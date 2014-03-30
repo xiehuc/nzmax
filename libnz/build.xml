@@ -3,8 +3,7 @@
 	<compiler>
 		<incremental>true</incremental>
 		<source-path>
-			<path-element>nz</path-element>
-			<path-element>ui</path-element>
+			<path-element>.</path-element>
 		</source-path>
 		<include-libraries>
 			<library>../lib/greensock.swc</library>

@@ -1,0 +1,15 @@
+<info>
+	<require>
+		<file path="main.xml" url="main.xml"/>
+		<file path="真宵" url="maya.swf"/>
+	</require>
+  <name>Welcome</name>
+  <folder>Welcome</folder>
+  <logo>demologo.png</logo>
+  <author>codex</author>
+  <translator>codex</translator>"D:/PROJECT/nz/resource/comlib/info.xml"
+  <playTime>01:00</playTime>
+  <introduce>欢迎来nzmaxi.sinaapp.com</introduce>
+  <script>main.xml</script>
+  <finish>false</finish>
+</info>

@@ -14,5 +14,4 @@ if [ ! -e ${CERT_FILE} ] ; then
 	adt -certificate -cn ${CERT_NAME} 1024-RSA ${CERT_FILE} ${CERT_PASS}
 fi
 
-adt -package ${SIGNING_OPTIONS} ${AIR_OUTPUT} ${APP_XML} -C ../bin nzmax.swf
-#-C ${APP_DIR}
+adt -package ${SIGNING_OPTIONS} ${AIR_OUTPUT} ${APP_XML} -C ${APP_DIR} nzmax.swf -C ../share .
