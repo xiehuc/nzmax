@@ -14,7 +14,7 @@
 			
 		]]>
 	</fx:Script>
-	<fx:Style source="../../Style.css"/>
+	<fx:Style source="../../../Style.css"/>
 	<!---@private-->
 	<s:Button id="nextButton" x="154" y="65" width="106" height="80" styleName="playButtonStyle"
 			   click="Transport.getEvent(EventListBridge.CONTROLBUTTON_EVENT)(Assets.PLAYBUTTON_CLICK);"/>

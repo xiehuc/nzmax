@@ -54,3 +54,14 @@ build with command line
 in linux and mac osx, you can also build without any ide tools.
 
 1.  run ./build.sh under root of source
+
+build with Flash Builder
+--------------------------
+
+Flash Builder is most foolish IDE I have ever seen!!
+It all use fix path instead of releate path!
+
+so I use cmake to make configure files with correct global path!!
+
+1.  cmake . #at source root file, to generate configure files
+2.  open Flash Builder, and import libnz from File System

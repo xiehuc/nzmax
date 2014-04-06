@@ -47,11 +47,11 @@
 		private var overLayer:UIComponent;
 		public function ChooseButton() 
 		{
-			[Embed(source='../../../lib/skins.swf',symbol='skins.cb_up')]
+			[Embed(source='../../../../lib/skins.swf',symbol='skins.cb_up')]
 			var up:Class;
-			[Embed(source='../../../lib/skins.swf',symbol='skins.cb_down')]
+			[Embed(source='../../../../lib/skins.swf',symbol='skins.cb_down')]
 			var down:Class;
-			[Embed(source='../../../lib/skins.swf',symbol='skins.cb_over_l')]
+			[Embed(source='../../../../lib/skins.swf',symbol='skins.cb_over_l')]
 			var over:Class;
 			btn = new Button();
 			btn.setStyle("upSkin", up);

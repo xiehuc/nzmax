@@ -83,7 +83,7 @@
 			
 		]]>
 	</fx:Script>
-	<fx:Style source="../../Style.css"/>
+	<fx:Style source="../../../Style.css"/>
 	<s:Image id="bar_up_2_1" source="@Embed(source='../image/skins.swf',symbol='_bar.up_2_1')"
 			  includeIn="normal"
 			 />

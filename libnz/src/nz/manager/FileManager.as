@@ -17,6 +17,7 @@ package nz.manager
 		static public var ScriptDirectory:String;
 		static public var SaveDirectory:String;
 		static public var ScriptInfo:XML;
+		static public var STORY_DIR:String;
 		static public var define_complete:Function;
 		static private var directory:String;
 		static private var comlib:String;

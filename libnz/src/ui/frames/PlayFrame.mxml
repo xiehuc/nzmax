@@ -13,7 +13,7 @@
 			import nz.enum.Mode;
 		]]>
 	</fx:Script>
-	<fx:Style source="../../Style.css"/>
+	<fx:Style source="../../../Style.css"/>
 	<s:Image source="@Embed(source='../image/skins.swf',symbol='_bar.up_1')"/>
 	<s:Image y="172" source="@Embed(source='../image/skins.swf',symbol='_bar.down_0')"/>
 	<s:Button x="178" label="法庭记录" styleName="buttonLabelStyle topRightButtonStyle" 

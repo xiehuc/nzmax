@@ -608,7 +608,7 @@
 		
 		]]>
 	</fx:Script>
-	<fx:Style source="../../main.css"/>
+	<fx:Style source="../../../main.css"/>
 	<s:Group id="upArea" y="-19.50">
 		<s:TextInput id="nameField" width="48" height="18" skinClass="ui.skins.NameFieldSkin"/>
 	</s:Group>

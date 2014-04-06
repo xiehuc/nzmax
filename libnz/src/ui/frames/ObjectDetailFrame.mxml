@@ -77,7 +77,7 @@
 			
 		]]>
 	</fx:Script>
-	<fx:Style source="../../Style.css"/>
+	<fx:Style source="../../../Style.css"/>
 	<s:states>
 		<s:State name="normal"/>
 		<s:State name="object"/>

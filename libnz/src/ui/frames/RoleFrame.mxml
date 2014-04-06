@@ -39,5 +39,5 @@
 			
 		]]>
 	</fx:Script>
-	<fx:Style source="../../Style.css"/>
+	<fx:Style source="../../../Style.css"/>
 </frames:ObjectFrame>
