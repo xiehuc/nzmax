@@ -1,0 +1,29 @@
+﻿<config>
+	<version>
+		<main version="0.75">nzmaxi.swf</main>
+	</version>
+	<path>
+		<comlib>../share/comlib</comlib>
+		<story>../share/story</story>
+	</path>
+	<textFormat>
+		<!--family>Arial, Helvetica, _sans</family-->
+		<size>12</size>
+		<paddingLeft>15</paddingLeft>
+		<paddingRight>15</paddingRight>
+		<paddingTop>13</paddingTop>
+		<color>#ffffff</color>
+	</textFormat>
+	<keyMap>
+		<Confirm>90</Confirm>
+		<Cancel>88</Cancel>
+		<Select>8</Select>
+		<Menu>13</Menu>
+		<LButton>65</LButton>
+		<RButton>83</RButton>
+		<Left>37</Left>
+		<Right>39</Right>
+		<Up>38</Up>
+		<Down>40</Down>
+	</keyMap>
+</config>

@@ -1,4 +1,4 @@
 #!/bin/sh
 
 cp -r ../share/* ../bin
-adl application.xml ../bin
+adl src/nzmax-app.xml ../bin

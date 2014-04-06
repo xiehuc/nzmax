@@ -10,3 +10,7 @@ set(proj "nzmaxi")
 set(nature "flexnature")
 configure_file(cmake/project.in nzmaxi/.project)
 configure_file(nzmaxi/actionScriptProperties.in nzmaxi/.actionScriptProperties @ONLY)
+
+set(proj "nzmax")
+configure_file(nzmax/project.in nzmax/.project)
+configure_file(nzmax/actionScriptProperties.in nzmax/.actionScriptProperties)

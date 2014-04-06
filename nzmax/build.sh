@@ -2,7 +2,7 @@
 CERT_NAME=nzmax
 CERT_FILE=bat/nzmax.p12
 CERT_PASS=fd
-APP_XML=application.xml
+APP_XML=src/nzmax-app.xml
 AIR_OUTPUT=../bin/nzmax.air
 APP_DIR=../bin
 SOURCE_DIR=`dirname $(pwd)`
