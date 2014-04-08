@@ -19,3 +19,8 @@ set(proj "nzmaxm")
 set(mobile_nature "<nature>com.adobe.flexide.project.multiplatform.multiplatformnature</nature>")
 configure_file(cmake/airproject.in nzmaxm/.project)
 configure_file(nzmaxm/actionScriptProperties.in nzmaxm/.actionScriptProperties @ONLY)
+
+set(proj "nztools")
+set(nature "flexnature")
+configure_file(cmake/project.in nztools/.project)
+configure_file(nztools/actionScriptProperties.in nztools/.actionScriptProperties @ONLY)

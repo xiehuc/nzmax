@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<actionScriptProperties analytics="false" mainApplicationPath="nzmaxi.mxml" projectUUID="ca0fee02-292a-4013-b15a-8560af90d515" version="10">
+<actionScriptProperties analytics="false" mainApplicationPath="nztooli.mxml" projectUUID="630be166-f820-4256-a777-a77a8ddbb588" version="10">
   <compiler additionalCompilerArguments="-locale en_US" autoRSLOrdering="true"
 	  copyDependentFiles="true" fteInMXComponents="false"
 	  generateAccessible="true" htmlExpressInstall="false" htmlGenerate="false"
@@ -17,12 +17,11 @@
           <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/core.swc" useDefaultLinkType="false"/>
         </excludedEntries>
       </libraryPathEntry>
-      <libraryPathEntry kind="3" linkType="1" path="@PROJECT_SOURCE_DIR@/bin/libnz.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
   <applications>
-    <application path="nzmaxi.mxml"/>
+    <application path="nztooli.mxml"/>
   </applications>
   <modules/>
   <buildCSSFiles/>
