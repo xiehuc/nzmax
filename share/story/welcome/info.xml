@@ -1,7 +1,6 @@
 <info>
 	<require>
 		<file path="main.xml" url="main.xml"/>
-		<file path="真宵" url="maya.swf"/>
 	</require>
   <name>Welcome</name>
   <folder>Welcome</folder>
