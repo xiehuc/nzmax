@@ -64,4 +64,6 @@ It all use fix path instead of releate path!
 so I use cmake to make configure files with correct global path!!
 
 1.  cmake . #at source root file, to generate configure files
-2.  open Flash Builder, and import libnz from File System
+2.  open Flash Builder, File->Import-> select "Existing project into workspace"
+3.  **don't** select copy into workspace
+3.  import libnz,nzmax,nzmaxi,nzmaxm into workspace
