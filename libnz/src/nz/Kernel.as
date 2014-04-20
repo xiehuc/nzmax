@@ -353,7 +353,7 @@ package nz
 		}
 		private function global_ioerror_event(e:IOErrorEvent):void
 		{
-			pushError(e.toString());
+			this.pushError(e.toString());
 		}
 		private function show_progress(e:BasisEvent):void 
 		{

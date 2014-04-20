@@ -7,15 +7,19 @@
 			{
 				kernel.preinit();
 				kernel.regist("error",pushError);
-				kernel.regist("log",pushError);
+				kernel.regist("log",log);
 				kernel.link(control);
 				
 				kernel.init();
 				kernel.initConfig();
 			}
-			private function pushError(e:String):void
+			private function log(e:String):void
 			{
 				
+			}
+			private function pushError(e:String):void
+			{
+				log(e);
 			}
 		]]>
 	</fx:Script>
