@@ -88,7 +88,7 @@
 <Text point="p" text="喂喂。"/>
 <l emotion="handsondesk_action"/>
 <Text text="但是！这次异议是亚内检事三年来第一次异议这种事情"/>
-<l zoom=""/>
+<!--l zoom="" 不知道为什么素材的zoom没有了/-->
 <Text text="是绝对不可能的."/>
 <Music stop=""/>
 <Main flyto="j"/><Text text="哦~你是说亚内检事在这三年里还有过其他成功的异议？"/>
@@ -156,7 +156,7 @@
 <Text text="[emo|document]而是像档案记录里的一样，是个名叫“鸭王”的充雾人"/>
 <l emotion="handsondesk_action"/>
 <Text text="所以！亚内检事三年以来成功的异议，事实上是"/>
-<l zoom=""/>
+<!--l zoom=""/-->
 <Music pause=""/>
 <Text text="一次也没有！"/>
 <Text autoSound="false"/>
@@ -174,7 +174,7 @@
              <Script delay="1.5"/>
              <Text autoSound="true"/>
 <Music load="bgm/法庭.mp3"/>
-<Main flyto="j"/><show_ef applyToTarget="visual"/><Text alpha="1" text="[emo|normal]看起来，很遗憾，我们不得不收回前面的祝贺了呢"/>
+<Main flyto="j"/><!--show_ef applyToTarget="visual"/--><Text alpha="1" text="[emo|normal]看起来，很遗憾，我们不得不收回前面的祝贺了呢"/>
 <Main flyto="p" /><Text realName="" text="……………………"/>
 <Main flyto="j"/><Text text="希望能在下一次审判中尽快看到亚内检事真正成功的异议。"/>
 <Main flyto="p" /><Text realName="" text="[cb][vib|1]（今天汗的太多了，人有点晕了）[vib|1][cw]"/>
@@ -191,15 +191,15 @@
 <Main flyto="c"/>
 <c emotion="quiet"/><Text  text="................."/>
 
-<Main flyto="j"/><show_ef applyToTarget="visual"/><Text text="那么，由于检控方的缺席，我们终于可以重新下判决了"/>
-<Effect applyTweens="">
+<Main flyto="j"/><!--show_ef applyToTarget="visual"/--><Text text="那么，由于检控方的缺席，我们终于可以重新下判决了"/>
+<!--Effect applyTweens="">
 <frame>
 <Music volumn="1"/>
 </frame>
 <frame last="1">
 <Music volumn="0"/>
 </frame>
-</Effect>
+</Effect-->
 <l voice="等下"/>
 <Text autoSound="false"/>
              <j emotion="surprised"/>
@@ -221,14 +221,14 @@
 <Main flyto="j"/><Text text="我判无罪你还磨蹭什么。"/>
 <Text text="[emo|serious]要是判他有罪，逆转5不就没戏了吗？"/>
 <Main flyto="l"/><Text realName="" text="......[emo|sweating][cb]（怪不得今天那么拽[br]原来有卡普空撑腰啊）[cw]"/>
-<Effect applyTweens="">
+<!--Effect applyTweens="">
 <frame>
 <Music volumn="0"/>
 </frame>
 <frame last="1">
 <Music volumn="1"/>
 </frame>
-</Effect>
+</Effect-->
 <Main flyto="j"/><Text text="那么，现在正式对被告人牙琉……[br]啊不，鸭王充雾人下判决"/>
 <j voice="无罪"/>
 <Main flyto="j"/><Text text="那么，本案就此闭庭！"/>
@@ -247,6 +247,7 @@
 <Main flyto="p"/><Text realName="" text="..........."/>
 <Text point="w" text="[emo|thinking]呜呜，结果我为什么站到这个证言台上来也没搞清楚"/>
 <Text text="[emo|disheartened]果然最没有存在感的是我吗？"/>
+<Text text="<剧终>"/>
 <Script finish=""/>
 </court>
 </nz>

@@ -2,7 +2,7 @@
 	<require>
 		<file path="bang.mp3" url="bang.mp3"/>
 		<file path="fall.mp3" url="fall.mp3"/>
-		<file path="Key.mp3" url="Key.mp3"/>
+		<file path="key.mp3" url="key.mp3"/>
 		<file path="shock.mp3" url="shock.mp3"/>
 		<file path="start.xml" url="start.xml"/>
 		
