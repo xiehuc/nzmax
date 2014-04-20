@@ -1,0 +1,22 @@
+﻿<config>
+  <menu>script/mainmenu.xml</menu>
+  <common>
+    <control>control/control.swf</control>
+    <family>宋体</family>
+    <size>13</size>
+    <leading>2</leading>
+    <delta>-1</delta>
+  </common>
+  <keyMap>
+    <Confirm>90</Confirm>
+		<Cancel>88</Cancel>
+		<Select>8</Select>
+		<Menu>13</Menu> 
+		<LButton>65</LButton>
+		<RButton>83</RButton>
+		<Left>37</Left>
+		<Right>39</Right>
+		<Up>38</Up>
+		<Down>40</Down>
+  </keyMap>
+</config>
