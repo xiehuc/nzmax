@@ -12,10 +12,13 @@ package nz
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	
+	import mx.core.UIComponent;
+	
+	import spark.components.Button;
+	import spark.components.Group;
+	
 	import lib.testing;
 	import lib.type.writer;
-	
-	import mx.core.UIComponent;
 	
 	import nz.component.Background;
 	import nz.component.BasicGroup;
@@ -45,9 +48,6 @@ package nz
 	import nz.support.ICreatable;
 	import nz.support.IFileManager;
 	import nz.support.IRole;
-	
-	import spark.components.Button;
-	import spark.components.Group;
 
 	public class Kernel extends Group
 	{
@@ -383,7 +383,7 @@ package nz
 		}
 		private function s_progress(e:ScriptEvent):void 
 		{
-			var info:Object;
+			var info:Object,tg:Object;
 			var downBoolean:Boolean = true;
 			var progressBoolean:Boolean = true;
 			var progressIndex:int = 0;
@@ -391,10 +391,15 @@ package nz
 			//错误检查
 			if (e.name == "Script")
 				return;
+			if(!pro.hasOwnProperty(e.name)){
+				pushError(" 没有 '"+e.name+"' 对象\n  请仔细检查脚本");
+				return;
+			}
 			while (progressIndex < e.value.length()) {
 				cmd = e.value[progressIndex].name();
-				info = pro[e.name].func.getFunc(cmd);
-				if (info.type == undefined) {
+				tg = pro[e.name];
+				info = tg.func.getFunc(cmd);
+				if (info==null||info.type == undefined) {
 					pushError(e.name+" 没有 "+cmd+" 属性或方法\n   请仔细检查.");
 					return;
 				}
@@ -402,23 +407,23 @@ package nz
 				if (info.progress == false) progressBoolean = false;
 				switch(info.type) {
 					case Script.SingleParams:
-						pro[e.name][cmd](e.value[progressIndex].toString());
+						tg[cmd](e.value[progressIndex].toString());
 						progressIndex++;
 						break;
 					case Script.NoParams:
-						pro[e.name][cmd]();
+						tg[cmd]();
 						progressIndex++;
 						break;
 					case Script.Properties:
-						pro[e.name][cmd] = e.value[progressIndex].toString();
+						tg[cmd] = e.value[progressIndex].toString();
 						progressIndex ++;
 						break;
 					case Script.ComplexParams:
-						pro[e.name][cmd](e.node, e.value[progressIndex].toString());
+						tg[cmd](e.node, e.value[progressIndex].toString());
 						progressIndex++;
 						break;
 					case Script.BooleanProperties:
-						pro[e.name][cmd] = Assets.stringToBoolean(e.value[progressIndex].toString());
+						tg[cmd] = Assets.stringToBoolean(e.value[progressIndex].toString());
 						progressIndex++;
 						break;
 					case Script.IgnoreProperties:

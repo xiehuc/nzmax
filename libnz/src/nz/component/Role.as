@@ -127,7 +127,7 @@
 			
 			this.mouseEnabled = this.mouseChildren = false;
 			zoomImage = new Sprite();
-			zoomImage.y = 192;
+			zoomImage.y = 192;//FIXME : 会不会被control覆盖了？
 			labelToIndex = new Object();
 			
 			func.setFunc("name", { type:Script.Properties } );
@@ -167,7 +167,13 @@
 			zoomClass = childFunc.getFunc("zoom").mc as Class;
 			zoomSpeakingClass = childFunc.getFunc("zoom_speaking").mc as Class;
 			zoomImage.addChild(new zoomSpeakingClass() as DisplayObject);
-			Transport.DisplayRoot.Over.addChild(zoomImage);
+			//assert failed
+			if(zoomImage.numChildren != 2){
+				while(zoomImage.numChildren) zoomImage.removeChildAt(0);
+				return;
+			}
+			Transport.DisplayRoot["Over"].addChild(zoomImage);
+			
 			dispatchEvent(new Event(INTERCEPT_END_TRACE, true));
 		}
 		/**@private */
@@ -184,7 +190,7 @@
 			zoomImage.removeChildAt(0);
 			zoomClass = null;
 			zoomSpeakingClass = null;
-			Transport.DisplayRoot.Over.removeChild(zoomImage);
+			Transport.DisplayRoot["Over"].removeChild(zoomImage);
 			dispatchEvent(new Event(UNINTERCEPT_END_TRACE, true));
 		}
 		/**

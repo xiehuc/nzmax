@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <frames:ObjectFrame  xmlns:fx="http://ns.adobe.com/mxml/2009"  xmlns:s="library://ns.adobe.com/flex/spark"
-	width="256" height="192" creationComplete="main(event)" xmlns:frames="ui.frames.*"
+	width="256" height="192" creationComplete="init(event)" xmlns:frames="ui.frames.*"
 	>
 	<fx:Script>
 		<![CDATA[
@@ -18,13 +18,13 @@
 			
 			import spark.events.IndexChangeEvent;
 			
-			override protected function main(event:FlexEvent):void
+			protected function init(event:FlexEvent):void
 			{
 				// TODO Auto-generated method stub
 				pane.dataProvider = Transport.DisplayRoot["RolePane"];
 				if(pane.dataProvider.length>0)
 					pane_title.text = pane.dataProvider.getItemAt(0).name;
-				top_r_btn.label ="证物记录";
+				if(top_r_btn) top_r_btn.label = "证物记录";
 			}
 			override protected function top_r_btn_clickHandler(event:MouseEvent):void
 			{
